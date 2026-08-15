@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Star map — Candice Cantrelle</title>
+<meta name="description" content="The whole portfolio as one figure: a core, seven discipline constellations, every curated project as a star, and dashed spurs for everything that leaves the site.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/map/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Star map — Candice Cantrelle">
+<meta property="og:description" content="The whole portfolio as one figure. Seven constellations, every project a star.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/map/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/cards.css">
+<link rel="stylesheet" href="../assets/css/worlds.css">
+<link rel="stylesheet" href="../assets/css/starmap.css">
+<script src="../assets/js/shell.js"></script>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">Star map</span></li></ol></div>
+
+  <header class="plate">
+    <div class="wrap plate__grid">
+      <div>
+        <p class="plate__kicker">The site · as one figure</p>
+        <h1>Star map</h1>
+        <p class="plate__lede">Everything here, and how it is joined up. One core, seven constellations, one star for every curated project. Dashed lines are the things that leave this site — the atlas, the repositories, the live builds.</p>
+      </div>
+      <p class="stamp"><b>7</b> disciplines<br>One registry<br>No hidden work<br>Drawn from the data</p>
+    </div>
+    <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
+  </header>
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">01</span> The map <span class="trail"></span></h2>
+      <p class="sec-hint">
+        Point at a node — or tab through them — to read what it is. Clicking a star opens
+        that project's case study where one exists, and its best available link where one
+        does not. The figure is generated from the same registry the rest of the site uses,
+        so it cannot quietly fall out of date.
+      </p>
+
+      <div class="starmap-frame">
+        <div id="map"></div>
+      </div>
+
+      <dl class="sm-readout" id="readout" aria-live="polite"></dl>
+
+      <ul class="sm-legend">
+        <li>
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7" fill="var(--rf-ink)"/></svg>
+          Showcase
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="5.5" fill="var(--rf-ink)"/></svg>
+          Prototype or research
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="4.2" fill="var(--rf-ink)"/></svg>
+          Workshop
+        </li>
+        <li>
+          <svg width="20" height="18" viewBox="0 0 20 18" aria-hidden="true"><circle cx="9" cy="9" r="5.5" fill="var(--rf-ink)"/><circle cx="9" cy="9" r="9" fill="none" stroke="var(--rf-ink)" stroke-width="1"/></svg>
+          Has a live version
+        </li>
+        <li>
+          <svg width="30" height="18" viewBox="0 0 30 18" aria-hidden="true"><line x1="0" y1="9" x2="18" y2="9" stroke="var(--rf-muted)" stroke-width="1" stroke-dasharray="3 4"/><rect x="21" y="6" width="6" height="6" transform="rotate(45 24 9)" fill="none" stroke="var(--rf-muted)" stroke-width="1.2"/></svg>
+          Leaves this site
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">02</span> The same map, as a list <span class="trail"></span></h2>
+      <p class="sec-hint">
+        Identical content, ordinary links. This is the version that works without
+        JavaScript, in a screen reader, and on a narrow phone — the figure above is a
+        second view of it, not a replacement for it.
+      </p>
+      <ul class="sm-index" id="index">
+        <li>
+          <h3><a href="../">Portfolio home</a></h3>
+          <ul>
+            <li><span class="sm-index__title"><a href="../about/">About</a></span></li>
+            <li><span class="sm-index__title"><a href="../about/credentials/">Credentials</a></span></li>
+            <li><span class="sm-index__title"><a href="../archive/">Archive — the previous site</a></span></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">03</span> Elsewhere <span class="trail"></span></h2>
+      <p class="sec-hint">Destinations that are not part of this site.</p>
+      <ul class="sm-index">
+        <li style="--sm-accent: var(--rf-orange)">
+          <h3>Off this site</h3>
+          <ul>
+            <li>
+              <span class="sm-index__title"><a href="https://unicorn0-0cakes.github.io/simulations/" rel="noopener">Simulations atlas</a></span>
+              <span class="sm-index__links">Nine instruments · methods pages · every taxonomy</span>
+            </li>
+            <li>
+              <span class="sm-index__title"><a href="https://github.com/Unicorn0-0Cakes" rel="noopener">GitHub</a></span>
+              <span class="sm-index__links">Source repositories</span>
+            </li>
+            <li>
+              <span class="sm-index__title"><a href="https://www.linkedin.com/in/candice-cantrelle" rel="noopener">LinkedIn</a></span>
+              <span class="sm-index__links">Professional profile</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="../data/projects.js"></script>
+<script src="../assets/js/cards.js"></script>
+<script src="../assets/js/starmap.js"></script>
+<script>
+/* The list is built first: if the figure ever throws, the page still
+   carries the whole sitemap. */
+CCStarMap.index("#index");
+CCStarMap.map("#map", "#readout");
+</script>
+</body>
+</html>

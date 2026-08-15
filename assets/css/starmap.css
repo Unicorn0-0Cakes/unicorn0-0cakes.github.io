@@ -1,0 +1,183 @@
+/* =====================================================================
+   CC / PORTFOLIO — STAR MAP
+   ---------------------------------------------------------------------
+   The site drawn as one figure: a core, seven discipline constellations,
+   every curated project as a star, and dashed spurs for the things that
+   leave the site.
+
+   The figure is generated from data/projects.js, so it cannot drift out
+   of step with the registry — a project added there appears here, and a
+   project set to "hidden" disappears from both.
+
+   Everything the map shows is also present as an ordinary nested list
+   below it. The list is the accessible source of truth; the map is the
+   view of it that shows how the pieces relate.
+   ===================================================================== */
+
+.starmap-frame {
+  position: relative;
+  border: 1px solid var(--rf-line);
+  border-radius: var(--w-radius, var(--rf-radius));
+  background:
+    radial-gradient(ellipse at 50% 45%, var(--rf-panel) 0%, var(--rf-bg2) 78%);
+  padding: var(--s-4);
+  overflow: hidden;
+}
+
+/* A faint field of fixed background stars, drawn behind the figure.
+   Purely decorative, so it never carries meaning a reader could miss. */
+.starmap-frame::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, var(--rf-line) 50%, transparent 51%),
+    radial-gradient(1px 1px at 84% 12%, var(--rf-line) 50%, transparent 51%),
+    radial-gradient(1px 1px at 31% 79%, var(--rf-line) 50%, transparent 51%),
+    radial-gradient(1px 1px at 68% 88%, var(--rf-line) 50%, transparent 51%),
+    radial-gradient(1px 1px at 92% 62%, var(--rf-line) 50%, transparent 51%),
+    radial-gradient(1px 1px at 7% 54%, var(--rf-line) 50%, transparent 51%),
+    radial-gradient(1px 1px at 46% 6%, var(--rf-line) 50%, transparent 51%),
+    radial-gradient(1px 1px at 58% 35%, var(--rf-line) 50%, transparent 51%);
+  opacity: .55;
+  pointer-events: none;
+}
+
+/* The figure is square, so an unconstrained width makes it taller than
+   any screen. Capped and centred, so it is taken in at once. */
+.starmap {
+  display: block; position: relative;
+  width: 100%; max-width: 780px; height: auto;
+  margin: 0 auto;
+}
+
+/* ---- structure lines ------------------------------------------------ */
+.sm-spoke      { stroke: var(--rf-line); stroke-width: 1; fill: none; opacity: .5; }
+.sm-tether     { stroke: var(--rf-line-soft); stroke-width: 1; fill: none; opacity: .85; }
+.sm-offsite    { stroke: var(--rf-muted); stroke-width: 1; fill: none;
+                 stroke-dasharray: 3 4; opacity: .75; }
+.sm-ring       { stroke: var(--rf-line-soft); stroke-width: 1; fill: none; opacity: .5; }
+
+/* ---- the core ------------------------------------------------------- */
+.sm-core circle { fill: var(--rf-panel); stroke: var(--rf-ink); stroke-width: 1.5; }
+.sm-core text {
+  font-family: var(--rf-mono); font-size: 13px; font-weight: 600;
+  letter-spacing: var(--rf-track-s); fill: var(--rf-ink);
+  text-anchor: middle; dominant-baseline: middle;
+}
+.sm-core:hover circle, .sm-core:focus-visible circle { fill: var(--rf-panel2); }
+
+/* ---- discipline nodes ----------------------------------------------- */
+.sm-disc circle { fill: var(--sm-accent); stroke: var(--rf-bg); stroke-width: 2; }
+.sm-disc text.sm-disc__name {
+  font-family: var(--rf-mono); font-size: 12.5px; font-weight: 600;
+  letter-spacing: var(--rf-track-s); text-transform: uppercase;
+  fill: var(--rf-ink);
+}
+.sm-disc text.sm-disc__n {
+  font-family: var(--rf-mono); font-size: 10px; fill: var(--rf-muted);
+}
+.sm-disc:hover circle, .sm-disc:focus-visible circle { r: 13; }
+.sm-disc:hover text.sm-disc__name, .sm-disc:focus-visible text.sm-disc__name {
+  fill: var(--sm-accent);
+}
+
+/* ---- project stars --------------------------------------------------- */
+.sm-star circle.sm-star__dot { fill: var(--sm-accent); stroke: none; }
+.sm-star circle.sm-star__halo {
+  fill: none; stroke: var(--sm-accent); stroke-width: 1; opacity: .55;
+}
+.sm-star circle.sm-star__hit { fill: transparent; stroke: none; }
+.sm-star text {
+  font-family: var(--rf-mono); font-size: 10.5px; fill: var(--rf-ink);
+  opacity: 0; pointer-events: none;
+  paint-order: stroke; stroke: var(--rf-bg); stroke-width: 3.5; stroke-linejoin: round;
+}
+.sm-star:hover text, .sm-star:focus-visible text { opacity: 1; }
+.sm-star:hover circle.sm-star__dot, .sm-star:focus-visible circle.sm-star__dot { r: 9; }
+
+/* ---- things that leave the site -------------------------------------- */
+.sm-out rect, .sm-out circle { fill: var(--rf-bg); stroke: var(--rf-muted); stroke-width: 1.2; }
+.sm-out text {
+  font-family: var(--rf-mono); font-size: 10.5px; fill: var(--rf-ink-dim);
+  paint-order: stroke; stroke: var(--rf-bg); stroke-width: 3.5; stroke-linejoin: round;
+}
+.sm-out:hover rect, .sm-out:focus-visible rect,
+.sm-out:hover circle, .sm-out:focus-visible circle { stroke: var(--rf-ink); }
+.sm-out:hover text, .sm-out:focus-visible text { fill: var(--rf-ink); }
+
+/* ---- site pages orbiting the core ------------------------------------ */
+.sm-page circle { fill: var(--rf-bg); stroke: var(--rf-line); stroke-width: 1.2; }
+.sm-page text { font-family: var(--rf-mono); font-size: 10px; fill: var(--rf-muted); }
+.sm-page:hover circle, .sm-page:focus-visible circle { stroke: var(--rf-ink); }
+.sm-page:hover text, .sm-page:focus-visible text { fill: var(--rf-ink); }
+
+/* Keyboard focus is drawn on the node itself, so it is visible against
+   the field rather than being clipped by the SVG viewport. */
+.starmap a:focus { outline: none; }
+.starmap a:focus-visible circle.sm-star__dot,
+.starmap a:focus-visible .sm-focusable {
+  outline: 2px solid var(--rf-ink);
+  outline-offset: 3px;
+}
+
+/* ---- the readout ------------------------------------------------------ */
+.sm-readout {
+  display: grid; grid-template-columns: auto 1fr; gap: var(--s-2) var(--s-4);
+  align-items: baseline;
+  margin-top: var(--s-4); padding: var(--s-4);
+  border: 1px solid var(--rf-line-soft); border-radius: var(--rf-radius);
+  background: var(--rf-panel); min-height: 76px;
+}
+.sm-readout dt {
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase;
+  color: var(--rf-muted); font-weight: 600;
+}
+.sm-readout dd { margin: 0; font-size: var(--t-small); color: var(--rf-ink); }
+.sm-readout .sm-readout__hint { color: var(--rf-muted); font-style: italic; }
+
+/* ---- legend ------------------------------------------------------------ */
+.sm-legend {
+  list-style: none; padding: 0; margin: var(--s-5) 0 0;
+  display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-6);
+}
+.sm-legend li {
+  display: flex; align-items: center; gap: 8px; margin: 0;
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase;
+  color: var(--rf-muted);
+}
+.sm-legend svg { flex: none; overflow: visible; }
+
+/* ---- the same map, as a list -------------------------------------------- */
+.sm-index { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--s-6); list-style: none; padding: 0; margin: 0; }
+.sm-index > li { margin: 0; }
+.sm-index h3 {
+  font-family: var(--rf-mono); font-size: var(--t-micro); font-weight: 600;
+  letter-spacing: var(--rf-track); text-transform: uppercase;
+  margin: 0 0 var(--s-3); padding-bottom: 6px;
+  border-bottom: 2px solid var(--sm-accent); color: var(--rf-ink);
+}
+.sm-index ul { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s-3); }
+.sm-index ul li { margin: 0; font-size: var(--t-small); }
+.sm-index__title { font-weight: 600; }
+.sm-index__links {
+  display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 3px;
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase;
+}
+
+/* ---- motion ------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .sm-star circle.sm-star__dot,
+  .sm-disc circle { transition: r .18s ease; }
+  .sm-star text, .sm-out text { transition: opacity .18s ease; }
+}
+
+/* On small screens the figure stops being readable at a glance, so it is
+   dropped in favour of the list, which says exactly the same thing. */
+@media (max-width: 720px) {
+  .starmap-frame, .sm-legend { display: none; }
+  .sm-readout { display: none; }
+}

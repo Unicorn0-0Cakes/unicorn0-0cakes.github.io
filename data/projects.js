@@ -34,7 +34,7 @@
      verified numbers, it has no numbers. Do not add estimates.
    ===================================================================== */
 
-const SIM_BASE = "/simulations/atlas/";
+const SIM_BASE = "https://unicorn0-0cakes.github.io/simulations/";
 const GH       = "https://github.com/Unicorn0-0Cakes/";
 
 const PROJECTS = [
@@ -549,8 +549,14 @@ const SELECTED = [
    `nav: false` builds the wing and leaves it reachable by URL without
    advertising it. Games is set that way until there is a game in it.
    ------------------------------------------------------------------ */
+/* A category's URL is "/" + id + "/" unless it declares an explicit `path`.
+   Simulations is the one exception: the standalone atlas repository already
+   publishes a GitHub Pages project site at /simulations/, and a project site
+   takes precedence over a same-named directory in a user site. The wing
+   therefore lives at /simulation/ — singular, matching the discipline name
+   used on the homepage — and the atlas keeps the URL it already had. */
 const CATEGORIES = [
-  { id: "simulations", name: "Simulations",  nav: true,  accent: "--rf-orange",
+  { id: "simulations", name: "Simulations",  nav: true,  path: "/simulation/",  accent: "--rf-orange",
     tagline: "An atlas of scientific instruments",
     desc: "Working models of documented experiments. Set the conditions, run the world, read what comes out." },
   { id: "ai-ml",       name: "AI + ML",      nav: true,  accent: "--rf-indigo",

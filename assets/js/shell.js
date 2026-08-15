@@ -82,18 +82,19 @@
      2. MARKUP
      ------------------------------------------------------------------ */
   var NAV = [
-    { href: "/simulations/", label: "Simulations" },
+    { href: "/simulation/",  label: "Simulations" },
     { href: "/ai-ml/",       label: "AI + ML" },
     { href: "/software/",    label: "Software" },
     { href: "/research/",    label: "Research" },
     { href: "/games/",       label: "Games" },
     { href: "/design/",      label: "Design" },
     { href: "/workshop/",    label: "Workshop" },
-    { href: "/about/",       label: "About" }
+    { href: "/about/",       label: "About" },
+    { href: "/map/",         label: "Star map" }
   ];
 
   var GITHUB   = "https://github.com/Unicorn0-0Cakes";
-  var SIM_SITE = "/simulations/atlas/";
+  var SIM_SITE = "https://unicorn0-0cakes.github.io/simulations/";
 
   function wordmark(cls) {
     return '<a class="wordmark ' + (cls || "") + '" href="' + BASE + '">' +
@@ -151,7 +152,7 @@
             "</div>" +
             "<div>" +
               "<h2>Work</h2><ul>" +
-                '<li><a href="' + U("/simulations/") + '">Simulations</a></li>' +
+                '<li><a href="' + U("/simulation/") + '">Simulations</a></li>' +
                 '<li><a href="' + U("/ai-ml/") + '">AI + ML</a></li>' +
                 '<li><a href="' + U("/software/") + '">Software</a></li>' +
                 '<li><a href="' + U("/research/") + '">Research</a></li>' +
@@ -164,13 +165,14 @@
                 '<li><a href="' + U("/workshop/") + '">Workshop</a></li>' +
                 '<li><a href="' + U("/about/") + '">About</a></li>' +
                 '<li><a href="' + U("/about/#credentials") + '">Credentials</a></li>' +
+                '<li><a href="' + U("/map/") + '">Star map</a></li>' +
               "</ul>" +
             "</div>" +
             "<div>" +
               "<h2>Elsewhere</h2><ul>" +
                 '<li><a href="' + GITHUB + '" rel="noopener" data-ext>GitHub</a></li>' +
                 '<li><a href="https://www.linkedin.com/in/candice-cantrelle" rel="noopener" data-ext>LinkedIn</a></li>' +
-                '<li><a href="' + U(SIM_SITE) + '">Simulations atlas</a></li>' +
+                '<li><a href="' + SIM_SITE + '" rel="noopener" data-ext>Simulations atlas</a></li>' +
               "</ul>" +
             "</div>" +
           "</div>" +

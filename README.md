@@ -11,8 +11,8 @@ Static HTML, CSS and JavaScript. No framework, no build step, no tracking.
 
 ```
 /                       homepage
-/simulations/           Simulations wing — front door to the atlas
-/simulations/atlas/     the atlas itself (vendored, see below)
+/simulation/            Simulations wing — front door to the atlas
+/map/                   star map — the whole site as one figure
 /ai-ml/                 AI + ML wing
 /software/              Software wing
 /research/              Research wing
@@ -40,26 +40,6 @@ navigation cannot drift between wings. It resolves the site's base URL from its
 own script URL, which means pages work from any directory depth. Page content
 remains readable if JavaScript fails.
 
-## The vendored atlas
-
-`/simulations/atlas/` is a verbatim copy of
-[`Unicorn0-0Cakes/simulations`](https://github.com/Unicorn0-0Cakes/simulations),
-so the instruments are served from this repository rather than depending on a
-second GitHub Pages site. That repository remains the source of truth.
-
-To pull in new or updated instruments, replace the directory wholesale:
-
-```sh
-rm -rf simulations/atlas
-git clone --depth 1 https://github.com/Unicorn0-0Cakes/simulations.git simulations/atlas
-rm -rf simulations/atlas/.git simulations/atlas/.gitignore \
-       simulations/atlas/.gitattributes simulations/atlas/.nojekyll
-```
-
-Nothing inside `simulations/atlas/` is patched during vendoring — every path in
-it is relative to the atlas root — so a re-copy never needs re-editing. If an
-instrument is added, add its portfolio record to `data/projects.js` as well.
-
 ## Local preview
 
 Serve from the repository root, because the site is a user site mounted at `/`:
@@ -69,3 +49,30 @@ python3 -m http.server 8000
 ```
 
 Then open http://localhost:8000/.
+
+## The star map
+
+`/map/` draws the whole site as one figure — core, seven discipline
+constellations, one star per curated project, dashed spurs for anything that
+leaves the site. It is generated at runtime from `data/projects.js`, so adding
+a project to the registry adds a star and setting one to `hidden` removes it.
+Nothing about the map needs editing when the work changes.
+
+Section 02 of that page renders the identical content as an ordinary nested
+list. That list is the accessible version — it is what a screen reader, a
+visitor without JavaScript, and a narrow phone get — and the figure is a second
+view of it rather than a replacement.
+
+## A note on /simulation/ and /simulations/
+
+The Simulations **wing** is at `/simulation/`. The standalone atlas is at
+`/simulations/`, published from `Unicorn0-0Cakes/simulations`.
+
+They differ by one letter for a real reason: GitHub Pages serves a project site
+at `/<repo>/` in preference to a same-named directory in the user site, so the
+portfolio cannot use `/simulations/` while the atlas repo publishes there. The
+wing therefore uses the singular — which is also the discipline name on the
+homepage — and links out to the atlas.
+
+`data/projects.js` records this as an explicit `path` on the Simulations
+category; every other category derives its URL from its `id`.

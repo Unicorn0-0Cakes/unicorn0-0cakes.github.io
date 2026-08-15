@@ -57,6 +57,20 @@
   .hero__body { font-size: 16px; color: var(--rf-ink-dim); max-width: 52ch; margin: 0 0 var(--s-6); }
   .hero__cta { display: flex; gap: var(--s-3); flex-wrap: wrap; }
 
+  /* The orbit plate is the argument of the site stated as a figure, so it
+     is also the way into the full one. */
+  .orbit-link { display: block; text-decoration: none; border-radius: var(--rf-radius); }
+  .orbit-link__cue {
+    display: block; margin-top: var(--s-4); text-align: center;
+    font-family: var(--rf-mono); font-size: var(--t-nano);
+    letter-spacing: var(--rf-track); text-transform: uppercase;
+    color: var(--rf-muted);
+  }
+  .orbit-link__cue::after { content: " \2192"; }
+  .orbit-link:hover .orbit-link__cue,
+  .orbit-link:focus-visible .orbit-link__cue { color: var(--w-accent); }
+  .orbit-link:hover .orbit, .orbit-link:focus-visible .orbit { opacity: .92; }
+
   /* The orbit plate. Six rings, one per discipline, drawn to the same
      centre — the argument of the whole site, stated as a figure. */
   .orbit { width: 100%; max-width: 300px; margin: 0 auto; display: block; }
@@ -107,10 +121,11 @@
 <noscript>
   <div class="wrap" style="padding-top:16px">
     <nav aria-label="Primary" class="fallback" style="border:1px solid var(--rf-line);padding:12px 16px;border-radius:3px">
-      <a href="simulations/">Simulations</a> · <a href="ai-ml/">AI + ML</a> ·
+      <a href="simulation/">Simulations</a> · <a href="ai-ml/">AI + ML</a> ·
       <a href="software/">Software</a> · <a href="research/">Research</a> ·
-      <a href="design/">Design</a> · <a href="workshop/">Workshop</a> ·
-      <a href="about/">About</a>
+      <a href="games/">Games</a> · <a href="design/">Design</a> ·
+      <a href="workshop/">Workshop</a> · <a href="about/">About</a> ·
+      <a href="map/">Star map</a>
     </nav>
   </div>
 </noscript>
@@ -144,6 +159,7 @@
       </div>
 
       <div>
+        <a class="orbit-link" href="map/" aria-label="Open the star map: the whole site as one figure">
         <svg class="orbit" viewBox="0 0 260 260" role="img" aria-labelledby="orbit-t orbit-d">
           <title id="orbit-t">Six disciplines on concentric orbits around one centre</title>
           <desc id="orbit-d">A diagram: six rings of different radii share a single centre marked "systems", each carrying one discipline — simulation, machine learning, software, research, games and design.</desc>
@@ -182,6 +198,8 @@
           <text class="lbl" x="130" y="74"  text-anchor="middle">Research</text>
           <text class="lbl" x="130" y="92"  text-anchor="middle">Design</text>
         </svg>
+        <span class="orbit-link__cue">Open the star map</span>
+        </a>
       </div>
     </div>
   </section>
@@ -198,10 +216,11 @@
       <nav class="doors" id="doors" aria-label="Disciplines"></nav>
       <noscript>
         <div class="fallback" style="margin-top:16px">
-          <p><a href="simulations/">Simulations</a> — an atlas of scientific instruments</p>
+          <p><a href="simulation/">Simulations</a> — an atlas of scientific instruments</p>
           <p><a href="ai-ml/">AI + ML</a> — models, datasets, and what they actually scored</p>
           <p><a href="software/">Software</a> — tools built to be used</p>
           <p><a href="research/">Research</a> — questions in progress</p>
+          <p><a href="games/">Games</a> — systems you play from inside</p>
           <p><a href="design/">Design</a> — identity, interface and image</p>
           <p><a href="workshop/">Workshop</a> — small things, kept honest</p>
         </div>

@@ -363,6 +363,12 @@
   /* ------------------------------------------------------------------
      THE DOORS
      ------------------------------------------------------------------ */
+  /* Where a category's landing page lives. Usually derivable from the id;
+     `path` overrides it where deployment forced the URL to differ. */
+  function catPath(c) {
+    return (c && c.path) || "/" + (c && c.id) + "/";
+  }
+
   function doors(selector) {
     var el = document.querySelector(selector);
     if (!el) return;
@@ -371,7 +377,7 @@
     var html = shown.map(function (c, i) {
       var n = countIn(c.id);
       total += n;
-      return '<a class="door" href="' + U("/" + c.id + "/") + '" style="--door-accent: var(' + c.accent + ')">' +
+      return '<a class="door" href="' + U(catPath(c)) + '" style="--door-accent: var(' + c.accent + ')">' +
         '<span class="door__n">' + String(i + 1).padStart(2, "0") + "</span>" +
         '<span class="door__name">' + esc(c.name) + "</span>" +
         '<span class="door__desc">' + esc(c.tagline) + "</span>" +
@@ -393,6 +399,7 @@
   window.CC = {
     esc: esc, visible: visible, byCategory: byCategory, byId: byId,
     featured: featured, countIn: countIn, category: category, curated: curated,
-    card: card, renderInto: renderInto, doors: doors, statusChip: statusChip
+    card: card, renderInto: renderInto, doors: doors, statusChip: statusChip,
+    catPath: catPath
   };
 })();
