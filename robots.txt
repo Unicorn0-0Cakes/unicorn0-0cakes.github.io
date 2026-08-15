@@ -1,0 +1,11 @@
+# https://unicorn0-0cakes.github.io/
+#
+# Everything published here is meant to be found. The only exclusions are
+# the 404 page, which carries its own noindex, and the tooling directory,
+# which holds maintenance scripts rather than pages.
+
+User-agent: *
+Allow: /
+Disallow: /tools/
+
+Sitemap: https://unicorn0-0cakes.github.io/sitemap.xml
