@@ -1,0 +1,43 @@
+# =====================================================================
+# CC / PORTFOLIO — VALIDATION
+# ---------------------------------------------------------------------
+# Runs tools/validate-site.js on every push and pull request to main.
+#
+# This workflow does NOT deploy. The site is published by GitHub Pages
+# straight from the branch, which is the whole point of a static site
+# with no build step — adding a deployment pipeline here would make the
+# publishing path harder to reason about, not easier. If this job fails,
+# the site still deploys; the failure is a signal to go and fix it.
+# =====================================================================
+name: Validate site
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Registry, paths, metadata and legacy references
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # No install step: the validator uses Node's standard library only.
+      - name: Validate
+        run: node tools/validate-site.js
+
+      # Catches the case where the registry changed but the generated
+      # files were not regenerated. Reported separately so the fix is
+      # obvious from the job name alone.
+      - name: Check generated files are in sync
+        run: node tools/sync-static.js --check
