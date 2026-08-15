@@ -1,0 +1,1376 @@
+{
+  "model_version": "0.1.0-milestone0",
+  "parameter_set_id": "2d6343f41b392d36",
+  "parameters": [
+    {
+      "name": "population_cap",
+      "default": 100000,
+      "units": "citizens",
+      "range": [
+        1000,
+        100000
+      ],
+      "note": "Hard invariant: living population may never exceed this.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "years",
+      "default": 500,
+      "units": "years",
+      "range": [
+        1,
+        1000
+      ],
+      "note": "Simulated duration.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "assessment_interval",
+      "default": 5,
+      "units": "years",
+      "range": [
+        1,
+        10
+      ],
+      "note": "Civilization-wide assessment cadence, on the civilization anniversary.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "adult_civic_age",
+      "default": 20,
+      "units": "years",
+      "range": [
+        16,
+        25
+      ],
+      "note": "Age at which a citizen receives an official civic classification.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "child_assessment_min_age",
+      "default": 6,
+      "units": "years",
+      "range": [
+        3,
+        12
+      ],
+      "note": "Youngest age at which developmental assessment is recorded (not civic).",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "g_loading",
+      "default": [
+        0.8,
+        0.75,
+        0.7,
+        0.65,
+        0.7,
+        0.72,
+        0.45,
+        0.35,
+        0.55,
+        0.3,
+        0.4
+      ],
+      "units": "correlation",
+      "range": [
+        0.0,
+        0.95
+      ],
+      "note": "Loading of each cognitive dimension on the general factor g. Order matches cognition.DIMS. Low loadings for practical judgment / social understanding / emotional regulation encode the assumption that these are only weakly predicted by g.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "abs_scale_mean",
+      "default": 100.0,
+      "units": "points",
+      "range": [
+        80,
+        120
+      ],
+      "note": "Year-0 absolute capability scale mean.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "abs_scale_sd",
+      "default": 15.0,
+      "units": "points",
+      "range": [
+        10,
+        20
+      ],
+      "note": "Year-0 absolute capability scale SD.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "test_reliability",
+      "default": 0.92,
+      "units": "reliability coefficient",
+      "range": [
+        0.75,
+        0.98
+      ],
+      "note": "Test-retest reliability of the official assessment. Observed = latent + error with SD = abs_scale_sd * sqrt(1 - reliability).",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "practice_effect",
+      "default": 1.2,
+      "units": "points per prior sitting",
+      "range": [
+        0.0,
+        4.0
+      ],
+      "note": "Score inflation per previous official sitting, saturating at practice_max.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "practice_max",
+      "default": 4.0,
+      "units": "points",
+      "range": [
+        0.0,
+        10.0
+      ],
+      "note": "Ceiling on cumulative practice effect.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "state_effect_health",
+      "default": 12.0,
+      "units": "points per unit ill-health",
+      "range": [
+        0.0,
+        25.0
+      ],
+      "note": "Reduction in observed score at maximal acute ill-health.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "state_effect_stress",
+      "default": 5.0,
+      "units": "points per unit stress",
+      "range": [
+        0.0,
+        15.0
+      ],
+      "note": "Reduction in observed score at maximal stress.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "sensory_penalty",
+      "default": 6.0,
+      "units": "points",
+      "range": [
+        0.0,
+        20.0
+      ],
+      "note": "Observed-score penalty for uncorrected sensory impairment. A measurement artefact, not a capability difference.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "iq_report_ceiling",
+      "default": 150.0,
+      "units": "IQ points",
+      "range": [
+        130,
+        200
+      ],
+      "note": "Maximum reportable official score. Latent capability is retained separately.",
+      "scope": "common",
+      "sensitivity": "low",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "iq_report_floor",
+      "default": 40.0,
+      "units": "IQ points",
+      "range": [
+        20,
+        60
+      ],
+      "note": "Minimum reportable official score.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "normalization_method",
+      "default": "mean_sd",
+      "units": "categorical",
+      "range": [
+        "mean_sd",
+        "median_mad",
+        "trimmed"
+      ],
+      "note": "Primary normalisation for relative civic IQ. DECLARED BEFORE PRODUCTION RUNS.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "fluid_peak_age",
+      "default": 25.0,
+      "units": "years",
+      "range": [
+        18,
+        35
+      ],
+      "note": "Age of peak fluid/speed capability.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "fluid_decline_rate",
+      "default": 0.22,
+      "units": "points per year after peak",
+      "range": [
+        0.0,
+        0.6
+      ],
+      "note": "Normal-ageing decline in fluid reasoning and processing speed.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "crystallised_growth",
+      "default": 0.1,
+      "units": "points per year of experience",
+      "range": [
+        0.0,
+        0.4
+      ],
+      "note": "Growth in verbal/learned expertise with experience, saturating.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "education_effect",
+      "default": 1.5,
+      "units": "points per effective school year",
+      "range": [
+        0.0,
+        4.0
+      ],
+      "note": "Effect of schooling on latent capability during development.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "childhood_adversity_effect",
+      "default": 9.0,
+      "units": "points",
+      "range": [
+        0.0,
+        20.0
+      ],
+      "note": "Latent capability cost of maximal childhood adversity (nutrition, toxins, stress, illness).",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "heritability_latent",
+      "default": 0.5,
+      "units": "proportion of variance",
+      "range": [
+        0.0,
+        0.8
+      ],
+      "note": "Share of child's expected latent endowment attributable to a polygenic mid-parent term. NOT a claim about real-world heritability; a model knob whose influence is measured by sensitivity analysis.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "shared_environment_share",
+      "default": 0.2,
+      "units": "proportion of variance",
+      "range": [
+        0.0,
+        0.5
+      ],
+      "note": "Share attributable to modelled family/environment inputs.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "regression_to_mean",
+      "default": 1.0,
+      "units": "multiplier",
+      "range": [
+        0.5,
+        1.0
+      ],
+      "note": "Strength of regression of mid-parent value toward the contemporaneous mean.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "gompertz_a",
+      "default": 2.6e-05,
+      "units": "annual hazard",
+      "range": [
+        1e-05,
+        0.0001
+      ],
+      "note": "Gompertz baseline hazard at age 0 of the adult component.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "gompertz_b",
+      "default": 0.085,
+      "units": "per year",
+      "range": [
+        0.06,
+        0.12
+      ],
+      "note": "Gompertz rate of hazard increase with age.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "makeham_c",
+      "default": 0.0009,
+      "units": "annual hazard",
+      "range": [
+        0.0002,
+        0.003
+      ],
+      "note": "Age-independent background mortality.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "infant_mortality",
+      "default": 0.0045,
+      "units": "annual probability",
+      "range": [
+        0.001,
+        0.05
+      ],
+      "note": "First-year death probability before health-system modifiers.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "child_mortality",
+      "default": 0.0004,
+      "units": "annual probability",
+      "range": [
+        0.0001,
+        0.005
+      ],
+      "note": "Ages 1-14 baseline death probability.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "max_age",
+      "default": 115,
+      "units": "years",
+      "range": [
+        100,
+        130
+      ],
+      "note": "Hard age ceiling.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "fertility_window",
+      "default": [
+        18,
+        44
+      ],
+      "units": "years",
+      "range": [
+        [
+          15,
+          50
+        ],
+        [
+          15,
+          50
+        ]
+      ],
+      "note": "Ages at which a citizen may hold a birth permit.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "desired_children_mean",
+      "default": 2.1,
+      "units": "children",
+      "range": [
+        0.5,
+        4.0
+      ],
+      "note": "Mean desired completed family size.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "desired_children_sd",
+      "default": 1.0,
+      "units": "children",
+      "range": [
+        0.2,
+        2.0
+      ],
+      "note": "Dispersion of desired family size.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "conception_rate",
+      "default": 0.32,
+      "units": "annual probability",
+      "range": [
+        0.05,
+        0.9
+      ],
+      "note": "Annual probability that a permitted, willing, fertile citizen conceives.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "fertility_policy",
+      "default": "equal_voluntary",
+      "units": "categorical",
+      "range": [
+        "equal_voluntary",
+        "lottery",
+        "waiting_list",
+        "iq_weighted",
+        "need_aware",
+        "society_allotment"
+      ],
+      "note": "Reproductive-policy module. Held IDENTICAL across A/B/C in the primary comparison; iq_weighted belongs to a separate preregistered phase.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "maternal_mortality",
+      "default": 0.00012,
+      "units": "per birth",
+      "range": [
+        0.0,
+        0.005
+      ],
+      "note": "Maternal death risk per birth.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "chronic_onset_base",
+      "default": 0.006,
+      "units": "annual probability",
+      "range": [
+        0.001,
+        0.03
+      ],
+      "note": "Baseline annual chronic-condition onset hazard at age 30.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "chronic_age_slope",
+      "default": 0.055,
+      "units": "per year",
+      "range": [
+        0.02,
+        0.09
+      ],
+      "note": "Exponential increase in chronic onset with age.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "dementia_base",
+      "default": 0.0016,
+      "units": "annual probability at 65",
+      "range": [
+        0.0005,
+        0.01
+      ],
+      "note": "Dementia incidence at age 65, doubling every dementia_doubling years.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "dementia_doubling",
+      "default": 5.5,
+      "units": "years",
+      "range": [
+        4.0,
+        8.0
+      ],
+      "note": "Age doubling time of dementia incidence.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "injury_rate_base",
+      "default": 0.01,
+      "units": "annual probability",
+      "range": [
+        0.002,
+        0.05
+      ],
+      "note": "Baseline injury hazard before occupational and support modifiers.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "mental_health_incidence",
+      "default": 0.011,
+      "units": "annual probability",
+      "range": [
+        0.003,
+        0.04
+      ],
+      "note": "Annual onset hazard of a significant mental-health condition.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "health_literacy_gradient",
+      "default": 0.22,
+      "units": "hazard multiplier per SD",
+      "range": [
+        0.0,
+        0.5
+      ],
+      "note": "Mortality hazard reduction per +1 SD in the health-literacy pathway. This is the ONLY route by which cognition touches mortality directly; accessible systems can close it (see accessibility_closes_gradient).",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "accessibility_closes_gradient",
+      "default": 0.85,
+      "units": "proportion",
+      "range": [
+        0.0,
+        1.0
+      ],
+      "note": "Fraction of the health-literacy gradient removed at full cognitive accessibility of the health system.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "support_mortality_benefit",
+      "default": 0.28,
+      "units": "hazard multiplier",
+      "range": [
+        0.0,
+        0.6
+      ],
+      "note": "Proportional hazard reduction when assigned support matches assessed need.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "undersupport_mortality_penalty",
+      "default": 0.35,
+      "units": "hazard multiplier",
+      "range": [
+        0.0,
+        1.0
+      ],
+      "note": "Proportional hazard increase under severe unmet support need.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "oversupport_independence_cost",
+      "default": 0.06,
+      "units": "adaptive points per year",
+      "range": [
+        0.0,
+        0.2
+      ],
+      "note": "Loss of adaptive functioning per year of unnecessary supervision. Encodes that more supervision is not automatically better.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "medical_innovation_rate",
+      "default": 0.0011,
+      "units": "annual hazard reduction",
+      "range": [
+        0.0,
+        0.005
+      ],
+      "note": "Compounding mortality improvement from accumulated medical knowledge.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "healthy_threshold",
+      "default": 0.55,
+      "units": "index 0-1",
+      "range": [
+        0.3,
+        0.8
+      ],
+      "note": "Health index above which a person-year counts as healthy (HALE).",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "independence_threshold",
+      "default": 0.5,
+      "units": "index 0-1",
+      "range": [
+        0.3,
+        0.8
+      ],
+      "note": "Adaptive-functioning index above which a person-year counts as functionally independent.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "support_levels",
+      "default": 9,
+      "units": "count",
+      "range": [
+        3,
+        12
+      ],
+      "note": "Number of ordered support levels, 0 = independent .. 8 = secure protective care.",
+      "scope": "common",
+      "sensitivity": "low",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "support_assessment_error",
+      "default": 0.12,
+      "units": "SD of need index",
+      "range": [
+        0.0,
+        0.4
+      ],
+      "note": "Noise in the needs assessment; drives over- and under-support.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "support_capacity_per_capita",
+      "default": 0.95,
+      "units": "relative to assessed need",
+      "range": [
+        0.4,
+        1.5
+      ],
+      "note": "Resource ceiling on total assigned support.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "scaffolding_strength",
+      "default": {
+        "A": 0.35,
+        "B": 0.9,
+        "C": 0.65
+      },
+      "units": "proportion",
+      "range": [
+        0.0,
+        1.0
+      ],
+      "note": "Society-level reduction of unnecessary cognitive burden in civic, medical, financial and transport systems. THE PRIMARY B-vs-A/C treatment lever.",
+      "scope": "society",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "scaffolding_cost",
+      "default": {
+        "A": 0.03,
+        "B": 0.11,
+        "C": 0.07
+      },
+      "units": "share of output",
+      "range": [
+        0.0,
+        0.3
+      ],
+      "note": "Recurrent cost of accessibility infrastructure.",
+      "scope": "society",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "allocation_rule",
+      "default": {
+        "A": "iq_rank",
+        "B": "preference_qualification",
+        "C": "competency_fit"
+      },
+      "units": "categorical",
+      "range": [
+        "iq_rank",
+        "preference_qualification",
+        "competency_fit"
+      ],
+      "note": "Occupational allocation rule.",
+      "scope": "society",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "reallocation_interval",
+      "default": 5,
+      "units": "years",
+      "range": [
+        1,
+        10
+      ],
+      "note": "Years between civilization-wide occupational reallocation reviews.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "training_rate",
+      "default": 0.06,
+      "units": "skill points per year",
+      "range": [
+        0.01,
+        0.2
+      ],
+      "note": "Learned-expertise accumulation while employed in a matched role.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "experience_performance_weight",
+      "default": 0.3,
+      "units": "weight",
+      "range": [
+        0.0,
+        0.6
+      ],
+      "note": "Weight of accumulated experience in job performance relative to ability fit.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "burnout_rate",
+      "default": 0.02,
+      "units": "annual probability per unit strain",
+      "range": [
+        0.0,
+        0.1
+      ],
+      "note": "Burnout hazard when role demands exceed capability plus support.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "mismatch_error_multiplier",
+      "default": 1.8,
+      "units": "multiplier",
+      "range": [
+        1.0,
+        4.0
+      ],
+      "note": "Increase in adverse occupational events per unit of role mismatch.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "innovation_base",
+      "default": 0.004,
+      "units": "annual probability per research worker",
+      "range": [
+        0.0,
+        0.02
+      ],
+      "note": "Baseline innovation hazard, scaled by research-role fit and education.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "housing_preference_weight",
+      "default": {
+        "A": 0.15,
+        "B": 0.65,
+        "C": 0.4
+      },
+      "units": "weight",
+      "range": [
+        0.0,
+        1.0
+      ],
+      "note": "Weight of stated preference against administrative assignment in housing.",
+      "scope": "society",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "housing_capacity_slack",
+      "default": 0.05,
+      "units": "proportion",
+      "range": [
+        0.0,
+        0.3
+      ],
+      "note": "Spare housing stock; scarcity forces suboptimal placement.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "iq_bands",
+      "default": [
+        [
+          -1000000000.0,
+          70
+        ],
+        [
+          70,
+          80
+        ],
+        [
+          80,
+          90
+        ],
+        [
+          90,
+          100
+        ],
+        [
+          100,
+          110
+        ],
+        [
+          110,
+          120
+        ],
+        [
+          120,
+          130
+        ],
+        [
+          130,
+          140
+        ],
+        [
+          140,
+          150
+        ],
+        [
+          150,
+          1000000000.0
+        ]
+      ],
+      "units": "IQ points",
+      "range": "configurable",
+      "note": "Reporting bands for guaranteed representation. Configurable, not hard-coded.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "seats_base",
+      "default": 1,
+      "units": "seats per populated band",
+      "range": [
+        1,
+        5
+      ],
+      "note": "Guaranteed seats for every populated band, however small.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "seats_proportional",
+      "default": 90,
+      "units": "additional seats",
+      "range": [
+        0,
+        300
+      ],
+      "note": "Additional seats allocated proportionally to band population.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "leader_competence_iq_link",
+      "default": 0.2,
+      "units": "correlation",
+      "range": [
+        0.0,
+        0.6
+      ],
+      "note": "Correlation between g and *systems-planning* competence. Deliberately modest: the model must not assume high-IQ leadership is good leadership.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "leader_ethics_iq_link",
+      "default": 0.0,
+      "units": "correlation",
+      "range": [
+        -0.3,
+        0.3
+      ],
+      "note": "Correlation between g and leadership ethics. Default zero (assumption).",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "corruption_base",
+      "default": 0.03,
+      "units": "annual probability per official",
+      "range": [
+        0.0,
+        0.2
+      ],
+      "note": "Baseline hazard that an official engages in capture or corruption.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "audit_effectiveness",
+      "default": 0.7,
+      "units": "detection probability",
+      "range": [
+        0.2,
+        0.99
+      ],
+      "note": "Probability that an anti-corruption audit detects an active corruption episode.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "policy_effect_strength",
+      "default": 0.25,
+      "units": "multiplier",
+      "range": [
+        0.0,
+        0.6
+      ],
+      "note": "Maximum proportional effect of governance quality on health, support and safeguarding budgets.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "welfare_check_interval",
+      "default": 1.0,
+      "units": "years",
+      "range": [
+        0.083,
+        1.0
+      ],
+      "note": "Maximum interval between mandatory in-person welfare checks.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "abuse_attempt_rate",
+      "default": 0.0016,
+      "units": "annual probability per vulnerable citizen",
+      "range": [
+        0.0,
+        0.02
+      ],
+      "note": "Hazard that a severe-abuse situation is initiated. NOT set to zero.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "safeguard_detection_effectiveness",
+      "default": 0.97,
+      "units": "probability per check",
+      "range": [
+        0.9,
+        1.0
+      ],
+      "note": "Per-check probability of detecting an active severe-abuse situation.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "max_undetected_duration",
+      "default": 1.0,
+      "units": "years",
+      "range": [
+        0.083,
+        1.0
+      ],
+      "note": "Hard cap on how long a severe-abuse situation may persist undetected under the default safeguarding regime.",
+      "scope": "common",
+      "sensitivity": "high",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "false_positive_rate",
+      "default": 0.012,
+      "units": "per check",
+      "range": [
+        0.0,
+        0.1
+      ],
+      "note": "Rate of incorrect safeguarding findings; drives administrative cost and harm.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "inspector_corruption_rate",
+      "default": 0.004,
+      "units": "annual probability",
+      "range": [
+        0.0,
+        0.05
+      ],
+      "note": "Hazard that an inspector is compromised; mitigated by rotation.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "intervention_success",
+      "default": 0.88,
+      "units": "probability",
+      "range": [
+        0.5,
+        1.0
+      ],
+      "note": "Probability that intervention after detection ends the situation within a year.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "disaster_rate",
+      "default": 0.05,
+      "units": "annual probability",
+      "range": [
+        0.0,
+        0.3
+      ],
+      "note": "Major natural disaster.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "epidemic_rate",
+      "default": 0.03,
+      "units": "annual probability",
+      "range": [
+        0.0,
+        0.2
+      ],
+      "note": "Epidemic onset.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "pandemic_rate",
+      "default": 0.004,
+      "units": "annual probability",
+      "range": [
+        0.0,
+        0.05
+      ],
+      "note": "Severe pandemic onset.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "crop_failure_rate",
+      "default": 0.045,
+      "units": "annual probability",
+      "range": [
+        0.0,
+        0.3
+      ],
+      "note": "Agricultural failure.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "infrastructure_failure_rate",
+      "default": 0.035,
+      "units": "annual probability",
+      "range": [
+        0.0,
+        0.3
+      ],
+      "note": "Major infrastructure or information-system failure.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "economic_contraction_rate",
+      "default": 0.07,
+      "units": "annual probability",
+      "range": [
+        0.0,
+        0.3
+      ],
+      "note": "Economic contraction.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "breakthrough_rate",
+      "default": 0.025,
+      "units": "annual probability",
+      "range": [
+        0.0,
+        0.2
+      ],
+      "note": "Exogenous technological breakthrough.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "shock_severity_mean",
+      "default": 0.35,
+      "units": "index 0-1",
+      "range": [
+        0.05,
+        0.9
+      ],
+      "note": "Mean shock severity.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "climate_drift",
+      "default": 0.0007,
+      "units": "index per year",
+      "range": [
+        0.0,
+        0.005
+      ],
+      "note": "Slow degradation of environmental carrying capacity.",
+      "scope": "common",
+      "sensitivity": "medium",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "logging_level",
+      "default": "standard",
+      "units": "categorical",
+      "range": [
+        "minimal",
+        "standard",
+        "forensic"
+      ],
+      "note": "Standard = annual aggregates + 5-year snapshots + all rare events + panel.",
+      "scope": "common",
+      "sensitivity": "low",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "panel_size",
+      "default": 1000,
+      "units": "citizens",
+      "range": [
+        0,
+        10000
+      ],
+      "note": "Reproducible individual-citizen panel retained at full resolution.",
+      "scope": "common",
+      "sensitivity": "low",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    },
+    {
+      "name": "checkpoint_interval",
+      "default": 50,
+      "units": "years",
+      "range": [
+        0,
+        500
+      ],
+      "note": "Years between full checkpoints.",
+      "scope": "common",
+      "sensitivity": "low",
+      "source": "not yet calibrated",
+      "code_location": "engine/cce_engine/params.py"
+    }
+  ]
+}

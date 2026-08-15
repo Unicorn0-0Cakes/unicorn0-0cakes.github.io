@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inside the Atom — Rutherford Scattering</title>
+<meta name="description" content="Fire alpha particles through a thin metal foil, count them at chosen angles with a movable detector, and decide whether a diffuse or a concentrated positive charge explains the angular distribution.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/orbital.css">
+<script src="../assets/orbital.js" data-title="Inside the Atom" data-tag="Rutherford Scattering" data-sim="inside-the-atom" data-motion="on"></script>
+<link rel="stylesheet" href="css/inside-the-atom.css">
+<link rel="stylesheet" href="../assets/orbital-sim.css">
+<script src="../assets/catalogue.js"></script>
+</head>
+<body>
+<a class="rf-skip" href="#home">Skip to the instrument</a>
+
+<!-- ============================ home ============================ -->
+<div id="home">
+  <div class="hero">
+    <div class="eyebrow upper">Scattering instrument · after Geiger, Marsden and Rutherford</div>
+    <h1>Inside<br>the Atom</h1>
+    <p class="lede">
+      A foil of gold two thousand atoms thick, a pencil of alpha particles, and a zinc-sulphide screen you can
+      swing to any angle around it. Almost everything goes straight through. The question is what the handful
+      that do not are telling you.
+    </p>
+    <p class="lede sm">
+      You operate the beam and the detector. Nothing in the apparatus shows you an atom; you get counts at
+      angles you chose, with the statistics those counts happen to have, and you have to decide from them
+      whether the positive charge in the foil is spread through each atom or concentrated at its centre.
+    </p>
+    <div class="herobtns">
+      <span class="pill">Space runs an exposure · ← → move the detector · T switches theme</span>
+    </div>
+  </div>
+
+  <div class="modes" id="homeModes"></div>
+
+  <div class="hero" style="padding-top:0">
+    <div class="assumption">
+      <b>On the history.</b> In 1909 Geiger and Marsden reported that about one alpha particle in eight thousand
+      falling on a thick platinum plate came back out on the side it went in. In 1911 Rutherford published the
+      single-scattering theory that accounts for it, and in 1913 Geiger and Marsden tested that theory from 5° to
+      150°, counting more than a hundred thousand scintillations. This instrument implements the two competing
+      angular distributions <i>as Rutherford set them out side by side in the 1911 paper</i>. It is not a
+      reconstruction of the apparatus: the geometry is schematic, the exposures are counted in particles rather
+      than in weeks, and the numbers that had no counterpart in 1913 are labelled where they appear.
+      <a href="methods.html">Methods &amp; limitations →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ app ============================ -->
+<div id="app">
+
+  <div class="topbar">
+    <div class="tb-title">INSIDE THE ATOM <span id="tbMode">· Free laboratory</span></div>
+    <div class="tb-stats" id="tbStats"></div>
+    <div class="tb-controls">
+      <button class="btn primary" id="fireBtn" title="Run one exposure at the current detector setting (Space)">▶ Expose</button>
+      <button class="btn" id="sweepBtn" title="Run an exposure at every angle of a standard sweep">Sweep</button>
+      <button class="btn ghost sm" id="resetBtn" title="Clear the ledger and restore the opening state">Reset</button>
+      <button class="btn ghost sm" id="homeBtn" title="Back to the mode chooser" aria-label="Back to the mode chooser">✕</button>
+    </div>
+  </div>
+
+  <nav class="rail" id="rail" aria-label="Screens">
+    <div class="grouplabel upper muted">Bench</div>
+    <button class="navitem on" data-screen="bench" id="navBench"><span class="ico" aria-hidden="true">◎</span><span class="lbl">Apparatus</span></button>
+    <button class="navitem" data-screen="counts" id="navCounts"><span class="ico" aria-hidden="true">▤</span><span class="lbl">Counts</span></button>
+    <button class="navitem" data-screen="distribution" id="navDistribution"><span class="ico" aria-hidden="true">◔</span><span class="lbl">Distribution</span></button>
+    <div class="grouplabel upper muted">Record</div>
+    <button class="navitem" data-screen="ledger" id="navLedger"><span class="ico" aria-hidden="true">≡</span><span class="lbl">Evidence</span></button>
+    <button class="navitem" data-screen="compare" id="navCompare"><span class="ico" aria-hidden="true">⇄</span><span class="lbl">Models</span></button>
+    <div class="grouplabel upper muted">Report</div>
+    <button class="navitem" data-screen="conclude" id="navConclude"><span class="ico" aria-hidden="true">✓</span><span class="lbl">Conclusion</span></button>
+    <button class="navitem" data-screen="notes" id="navNotes"><span class="ico" aria-hidden="true">§</span><span class="lbl">Assumptions</span></button>
+  </nav>
+
+  <main class="main" id="main">
+    <section class="screen on" id="screen-bench" tabindex="-1" aria-label="Apparatus"></section>
+    <section class="screen" id="screen-counts" tabindex="-1" aria-label="Counts"></section>
+    <section class="screen" id="screen-distribution" tabindex="-1" aria-label="Distribution"></section>
+    <section class="screen" id="screen-ledger" tabindex="-1" aria-label="Evidence ledger"></section>
+    <section class="screen" id="screen-compare" tabindex="-1" aria-label="Model comparison"></section>
+    <section class="screen" id="screen-conclude" tabindex="-1" aria-label="Conclusion"></section>
+    <section class="screen" id="screen-notes" tabindex="-1" aria-label="Assumptions"></section>
+  </main>
+
+  <aside class="inspector" id="inspector" aria-label="Controls"></aside>
+</div>
+
+<!-- ============================ modal ============================ -->
+<div class="veil" id="veil" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="mh">
+      <div class="upper muted" id="modalKicker"></div>
+      <h2 id="modalTitle"></h2>
+    </div>
+    <div class="mb" id="modalBody"></div>
+    <div class="mf" id="modalFoot"></div>
+  </div>
+</div>
+
+<div class="livestatus rf-sr" id="live" role="status" aria-live="polite"></div>
+
+<script src="js/config.js"></script>
+<script src="js/model.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/apparatus.js"></script>
+<script src="js/events.js"></script>
+<script src="js/screens.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

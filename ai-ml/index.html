@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" data-world="ai-ml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI & Machine Learning — Candice Cantrelle</title>
+<meta name="description" content="Vision and prediction projects reported with the numbers that were actually measured — and clearly marked where no verified numbers exist.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/ai-ml/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI & Machine Learning — Candice Cantrelle">
+<meta property="og:description" content="Vision and prediction projects reported with the numbers that were actually measured — and clearly marked where no verified numbers exist.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/ai-ml/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/cards.css">
+<link rel="stylesheet" href="../assets/css/worlds.css">
+<script src="../assets/js/shell.js"></script>
+
+<style>
+.rule-box { border:1px solid var(--rf-line); border-left:3px solid var(--w-accent);
+            border-radius:var(--rf-radius); padding:var(--s-5); background:var(--rf-panel); }
+.rule-box h3 { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+               text-transform:uppercase; color:var(--w-accent); margin:0 0 var(--s-3); font-weight:600; }
+.rule-box p { font-size:var(--t-small); color:var(--rf-ink-dim); }
+</style>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">AI + ML</span></li></ol></div>
+  <header class="plate">
+    <div class="wrap plate__grid">
+      <div>
+        <p class="plate__kicker">Wing 02 · The results table</p>
+        <h1>AI &amp; Machine Learning</h1>
+        <p class="plate__lede">Image classification, expression recognition and predictive maintenance. Where a figure was measured, it is here. Where it was not, that is stated rather than filled in.</p>
+      </div>
+      <p class="stamp"><b>5</b> projects<br>2 showcase · 1 prototype · 2 workshop<br>TensorFlow · scikit-learn<br>2025</p>
+    </div>
+    <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
+  </header>
+
+
+  <section class="doc">
+    <div class="wrap">
+      <div class="rule-box">
+        <h2 style="font:inherit">A note on the numbers</h2>
+        <p>
+          Three of these projects are Jupyter notebooks whose cell outputs were cleared before
+          they were committed. That means most stored metrics are simply gone. Rather than
+          reconstruct plausible figures, this section reports only what can be traced to the
+          notebooks themselves — which is a complete set for the emotion detector, a single
+          author-reported figure for SVHN, and nothing at all for the turbofan model.
+        </p>
+        <p style="margin-bottom:0">
+          It makes the section look thinner than it is. It also means every number on it is real.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">01</span> Projects <span class="trail"></span></h2>
+      <div class="grid" id="ml"></div>
+    </div>
+  </section>
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">02</span> How these are evaluated <span class="trail"></span></h2>
+      <p class="sec-hint">The same four questions, asked of every model here.</p>
+      <div class="grid grid--2">
+        <div class="rule-box"><h3>What is it scoring against?</h3>
+          <p>A held-out split, and how it was made. An accuracy figure without its baseline is decoration.</p></div>
+        <div class="rule-box"><h3>What is the class balance?</h3>
+          <p>The emotion detector's <em>surprise</em> class is around 21% of the data. That number belongs
+             next to the accuracy, not in a footnote.</p></div>
+        <div class="rule-box"><h3>What did it cost?</h3>
+          <p>The deepest SVHN network was abandoned — not because it scored badly, but because it
+             needed restarts for memory and made hyperparameter search impractical.</p></div>
+        <div class="rule-box"><h3>What would break it?</h3>
+          <p>Every project page ends with limitations, and they are specific ones.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="../data/projects.js"></script>
+<script src="../assets/js/cards.js"></script>
+<script>
+CC.renderInto("#ml", CC.curated(CC.byCategory("ai-ml")));
+</script>
+</body>
+</html>

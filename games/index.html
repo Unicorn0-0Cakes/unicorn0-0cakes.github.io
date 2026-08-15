@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" data-world="games">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Games — Candice Cantrelle</title>
+<meta name="description" content="A games wing built and waiting for its first release. The presentation system is complete; the shelf is not.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/games/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Games — Candice Cantrelle">
+<meta property="og:description" content="A games wing built and waiting for its first release. The presentation system is complete; the shelf is not.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/games/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/cards.css">
+<link rel="stylesheet" href="../assets/css/worlds.css">
+<script src="../assets/js/shell.js"></script>
+
+<style>
+.empty-state {
+  border: 1px dashed var(--rf-line); border-radius: var(--rf-radius);
+  padding: var(--s-7); text-align: center; background: var(--rf-panel);
+}
+.empty-state h2 { font-size: var(--t-h2); margin: 0 0 var(--s-3); }
+.empty-state p { margin: 0 auto var(--s-4); color: var(--rf-ink-dim); max-width: 56ch; }
+.empty-state p:last-child { margin-bottom: 0; }
+</style>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">Games</span></li></ol></div>
+  <header class="plate">
+    <div class="wrap plate__grid">
+      <div>
+        <p class="plate__kicker">Wing 05 · The anthology</p>
+        <h1>Games</h1>
+        <p class="plate__lede">Games are their own discipline here, not a subfolder of software. A game is a systems problem, an interaction problem, an art-direction problem and a psychology problem arriving at once, and the only way to judge one is against all four.</p>
+      </div>
+      <p class="stamp"><b>1</b> entry<br>Design document only<br>Nothing released yet</p>
+    </div>
+    <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
+  </header>
+
+
+  <section class="doc">
+    <div class="wrap">
+      <div class="empty-state">
+        <h2>This wing is built. It is not yet full.</h2>
+        <p>
+          There is one entry below, and it is a design document rather than a game — the systems
+          are specified and the alpha scope is defined, but nothing has been implemented.
+          Presenting it as a release would be exactly the kind of thing the rest of this site
+          is arranged to avoid.
+        </p>
+        <p>
+          So the wing exists, the presentation system is finished, and the shelf says what is
+          actually on it. It is deliberately not linked from the main navigation until there is
+          something here worth navigating to.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">01</span> Entries <span class="trail"></span></h2>
+      <div class="grid grid--2" id="gm"></div>
+    </div>
+  </section>
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">02</span> What a game entry will carry <span class="trail"></span></h2>
+      <p class="sec-hint">
+        The schema below is the one every future release fills in. A field with nothing in it
+        renders as empty rather than being quietly dropped, so an incomplete entry looks
+        incomplete.
+      </p>
+      <dl class="placard">
+        <div><dt>Genre</dt><dd class="empty">—</dd></div>
+        <div><dt>Platform</dt><dd class="empty">—</dd></div>
+        <div><dt>Engine</dt><dd class="empty">—</dd></div>
+        <div><dt>Status</dt><dd class="empty">Released · Playable · Prototype · Experimental</dd></div>
+        <div><dt>My role</dt><dd class="empty">—</dd></div>
+        <div><dt>Design goal</dt><dd class="empty">—</dd></div>
+        <div><dt>Core mechanic</dt><dd class="empty">—</dd></div>
+        <div><dt>Playable demo</dt><dd class="empty">—</dd></div>
+        <div><dt>Source</dt><dd class="empty">—</dd></div>
+        <div><dt>Development notes</dt><dd class="empty">—</dd></div>
+      </dl>
+      <p class="sec-hint" style="margin-top:var(--s-5)">
+        Subdivisions — Released, Playable, Prototype, Experimental Mechanics — are deliberately
+        not built. Four headings over one entry would be filing, not curation. They go in when
+        the volume justifies them.
+      </p>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="../data/projects.js"></script>
+<script src="../assets/js/cards.js"></script>
+<script>
+CC.renderInto("#gm", CC.curated(CC.byCategory("games")));
+</script>
+</body>
+</html>

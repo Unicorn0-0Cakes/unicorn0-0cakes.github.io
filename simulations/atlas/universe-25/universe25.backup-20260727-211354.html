@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universe 25 — Mouse Utopia Simulation</title>
+<style>
+  :root{
+    --bg:#0b0d12; --panel:#141821; --panel2:#1b202b; --line:#28303e;
+    --ink:#e8ecf4; --muted:#8b95a7; --accent:#6ea8fe;
+    --normal:#3fb96b; --stressed:#e8c447; --aggressive:#e5484d;
+    --withdrawn:#4a7bff; --beautiful:#c96bd8;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  header{padding:18px 24px 10px;border-bottom:1px solid var(--line);
+    display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  header h1{font-size:20px;margin:0;letter-spacing:.3px;font-weight:700}
+  header .sub{color:var(--muted);font-size:13px}
+  .wrap{display:grid;grid-template-columns:1fr 360px;gap:16px;padding:16px 24px 40px;
+    max-width:1500px;margin:0 auto}
+  @media(max-width:1000px){.wrap{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .stage{position:relative;padding:0;overflow:hidden}
+  #grid{display:block;width:100%;height:auto;background:#080a0e;border-radius:14px}
+  /* phase banner */
+  .banner{position:absolute;left:50%;top:22px;transform:translateX(-50%) translateY(-14px);
+    background:rgba(10,12,18,.86);border:1px solid var(--line);backdrop-filter:blur(6px);
+    padding:12px 22px;border-radius:12px;text-align:center;opacity:0;pointer-events:none;
+    transition:opacity .5s,transform .5s;max-width:80%}
+  .banner.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .banner .ph{font-size:15px;font-weight:700;letter-spacing:.4px}
+  .banner .desc{font-size:12.5px;color:var(--muted);margin-top:3px}
+  /* controls */
+  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+  button.btn{background:var(--panel2);color:var(--ink);border:1px solid var(--line);
+    padding:9px 14px;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600;
+    transition:.15s;font-family:var(--font)}
+  button.btn:hover{border-color:var(--accent);background:#222a38}
+  button.btn.primary{background:var(--accent);color:#08101f;border-color:var(--accent)}
+  button.btn.primary:hover{filter:brightness(1.08)}
+  .seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .seg button{background:var(--panel2);color:var(--muted);border:0;padding:9px 12px;
+    font-size:12.5px;cursor:pointer;font-weight:600;font-family:var(--font)}
+  .seg button.on{background:var(--accent);color:#08101f}
+  .setup{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:12px;
+    padding-top:12px;border-top:1px solid var(--line)}
+  .setup label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:5px}
+  .setup input[type=range]{width:150px;accent-color:var(--accent)}
+  .setup .val{color:var(--ink);font-weight:600}
+  .presets{display:flex;gap:6px;flex-wrap:wrap}
+  .presets button{font-size:12px;padding:7px 11px}
+  /* stats side */
+  .side{display:flex;flex-direction:column;gap:16px}
+  .metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .metric .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .metric .v{font-size:22px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+  .metric .v small{font-size:12px;color:var(--muted);font-weight:500}
+  .sec-title{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;
+    margin:2px 0 10px}
+  canvas.chart{width:100%;display:block}
+  .legend{display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:10px}
+  .legend .item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+  .legend .dot{width:10px;height:10px;border-radius:3px}
+  .phasebar{display:flex;height:10px;border-radius:6px;overflow:hidden;margin-top:4px;
+    border:1px solid var(--line)}
+  .phasebar .p{flex:1;opacity:.25;transition:.3s}
+  .phasebar .p.on{opacity:1}
+  .inspect{font-size:13px;line-height:1.7}
+  .inspect .row, .popup .row{display:flex;justify-content:space-between;gap:12px;
+    border-bottom:1px dashed var(--line);padding:3px 0}
+  .inspect .row span:last-child, .popup .row span:last-child{color:var(--ink);font-weight:600;text-align:right}
+  .inspect .hint, .popup .hint{color:var(--muted);font-size:12.5px;display:block}
+  .bar{height:6px;background:var(--panel);border-radius:4px;overflow:hidden;margin-top:3px}
+  .bar > i{display:block;height:100%;background:var(--accent)}
+  /* inspector popup over the stage */
+  .popup{position:absolute;top:14px;right:14px;width:238px;
+    background:rgba(14,18,26,.96);border:1px solid var(--line);border-radius:12px;
+    padding:12px 14px 13px;backdrop-filter:blur(8px);box-shadow:0 10px 34px rgba(0,0,0,.55);
+    display:none;z-index:6;font-size:13px}
+  .popup.show{display:block}
+  .popup .close{position:absolute;top:6px;right:10px;cursor:pointer;color:var(--muted);
+    font-size:18px;line-height:1}
+  .popup .close:hover{color:var(--ink)}
+  .popup .ttl{font-weight:700;font-size:14px;margin-bottom:8px;padding-right:14px}
+  /* fullscreen button */
+  .fsbtn{position:absolute;bottom:12px;right:12px;z-index:6;width:34px;height:34px;
+    border-radius:9px;border:1px solid var(--line);background:rgba(14,18,26,.9);
+    color:var(--ink);cursor:pointer;font-size:15px;line-height:1}
+  .fsbtn:hover{border-color:var(--accent)}
+  #stage:fullscreen{background:#080a0e;display:flex;align-items:center;justify-content:center;padding:0}
+  #stage:fullscreen #grid{width:100vw;height:100vh;border-radius:0}
+  .foot{color:var(--muted);font-size:11.5px;padding:0 24px 30px;max-width:1500px;margin:0 auto}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Universe 25 <span style="color:var(--muted);font-weight:400">· Predators &amp; Prey</span></h1>
+  <span class="sub">A mouse utopia with unlimited food &amp; water — one fatal limit (space), and now hunters on the prowl. Watch the colony rise, the cats hunt, and the balance tip.</span>
+</header>
+
+<div class="wrap">
+  <!-- LEFT: stage + controls -->
+  <div>
+    <div class="card stage" id="stage">
+      <canvas id="grid" width="900" height="600"></canvas>
+      <div class="banner" id="banner">
+        <div class="ph" id="bannerPh"></div>
+        <div class="desc" id="bannerDesc"></div>
+      </div>
+      <div class="popup" id="popup">
+        <span class="close" id="popupClose">×</span>
+        <div id="popupBody"></div>
+      </div>
+      <button class="fsbtn" id="fsBtn" title="Fullscreen">⛶</button>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <div class="legend" style="margin-bottom:12px">
+        <div class="item"><span class="dot" style="background:#5fbf5a"></span>Vegetation — mice only (cover from cats)</div>
+        <div class="item"><span class="dot" style="background:#2f86c9"></span>Water (blocks everyone)</div>
+      </div>
+      <div class="controls">
+        <button class="btn primary" id="playBtn">⏸ Pause</button>
+        <button class="btn" id="stepBtn">Step ▸</button>
+        <button class="btn" id="resetBtn">↻ Reset</button>
+        <div class="seg" id="speedSeg">
+          <button data-s="1">1×</button>
+          <button data-s="2" class="on">2×</button>
+          <button data-s="5">5×</button>
+          <button data-s="15">15×</button>
+          <button data-s="40">40×</button>
+        </div>
+        <span style="flex:1"></span>
+        <button class="btn" id="fsBtn2">⛶ Fullscreen</button>
+        <span class="sub" style="font-size:12px;color:var(--muted)">Click any animal for a live info popup</span>
+      </div>
+
+      <div class="setup">
+        <label>Starting mice
+          <input type="range" id="popSlider" min="4" max="60" value="14">
+          <span>Population: <span class="val" id="popVal">14</span></span>
+        </label>
+        <label>Resolution
+          <span class="seg" id="resSeg">
+            <button data-size="40">Burrow</button>
+            <button data-size="58" class="on">Colony</button>
+            <button data-size="78">City</button>
+            <button data-size="98">Metropolis</button>
+          </span>
+          <span style="color:var(--muted)">world size — fits more mice</span>
+        </label>
+        <label>Predators
+          <input type="range" id="predSlider" min="0" max="30" value="8">
+          <span>Cats: <span class="val" id="predVal">8</span></span>
+        </label>
+        <label>Food &amp; water bodies
+          <input type="range" id="siteSlider" min="1" max="8" value="3">
+          <span><span class="val" id="siteVal">3</span> of each</span>
+        </label>
+        <label>Resources
+          <span class="seg" id="infSeg">
+            <button data-inf="1" class="on">Infinite</button>
+            <button data-inf="0">Finite</button>
+          </span>
+          <span style="color:var(--muted)">grow &amp; recede when finite</span>
+        </label>
+        <label>River
+          <span class="seg" id="riverSeg">
+            <button data-river="1" class="on">On</button>
+            <button data-river="0">Off</button>
+          </span>
+          <span style="color:var(--muted)">flows &amp; can run dry <span id="riverLvl"></span></span>
+        </label>
+        <label>Fish
+          <span class="seg" id="fishSeg">
+            <button data-fish="1">On</button>
+            <button data-fish="0" class="on">Off</button>
+          </span>
+          <span style="color:var(--muted)">live in water · cats fish</span>
+        </label>
+        <label>Birds
+          <span class="seg" id="birdSeg">
+            <button data-bird="1">On</button>
+            <button data-bird="0" class="on">Off</button>
+          </span>
+          <span style="color:var(--muted)">nest in grass · hunt mice &amp; cats</span>
+        </label>
+        <div class="presets">
+          <span class="sec-title" style="margin:0 4px 0 0;align-self:center">Scenarios</span>
+          <button class="btn" data-preset="predator">Predator &amp; Prey</button>
+          <button class="btn" data-preset="classic">Classic (no cats)</button>
+          <button class="btn" data-preset="crowded">Instant Crowding</button>
+          <button class="btn" data-preset="roomy">Wide Open</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: stats -->
+  <div class="side">
+    <div class="card">
+      <div class="sec-title">Live metrics — Day <span id="tickLbl">0</span></div>
+      <div class="metrics">
+        <div class="metric"><div class="k">Population</div><div class="v" id="mPop">0</div></div>
+        <div class="metric"><div class="k">Density</div><div class="v" id="mDens">0<small>%</small></div></div>
+        <div class="metric"><div class="k">Births / day</div><div class="v" id="mBirth">0</div></div>
+        <div class="metric"><div class="k">Deaths / day</div><div class="v" id="mDeath">0</div></div>
+        <div class="metric"><div class="k">Beautiful Ones</div><div class="v" id="mBeauty">0</div></div>
+        <div class="metric"><div class="k">Peak pop.</div><div class="v" id="mPeak">0</div></div>
+        <div class="metric"><div class="k">Predators</div><div class="v" id="mPred" style="color:#ff8c42">0</div></div>
+        <div class="metric"><div class="k">Eaten / day</div><div class="v" id="mEaten">0</div></div>
+        <div class="metric" id="tileFish"><div class="k">Fish</div><div class="v" id="mFish" style="color:#8fd9e6">0</div></div>
+        <div class="metric" id="tileBirds"><div class="k">Birds</div><div class="v" id="mBirds" style="color:#cfd6e6">0</div></div>
+      </div>
+      <div style="margin-top:12px" class="sec-title">Phase</div>
+      <div class="phasebar" id="phasebar">
+        <div class="p" style="background:var(--normal)"></div>
+        <div class="p" style="background:var(--accent)"></div>
+        <div class="p" style="background:var(--stressed)"></div>
+        <div class="p" style="background:var(--aggressive)"></div>
+      </div>
+      <div id="phaseName" style="font-weight:700;margin-top:8px;font-size:14px">Exploration &amp; Settlement</div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">Population over time</div>
+      <canvas id="popChart" class="chart" width="330" height="140"></canvas>
+      <div class="legend">
+        <div class="item"><span class="dot" style="background:var(--accent)"></span>Mice</div>
+        <div class="item"><span class="dot" style="background:#ff8c42"></span>Cats</div>
+        <div class="item"><span class="dot" style="background:#8fd9e6"></span>Fish</div>
+        <div class="item"><span class="dot" style="background:#cfd6e6"></span>Birds</div>
+        <div class="item" style="color:var(--muted);opacity:.7">cats/fish/birds share a scale</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">Mental states</div>
+      <canvas id="stateChart" class="chart" width="330" height="120"></canvas>
+      <div class="legend">
+        <div class="item"><span class="dot" style="background:var(--normal)"></span>Normal</div>
+        <div class="item"><span class="dot" style="background:var(--stressed)"></span>Stressed</div>
+        <div class="item"><span class="dot" style="background:var(--aggressive)"></span>Aggressive</div>
+        <div class="item"><span class="dot" style="background:var(--withdrawn)"></span>Withdrawn</div>
+        <div class="item"><span class="dot" style="background:var(--beautiful)"></span>Beautiful One</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">Inspector</div>
+      <div class="inspect" id="inspect">
+        <div class="hint">Click any mouse on the grid to follow its life — traits, mood, age, and offspring.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  Based on John B. Calhoun's Universe 25 experiment (NIMH, 1968–1972), where a colony with unlimited resources but fixed space grew, socially fractured, and died out — the "behavioral sink." The predator layer is a modern extension: with hunters present, predation can hold density below the breakdown threshold and stave off collapse — or tip the whole system into extinction. A simplified agent model for exploration, not a scientific reproduction.
+</div>
+
+<script>
+"use strict";
+// ===================== SIMULATION ENGINE (ported from Python) =====================
+const STATE = {NORMAL:0, STRESSED:1, WITHDRAWN:2, AGGRESSIVE:3, BEAUTIFUL:4};
+const STATE_COLOR = {
+  0:"#3fb96b", 1:"#e8c447", 2:"#4a7bff", 3:"#e5484d", 4:"#c96bd8"
+};
+const rnd = (a,b)=>a+Math.random()*(b-a);
+const rndi = (a,b)=>Math.floor(rnd(a,b+1));
+const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+
+// Time is compressed vs the Python version so a full rise-and-fall is watchable.
+const CFG = {
+  ADULT_AGE: 45,
+  MAX_AGE: 260,
+  HUNGER_RATE: 0.42,  // hunger rises per tick — must travel to a food source
+  THIRST_RATE: 0.5,   // thirst rises per tick — must travel to a water source
+  ENERGY_RATE: 0.3,
+  SEEK_HUNGER: 55,    // hunger above this: go find food
+  SEEK_THIRST: 50,    // thirst above this: go find water
+  DEPRIVE: 88,        // hunger/thirst above this drains health (weaken then die)
+  DEPRIVE_DMG: 0.9,   // health lost per tick while deprived
+  RECOVER: 0.3,       // health regained per tick when fed & watered
+  PREG_DURATION: 26,
+  MAX_DENSITY: 0.85,
+};
+const FOOD_COLOR = "#5fbf5a";  // vegetation green
+const WATER_COLOR = "#2f86c9"; // water blue
+
+// Terrain / resource tuning
+const TERR = {
+  VEG_MAX: 100,
+  VEG_EAT: 20,         // vegetation consumed per feeding (finite mode)
+  VEG_GROW: 12,        // regrowth added per growth interval (finite)
+  VEG_SPREAD: 0.4,     // chance a lush veg cell seeds a neighbour (finite)
+  GROW_INTERVAL: 25,   // ticks between growth/recession updates
+  RECEDE_RATE: 0.03,   // fraction of shoreline dried per interval (finite)
+  EAT_GAIN: 55,        // hunger reduced by a feeding
+  DRINK_GAIN: 60,      // thirst reduced by a drink
+  RIVER_FLOW: 0.05,    // river level regained per interval (steady inflow)
+  RIVER_USE: 0.0005,   // river level lost per drink (overuse depletes it)
+};
+const DIRS8=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+const DIRS4=[[1,0],[-1,0],[0,1],[0,-1]];
+
+// Predator (cat) tuning — balanced by headless testing for coexistence.
+const PRED = {
+  ADULT_AGE: 60,
+  MAX_AGE: 650,
+  METAB: 0.7,         // food reserve burned per tick (tuned for boom-bust cycles)
+  FOOD: 22,           // reserve gained per mouse eaten
+  START_RESERVE: 55,
+  BREED_RESERVE: 88,  // reserve needed to spawn a pup
+  BREED_COST: 46,     // reserve spent breeding
+  BREED_COOL: 70,     // ticks between births
+  VISION: 7,          // detects prey within this many cells (grass gives prey cover)
+  FLEE: 4,            // prey sense predators within this many cells
+  CAP_FACTOR: 0.06,   // predator cap as fraction of world cells
+  ACTIVATE: 80,       // predators stay dormant until colony reaches this size
+  THIRST: 0.38,       // thirst rises per tick
+  SEEK_THIRST: 55,    // thirst above this: break off to drink
+  DEPRIVE: 88,        // thirst above this dehydrates (drains reserve)
+  DEHYDRATE: 0.7,     // extra reserve lost per tick while parched
+};
+const PRED_COLOR = "#ff8c42";
+
+// Fish — live only in water, food for cats. Optional mode.
+const FISH = {
+  ADULT: 30, MAX_AGE: 500, BREED_COOL: 75, BREED_CHANCE: 0.08, DEATH: 0.004,
+  CAP_FACTOR: 0.5,    // soft ceiling; predation is the real limit, not the cap
+  CAT_GAIN: 16,       // reserve a cat gains from eating a fish
+  CATCH_CHANCE: 0.28, // a cat's odds of landing an adjacent fish
+  MAX_PER_CELL: 2,    // fish won't stack deeper than this in one water cell
+};
+const FISH_COLOR = "#8fd9e6";
+
+// Birds — nest in vegetation, fly anywhere, hunt mice AND cats. Optional mode.
+const BIRD = {
+  ADULT: 55, MAX_AGE: 520, METAB: 0.28,
+  FOOD_MOUSE: 26,     // reserve gained from eating a mouse
+  FISH_GAIN: 15,      // reserve gained from snatching a fish
+  VISION: 8, FLEE: 5, // vision; how far mice sense a bird
+  START_RESERVE: 55, BREED_RESERVE: 88, BREED_COST: 46, BREED_COOL: 85,
+  CAP_FACTOR: 0.03,   // soft ceiling; prey availability is the real limit
+  ACTIVATE: 70,       // birds circle harmlessly until the colony establishes
+};
+const BIRD_COLOR = "#eef1f7";
+
+class Mouse {
+  constructor(x,y,sim,p1,p2){
+    this.x=x; this.y=y; this.sim=sim;
+    this.age=0; this.alive=true;
+    this.gender=Math.random()<0.5?"male":"female";
+    this.hunger=0; this.thirst=0; this.energy=100; this.drive=0;
+    if(p1&&p2){
+      this.aggression=inherit(p1.aggression,p2.aggression);
+      this.sociability=inherit(p1.sociability,p2.sociability);
+      this.parenting=inherit(p1.parenting,p2.parenting);
+      this.grooming=inherit(p1.grooming,p2.grooming);
+    } else {
+      this.aggression=rndi(20,40);
+      this.sociability=rndi(60,80);
+      this.parenting=rndi(60,80);
+      this.grooming=rndi(40,60);
+    }
+    this.state=STATE.NORMAL;
+    this.health=100;
+    this.pregTimer=0; this.pregnant=false; this.mate=null;
+    this.childrenCount=0;
+    // render interpolation
+    this.px=x; this.py=y;
+  }
+
+  update(){
+    if(!this.alive) return false;
+    this.age++;
+    this.hunger=Math.min(100,this.hunger+CFG.HUNGER_RATE);
+    this.thirst=Math.min(100,this.thirst+CFG.THIRST_RATE);
+    this.energy=Math.max(0,this.energy-CFG.ENERGY_RATE);
+
+    // Weaken-then-die: sustained hunger or thirst drains health; recover when
+    // fed and watered. Death comes from health hitting zero, not instantly.
+    if(this.hunger>=CFG.DEPRIVE || this.thirst>=CFG.DEPRIVE){
+      this.health-=CFG.DEPRIVE_DMG;
+    } else if(this.hunger<60 && this.thirst<60 && this.health<100){
+      this.health=Math.min(100,this.health+CFG.RECOVER);
+    }
+
+    // Sink-born mice (raised amid the breakdown) barely reproduce — the
+    // "Beautiful Ones" that doomed Universe 25. A trickle of fertility keeps
+    // the decline gradual rather than instant.
+    const fert = this.sinkBorn?0.12:1;
+    if(this.age>=CFG.ADULT_AGE){
+      if(this.gender==="female"&&!this.pregnant) this.drive=Math.min(100,this.drive+1.4*fert);
+      else if(this.gender==="male") this.drive=Math.min(100,this.drive+1.8*fert);
+    }
+    if(this.age>=CFG.MAX_AGE || this.health<=0){
+      this.alive=false; return false;
+    }
+    if(this.pregnant){
+      this.pregTimer++;
+      if(this.pregTimer>=CFG.PREG_DURATION) this.giveBirth();
+    }
+    this.updateMental();
+    this.act();
+    return true;
+  }
+
+  updateMental(){
+    const d=this.sim.densityFactor();
+    let target;
+    if(d<0.3){ target=STATE.NORMAL; }
+    else if(d<0.6){ target=Math.random()<0.3?STATE.STRESSED:STATE.NORMAL; }
+    else if(d<0.8){
+      if(this.sociability>70) target=STATE.STRESSED;
+      else if(this.grooming>70) target=STATE.WITHDRAWN;
+      else if(this.aggression>70) target=STATE.AGGRESSIVE;
+      else target=STATE.STRESSED;
+    } else {
+      if(this.grooming>60) target=Math.random()<0.4?STATE.BEAUTIFUL:STATE.WITHDRAWN;
+      else if(this.aggression>50) target=STATE.AGGRESSIVE;
+      else target=STATE.WITHDRAWN;
+    }
+    // Hunger/thirst show as visible stress.
+    if(this.hunger>80 || this.thirst>80) target=STATE.STRESSED;
+    if(this.state!==target && Math.random()<0.1){
+      this.state=target;
+      if(target===STATE.BEAUTIFUL) this.grooming=Math.min(100,this.grooming+10);
+    }
+  }
+
+  act(){
+    // Survival first: flee the nearest threat (cat on the ground or bird from above).
+    let threat=null;
+    if(this.sim.predators.length) threat=this.sim.nearestPredator(this.x,this.y,PRED.FLEE);
+    if(!threat && this.sim.birds.length) threat=this.sim.nearestBird(this.x,this.y,BIRD.FLEE);
+    if(threat){ this.fleeFrom(threat); return; }
+    // Thirst and hunger send the mouse to water / vegetation (survival need).
+    if(this.thirst>CFG.SEEK_THIRST){ this.seekWater(); return; }
+    if(this.hunger>CFG.SEEK_HUNGER){ this.seekFood(); return; }
+    if(this.energy<30){ this.energy=Math.min(100,this.energy+20); return; }
+    if(this.drive>70 && this.age>=CFG.ADULT_AGE &&
+       this.state!==STATE.WITHDRAWN && this.state!==STATE.BEAUTIFUL){
+      this.seekMate(); return;
+    }
+    switch(this.state){
+      case STATE.NORMAL: Math.random()<0.3?this.socialize():this.moveRandom(); break;
+      case STATE.STRESSED: Math.random()<0.5?this.moveRandom():this.hide(); break;
+      case STATE.AGGRESSIVE: this.attack(); break;
+      case STATE.WITHDRAWN: this.hide(); break;
+      case STATE.BEAUTIFUL:
+        this.health=Math.min(100,this.health+0.2);
+        if(Math.random()<0.2) this.moveRandom();
+        break;
+    }
+  }
+
+  seekMate(){
+    const d=this.sim.densityFactor();
+    if(d>0.7 && Math.random()<0.7){ this.moveRandom(); return; }
+    const mates=this.sim.potentialMates(this);
+    if(mates.length){
+      const m=mates[rndi(0,mates.length-1)];
+      this.drive=0; m.drive=0;
+      const f=this.gender==="female"?this:(m.gender==="female"?m:null);
+      const mm=f===this?m:this;
+      if(f){ f.pregnant=true; f.pregTimer=0; f.mate=mm; }
+    } else this.moveRandom();
+  }
+
+  giveBirth(){
+    this.pregnant=false; this.pregTimer=0;
+    const d=this.sim.densityFactor();
+    let litter = d<0.3?4 : d<0.6?3 : 2;
+    if(this.parenting<30) litter=Math.max(1,litter-1);
+    for(let i=0;i<litter;i++){
+      if(this.sim.densityFactor()>0.9 && Math.random()<0.7) continue;
+      const baby=new Mouse(this.x,this.y,this.sim,this,this.mate||this);
+      // "Born into the behavioral sink": pups raised amid the breakdown never
+      // develop normal social/parenting behavior. This is the ratchet that
+      // drives Universe 25 to extinction even after crowding eases.
+      if(this.sim.phase>=2){
+        baby.sociability=clamp(baby.sociability*0.35,0,100);
+        baby.parenting  =clamp(baby.parenting*0.35,0,100);
+        baby.grooming   =clamp(baby.grooming+35,0,100);
+        baby.aggression =clamp(baby.aggression*0.6,0,100);
+        baby.sinkBorn=true;
+      }
+      if(this.sim.addMouse(baby)){
+        this.childrenCount++;
+        this.sim.birthsThisTick++;
+        if(this.parenting<30 && Math.random()<0.5) baby.health-=20;
+      }
+    }
+  }
+
+  socialize(){
+    const near=this.sim.nearby(this.x,this.y,1);
+    if(near.length){
+      const o=near[rndi(0,near.length-1)];
+      this.sociability=Math.min(100,this.sociability+0.1);
+      this.moveToward(o.x,o.y);
+    } else this.moveRandom();
+  }
+  hide(){
+    const dir=this.sim.leastCrowdedDir(this.x,this.y);
+    if(dir) this.moveTo(this.x+dir[0],this.y+dir[1]);
+  }
+  attack(){
+    const near=this.sim.nearby(this.x,this.y,1);
+    if(near.length){
+      const t=near[rndi(0,near.length-1)];
+      t.health=Math.max(0,t.health-this.aggression*0.2);
+      this.moveToward(t.x,t.y);
+    } else this.moveRandom();
+  }
+  fleeFrom(pred){
+    // In a crush, escape often fails — overcrowding makes prey easy targets,
+    // linking predation to the density-collapse theme.
+    if(Math.random() < this.sim.densityFactor()*0.5) return; // panic freeze
+    const dx=this.x<pred.x?-1:this.x>pred.x?1:0;
+    const dy=this.y<pred.y?-1:this.y>pred.y?1:0;
+    if(!this.tryStep(dx,dy)) this.moveRandom();
+  }
+  seekWater(){
+    const sim=this.sim, idx=this.y*sim.w+this.x;
+    if(sim.waterDist[idx]===0){ this.thirst=Math.max(0,this.thirst-TERR.DRINK_GAIN); sim.riverUse++; return; }
+    if(!sim.stepToward(this,sim.waterDist)) this.moveRandom();
+  }
+  seekFood(){
+    const sim=this.sim, idx=this.y*sim.w+this.x;
+    if(sim.veg[idx]>0){
+      this.hunger=Math.max(0,this.hunger-TERR.EAT_GAIN);
+      if(!sim.infinite){ sim.veg[idx]-=TERR.VEG_EAT; if(sim.veg[idx]<=0){ sim.veg[idx]=0; sim.terrainDirty=true; } }
+      return;
+    }
+    if(!sim.stepToward(this,sim.vegDist)) this.moveRandom();
+  }
+  tryStep(dx,dy){
+    if(!dx&&!dy) return false;
+    const nx=this.x+dx, ny=this.y+dy;
+    if(this.sim.walkable(nx,ny)){ this.x=nx; this.y=ny; return true; }
+    return false;
+  }
+  moveRandom(){ for(let i=0;i<4;i++){ if(this.tryStep(rndi(-1,1),rndi(-1,1))) return; } }
+  moveToward(tx,ty){
+    const dx=this.x<tx?1:this.x>tx?-1:0, dy=this.y<ty?1:this.y>ty?-1:0;
+    if(this.tryStep(dx,dy)) return;
+    if(dx&&this.tryStep(dx,0)) return;
+    if(dy&&this.tryStep(0,dy)) return;
+    this.moveRandom();
+  }
+  moveTo(nx,ny){
+    if(this.sim.walkable(nx,ny)){ this.x=nx; this.y=ny; }
+  }
+}
+
+function inherit(t1,t2){
+  return clamp((t1+t2)/2 + rnd(-10,10), 0, 100);
+}
+
+// ===================== PREDATOR (cat) =====================
+class Predator {
+  constructor(x,y,sim){
+    this.x=x; this.y=y; this.sim=sim;
+    this.age=0; this.alive=true;
+    this.gender=Math.random()<0.5?"male":"female"; // flavor / inspector
+    this.reserve=PRED.START_RESERVE;               // food energy (from eating mice)
+    this.thirst=0;                                  // must drink at water stations
+    this.kills=0; this.breedCool=0;
+    this.px=x; this.py=y;                            // render interpolation
+  }
+  update(){
+    if(!this.alive) return false;
+    this.age++;
+    // Dormant until the colony is established — predators "arrive" once there
+    // is a real population to hunt, so the founding cluster isn't wiped out.
+    if(this.sim.mice.length < PRED.ACTIVATE){ this.moveRandom(); return true; }
+    this.reserve-=PRED.METAB;
+    this.thirst=Math.min(100,this.thirst+PRED.THIRST);
+    if(this.thirst>=PRED.DEPRIVE) this.reserve-=PRED.DEHYDRATE; // dehydration weakens
+    if(this.breedCool>0) this.breedCool--;
+    // Death by starvation, dehydration, or old age.
+    if(this.age>=PRED.MAX_AGE || this.reserve<=0 || this.thirst>=100){ this.alive=false; return false; }
+
+    // Thirst takes priority — break off the hunt to drink at the water's edge.
+    if(this.thirst>PRED.SEEK_THIRST){
+      const idx=this.y*this.sim.w+this.x;
+      if(this.sim.waterDist[idx]===0){ this.thirst=Math.max(0,this.thirst-60); this.sim.riverUse++; this.tryFish(); }
+      else { if(!this.sim.stepToward(this,this.sim.waterDist,true)) this.moveRandom(); return true; }
+    }
+
+    // Hunt: target the nearest mouse in the OPEN (grass hides prey), pounce if
+    // adjacent, else chase. A mouse that slips into vegetation is safe.
+    const prey=this.sim.nearestMouse(this.x,this.y,PRED.VISION,true);
+    if(prey){
+      const preyInGrass=this.sim.veg[prey.y*this.sim.w+prey.x]>0;
+      if(!preyInGrass && Math.abs(prey.x-this.x)<=1 && Math.abs(prey.y-this.y)<=1){
+        prey.alive=false;
+        this.reserve=Math.min(130,this.reserve+PRED.FOOD);
+        this.kills++; this.sim.eatenThisTick++;
+        this.moveTo(prey.x,prey.y);
+      } else {
+        this.moveToward(prey.x,prey.y);
+      }
+    } else if(this.sim.hasFish && this.reserve<75){
+      // no mice in the open — go fishing at the water's edge
+      const idx=this.y*this.sim.w+this.x;
+      if(this.sim.waterDist[idx]===0) this.tryFish();
+      else if(!this.sim.stepToward(this,this.sim.waterDist,true)) this.moveRandom();
+    } else {
+      this.moveRandom();
+    }
+
+    // Breed when well-fed (predator growth tracks food supply).
+    if(this.reserve>=PRED.BREED_RESERVE && this.age>=PRED.ADULT_AGE && this.breedCool===0){
+      const pup=new Predator(this.x,this.y,this.sim);
+      if(this.sim.addPredator(pup)){
+        this.reserve-=PRED.BREED_COST;
+        this.breedCool=PRED.BREED_COOL;
+        this.sim.predBirthsThisTick++;
+      }
+    }
+    return true;
+  }
+  tryStep(dx,dy){
+    if(!dx&&!dy) return false;
+    const nx=this.x+dx, ny=this.y+dy;
+    if(this.sim.canEnter(nx,ny,true)){ this.x=nx; this.y=ny; return true; } // predators avoid grass
+    return false;
+  }
+  moveRandom(){ for(let i=0;i<4;i++){ if(this.tryStep(rndi(-1,1),rndi(-1,1))) return; } }
+  moveToward(tx,ty){
+    const dx=this.x<tx?1:this.x>tx?-1:0, dy=this.y<ty?1:this.y>ty?-1:0;
+    if(this.tryStep(dx,dy)) return;
+    if(dx&&this.tryStep(dx,0)) return;
+    if(dy&&this.tryStep(0,dy)) return;
+    this.moveRandom();
+  }
+  moveTo(nx,ny){ if(this.sim.canEnter(nx,ny,true)){ this.x=nx; this.y=ny; } }
+  // opportunistically snatch a fish from an adjacent water cell
+  tryFish(){
+    if(!this.sim.hasFish) return false;
+    for(const [dx,dy] of DIRS8){
+      const nx=this.x+dx, ny=this.y+dy;
+      if(!this.sim.isWater(nx,ny)) continue;
+      const b=this.sim.fcells[ny*this.sim.w+nx];
+      if(b && b.length && Math.random()<FISH.CATCH_CHANCE){ const f=b.pop(); f.alive=false; this.sim.fishCount[ny*this.sim.w+nx]--; this.reserve=Math.min(130,this.reserve+FISH.CAT_GAIN); this.sim.fishCaughtThisTick++; return true; }
+    }
+    return false;
+  }
+}
+
+// ===================== FISH (live only in water) =====================
+class Fish {
+  constructor(x,y,sim){ this.x=x; this.y=y; this.sim=sim; this.age=0; this.alive=true; this.breedCool=0; this.px=x; this.py=y; }
+  update(){
+    if(!this.alive) return false;
+    this.age++;
+    if(this.breedCool>0) this.breedCool--;
+    // die if stranded (water dried up) or of old age
+    const w=this.sim.w;
+    // stranded, old age, or steady natural mortality (keeps births/deaths in flux)
+    if(!this.sim.isWater(this.x,this.y) || this.age>=FISH.MAX_AGE || (this.age>=FISH.ADULT && Math.random()<FISH.DEATH)){
+      this.sim.fishCount[this.y*w+this.x]--; this.alive=false; return false;
+    }
+    // swim toward the least-crowded neighbouring water so schools spread out
+    const spot=this.sim.leastCrowdedWater(this.x,this.y);
+    if(spot && (spot[0]!==this.x || spot[1]!==this.y)){
+      this.sim.fishCount[this.y*w+this.x]--;
+      this.x=spot[0]; this.y=spot[1];
+      this.sim.fishCount[this.y*w+this.x]++;
+    }
+    // Logistic breeding: the closer to carrying capacity, the less likely to
+    // breed — so the population eases toward an equilibrium and oscillates
+    // around it instead of pinning flat at a hard cap.
+    const room=1-this.sim.fish.length/this.sim.fishCap;
+    if(this.age>=FISH.ADULT && this.breedCool===0 && room>0 && Math.random()<FISH.BREED_CHANCE*room){
+      const s2=this.sim.openWaterCell(this.x,this.y);
+      if(s2){ this.sim.fish.push(new Fish(s2[0],s2[1],this.sim)); this.sim.fishCount[s2[1]*w+s2[0]]++; this.breedCool=FISH.BREED_COOL; }
+    }
+    return true;
+  }
+}
+
+// ===================== BIRD (nests in grass, hunts mice & cats) =====================
+class Bird {
+  constructor(x,y,sim){
+    this.x=x; this.y=y; this.sim=sim; this.age=0; this.alive=true;
+    this.gender=Math.random()<0.5?"male":"female";
+    this.reserve=BIRD.START_RESERVE; this.breedCool=0; this.kills=0; this.px=x; this.py=y;
+  }
+  update(){
+    if(!this.alive) return false;
+    this.age++;
+    // Circle in the grass until the colony has established, so a handful of
+    // founders isn't wiped out before it can grow.
+    if(this.sim.mice.length < BIRD.ACTIVATE){ this.stayInVeg(); return true; }
+    this.reserve-=BIRD.METAB;
+    if(this.breedCool>0) this.breedCool--;
+    if(this.age>=BIRD.MAX_AGE || this.reserve<=0){ this.alive=false; return false; }
+    // snatch a fish if one is in the water right beside the bird
+    if(this.sim.hasFish) this.tryFishBird();
+    // hunt only mice — and only leave the vegetation to chase one that's close.
+    const mouse=this.sim.nearestMouse(this.x,this.y,BIRD.VISION,false);
+    if(mouse){
+      if(Math.abs(mouse.x-this.x)<=1 && Math.abs(mouse.y-this.y)<=1){
+        mouse.alive=false; this.reserve=Math.min(120,this.reserve+BIRD.FOOD_MOUSE);
+        this.kills++; this.sim.birdKillsThisTick++;
+        this.flyTo(mouse.x,mouse.y);
+      } else {
+        // swoop: birds are fast in the air, moving two cells to run down fleeing prey
+        this.flyToward(mouse.x,mouse.y);
+        if(!(Math.abs(mouse.x-this.x)<=1 && Math.abs(mouse.y-this.y)<=1)) this.flyToward(mouse.x,mouse.y);
+      }
+    } else {
+      this.stayInVeg(); // no prey in range → remain in the vegetation
+    }
+    // nest & breed in the vegetation (logistic: tapers off near the ceiling)
+    if(this.reserve>=BIRD.BREED_RESERVE && this.age>=BIRD.ADULT && this.breedCool===0
+       && Math.random()<(1-this.sim.birds.length/this.sim.birdCap)){
+      this.sim.birds.push(new Bird(this.x,this.y,this.sim));
+      this.reserve-=BIRD.BREED_COST; this.breedCool=BIRD.BREED_COOL;
+    }
+    return true;
+  }
+  tryFishBird(){
+    for(const [dx,dy] of DIRS8){
+      const nx=this.x+dx, ny=this.y+dy;
+      if(!this.sim.isWater(nx,ny)) continue;
+      const b=this.sim.fcells[ny*this.sim.w+nx];
+      if(b && b.length && Math.random()<FISH.CATCH_CHANCE){
+        const f=b.pop(); f.alive=false; this.sim.fishCount[ny*this.sim.w+nx]--;
+        this.reserve=Math.min(120,this.reserve+BIRD.FISH_GAIN);
+        this.sim.fishCaughtThisTick++; return;
+      }
+    }
+  }
+  // birds fly — ignore water/grass, only bounded by the world edge
+  flyTo(x,y){ if(this.sim.valid(x,y)){ this.x=x; this.y=y; } }
+  flyToward(tx,ty){ const dx=this.x<tx?1:this.x>tx?-1:0, dy=this.y<ty?1:this.y>ty?-1:0; this.flyTo(this.x+dx,this.y+dy); }
+  // stay within vegetation; if outside it, head back. Birds only leave the
+  // grass while actively chasing a mouse (handled above).
+  stayInVeg(){
+    const w=this.sim.w;
+    if(this.sim.veg[this.y*w+this.x]>0){
+      const opts=[];
+      for(const [dx,dy] of DIRS8){ const nx=this.x+dx,ny=this.y+dy; if(this.sim.valid(nx,ny)&&this.sim.veg[ny*w+nx]>0) opts.push([nx,ny]); }
+      if(opts.length && Math.random()<0.6){ const [nx,ny]=opts[rndi(0,opts.length-1)]; this.x=nx; this.y=ny; }
+      return;
+    }
+    // return toward the nearest vegetation via the veg distance field
+    const cur=this.sim.vegDist[this.y*w+this.x];
+    if(cur>0){
+      let bx=this.x,by=this.y,best=cur;
+      for(const [dx,dy] of DIRS8){ const nx=this.x+dx,ny=this.y+dy; if(!this.sim.valid(nx,ny))continue; const f=this.sim.vegDist[ny*w+nx]; if(f>=0&&f<best){best=f;bx=nx;by=ny;} }
+      this.x=bx; this.y=by;
+    }
+  }
+}
+
+class Simulation {
+  constructor(w,h,initPop,initPred=0,nSites=3,infinite=true,hasRiver=true,hasFish=false,hasBirds=false){
+    this.w=w; this.h=h; this.infinite=infinite; this.hasRiver=hasRiver;
+    this.hasFish=hasFish; this.hasBirds=hasBirds;
+    this.mice=[]; this.predators=[]; this.fish=[]; this.birds=[]; this.deadCount=0;
+    this.fishCaughtThisTick=0; this.birdKillsThisTick=0;
+    this.tick=0; this.phase=0; this.peak=0; this.predPeak=0;
+    this.birthsThisTick=0; this.deathsThisTick=0;
+    this.eatenThisTick=0; this.predBirthsThisTick=0; this.totalEaten=0;
+    this.history=[];      // mouse population
+    this.predHistory=[];  // predator population
+    this.fishHistory=[];  // fish population
+    this.birdHistory=[];  // bird population
+    this.stateHistory=[]; // {0..4 counts}
+    this.maxCapacity=Math.floor(w*h*CFG.MAX_DENSITY);
+    this.predCap=Math.max(24,Math.floor(w*h*PRED.CAP_FACTOR));
+    this.thresholds={growth:0.2, breakdown:0.6, collapse:0.8};
+    this.cells=new Array(w*h);  // spatial index: cell -> array of mice
+    this.pcells=new Array(w*h); // spatial index: cell -> array of predators
+    this.fcells=new Array(w*h); // spatial index: cell -> array of fish
+    this.bcells=new Array(w*h); // spatial index: cell -> array of birds
+    this.fishCount=new Int16Array(w*h); // live per-cell fish count (updated as they move)
+
+    // ---- terrain ----
+    this.water=new Uint8Array(w*h);      // 1 = water (impassable)
+    this.river=new Uint8Array(w*h);      // 1 = part of the flowing river bed
+    this.veg=new Float32Array(w*h);      // vegetation amount (0..VEG_MAX)
+    this.riverBed=[]; this.riverLevel=1; this.riverUse=0;
+    this.waterCells=[]; this.vegCells=[];
+    this.waterDist=new Int32Array(w*h);  // land distance to nearest drink spot
+    this.vegDist=new Int32Array(w*h);    // land distance to nearest vegetation
+    this.terrainDirty=true;
+    const cx=Math.floor(w/2), cy=Math.floor(h/2), spread=Math.max(2,Math.floor(w*0.06));
+    this.spawnClear=spread+4;
+    this.generateTerrain(nSites, cx, cy);
+    // Keep pristine copies so toggling to "infinite" restores full terrain.
+    this.waterSeed=this.water.slice();
+    this.vegSeed=this.veg.slice();
+    this.recomputeFields();
+
+    // Release founders as a central cluster (on walkable ground).
+    for(let i=0;i<initPop;i++){
+      let x,y,t=0;
+      do{ x=clamp(cx+rndi(-spread,spread),0,w-1); y=clamp(cy+rndi(-spread,spread),0,h-1); t++; }
+      while(t<30 && !this.walkable(x,y));
+      this.addMouse(new Mouse(x,y,this));
+    }
+    // Predators start scattered on open ground (not water or grass).
+    for(let i=0;i<initPred;i++){
+      let x,y,t=0;
+      do{ x=rndi(0,w-1); y=rndi(0,h-1); t++; } while(t<40 && !this.canEnter(x,y,true));
+      this.predators.push(new Predator(x,y,this));
+    }
+    // Fish & bird carrying capacities, then seed initial populations.
+    this.fishCap=Math.max(8,Math.floor(this.waterCells.length*FISH.CAP_FACTOR));
+    this.birdCap=Math.max(8,Math.floor(w*h*BIRD.CAP_FACTOR));
+    if(this.hasFish){
+      const n=Math.min(this.fishCap, Math.max(6,Math.floor(this.waterCells.length*0.3)));
+      for(let i=0;i<n && this.waterCells.length;i++){
+        const idx=this.waterCells[rndi(0,this.waterCells.length-1)];
+        this.fish.push(new Fish(idx%w,(idx/w)|0,this));
+      }
+    }
+    if(this.hasBirds){
+      const n=Math.max(3,Math.floor(this.birdCap*0.15));
+      for(let i=0;i<n;i++){
+        let bx,by;
+        if(this.vegCells.length){ const idx=this.vegCells[rndi(0,this.vegCells.length-1)]; bx=idx%w; by=(idx/w)|0; }
+        else { bx=rndi(0,w-1); by=rndi(0,h-1); }
+        this.birds.push(new Bird(bx,by,this));
+      }
+    }
+  }
+
+  // ---- terrain generation ----
+  generateTerrain(nBodies, cx, cy){
+    const w=this.w, h=this.h, area=w*h;
+    const nearCenter=(x,y)=>Math.abs(x-cx)+Math.abs(y-cy) < this.spawnClear;
+    // grow a random blob from a seed, applying place() to each cell
+    const growBlob=(sx,sy,size,canPlace,place)=>{
+      const frontier=[[sx,sy]], seen=new Set();
+      let n=0;
+      while(frontier.length && n<size){
+        const [x,y]=frontier.splice(rndi(0,frontier.length-1),1)[0];
+        const key=y*w+x;
+        if(seen.has(key)) continue; seen.add(key);
+        if(x<0||x>=w||y<0||y>=h||!canPlace(x,y)) continue;
+        place(x,y); n++;
+        for(const [dx,dy] of DIRS4) frontier.push([x+dx,y+dy]);
+      }
+    };
+    const pickSize=(sm,md,lg)=>{ const r=Math.random(); return r<0.5?rndi(sm[0],sm[1]):r<0.85?rndi(md[0],md[1]):rndi(lg[0],lg[1]); };
+    const bigLake=Math.max(24,Math.floor(area*0.02));
+    // water bodies: puddles → lakes (impassable), kept off the spawn centre
+    for(let i=0;i<nBodies;i++){
+      let sx,sy,t=0;
+      do{ sx=rndi(2,w-3); sy=rndi(2,h-3); t++; } while(t<40 && nearCenter(sx,sy));
+      const size=pickSize([1,4],[8,20],[bigLake-15,bigLake]);
+      growBlob(sx,sy,size,(x,y)=>!nearCenter(x,y)&&this.water[y*w+x]===0,(x,y)=>{this.water[y*w+x]=1;});
+    }
+    // a winding river across the map (with a central ford so founders aren't split off)
+    if(this.hasRiver) this.carveRiver(cx,cy);
+    // vegetation patches (walkable), placed on non-water ground. Plentiful and
+    // varied so food geography shapes movement without hard-capping the colony.
+    const vegPatches=nBodies*2+2;
+    for(let i=0;i<vegPatches;i++){
+      let sx,sy,t=0;
+      do{ sx=rndi(1,w-2); sy=rndi(1,h-2); t++; } while(t<40 && this.water[sy*w+sx]===1);
+      const size=pickSize([8,18],[24,50],[60,130]);
+      growBlob(sx,sy,size,(x,y)=>this.water[y*w+x]===0,(x,y)=>{this.veg[y*w+x]=TERR.VEG_MAX;});
+    }
+  }
+  buildIndex(){
+    const c=this.cells; c.fill(undefined);
+    for(const m of this.mice){
+      if(!m.alive) continue;
+      const k=m.y*this.w+m.x;
+      (c[k]||(c[k]=[])).push(m);
+    }
+    const pc=this.pcells; pc.fill(undefined);
+    for(const p of this.predators){
+      if(!p.alive) continue;
+      const k=p.y*this.w+p.x;
+      (pc[k]||(pc[k]=[])).push(p);
+    }
+    const fc=this.fcells; fc.fill(undefined); this.fishCount.fill(0);
+    for(const f of this.fish){ if(!f.alive) continue; const k=f.y*this.w+f.x; (fc[k]||(fc[k]=[])).push(f); this.fishCount[k]++; }
+    const bc=this.bcells; bc.fill(undefined);
+    for(const b of this.birds){ if(!b.alive) continue; const k=b.y*this.w+b.x; (bc[k]||(bc[k]=[])).push(b); }
+  }
+  isWater(x,y){ return x>=0&&x<this.w&&y>=0&&y<this.h && this.water[y*this.w+x]===1; }
+  adjacentWater(x,y){
+    const opts=[];
+    for(const [dx,dy] of DIRS8){ const nx=x+dx,ny=y+dy; if(this.isWater(nx,ny)) opts.push([nx,ny]); }
+    if(this.isWater(x,y)) opts.push([x,y]);
+    return opts.length?opts[rndi(0,opts.length-1)]:null;
+  }
+  fishAt(x,y){ return this.fishCount[y*this.w+x]; }
+  // pick the neighbouring (or current) water cell holding the fewest fish
+  leastCrowdedWater(x,y){
+    let best=null,bestC=Infinity;
+    const consider=(cx,cy)=>{ if(!this.isWater(cx,cy))return; const c=this.fishAt(cx,cy); if(c<bestC){bestC=c;best=[cx,cy];} };
+    for(const [dx,dy] of DIRS8) consider(x+dx,y+dy);
+    consider(x,y);
+    return best;
+  }
+  // a neighbouring water cell that still has room for another fish
+  openWaterCell(x,y){
+    const opts=[];
+    for(const [dx,dy] of DIRS8){ const nx=x+dx,ny=y+dy; if(this.isWater(nx,ny) && this.fishAt(nx,ny)<FISH.MAX_PER_CELL) opts.push([nx,ny]); }
+    if(this.isWater(x,y) && this.fishAt(x,y)<FISH.MAX_PER_CELL) opts.push([x,y]);
+    return opts.length?opts[rndi(0,opts.length-1)]:null;
+  }
+  nearestGroundPrey(x,y,r){
+    let best=null,bd=Infinity;
+    for(let yy=Math.max(0,y-r); yy<=Math.min(this.h-1,y+r); yy++){
+      for(let xx=Math.max(0,x-r); xx<=Math.min(this.w-1,x+r); xx++){
+        const mc=this.cells[yy*this.w+xx];
+        if(mc) for(const m of mc){ if(!m.alive) continue; const d=(m.x-x)**2+(m.y-y)**2; if(d<bd){bd=d;best=m;} }
+        const pc=this.pcells[yy*this.w+xx];
+        if(pc) for(const p of pc){ if(!p.alive) continue; const d=(p.x-x)**2+(p.y-y)**2; if(d<bd){bd=d;best=p;} }
+      }
+    }
+    return best;
+  }
+  nearestBird(x,y,r){
+    let best=null,bd=Infinity;
+    for(let yy=Math.max(0,y-r); yy<=Math.min(this.h-1,y+r); yy++){
+      for(let xx=Math.max(0,x-r); xx<=Math.min(this.w-1,x+r); xx++){
+        const b=this.bcells[yy*this.w+xx];
+        if(!b) continue;
+        for(const bird of b){ if(!bird.alive) continue; const d=(bird.x-x)**2+(bird.y-y)**2; if(d<bd){bd=d;best=bird;} }
+      }
+    }
+    return best;
+  }
+  at(x,y){ return this.cells[y*this.w+x]; }
+  addMouse(m){
+    if(this.mice.length>=this.maxCapacity) return false;
+    this.mice.push(m); return true;
+  }
+  addPredator(p){
+    if(this.predators.length>=this.predCap) return false;
+    this.predators.push(p); return true;
+  }
+  nearestMouse(x,y,r,skipVeg=false){
+    let best=null,bd=Infinity;
+    for(let yy=Math.max(0,y-r); yy<=Math.min(this.h-1,y+r); yy++){
+      for(let xx=Math.max(0,x-r); xx<=Math.min(this.w-1,x+r); xx++){
+        // mice hidden in vegetation are safe — predators can't reach them
+        if(skipVeg && this.veg[yy*this.w+xx]>0) continue;
+        const b=this.cells[yy*this.w+xx];
+        if(!b) continue;
+        for(const m of b){ if(!m.alive) continue; const d=(m.x-x)**2+(m.y-y)**2; if(d<bd){bd=d;best=m;} }
+      }
+    }
+    return best;
+  }
+  // Carve a meandering river from one edge to the opposite, width ~2, leaving a
+  // dry "ford" where it would cross the spawn centre. Bed is ordered source→mouth.
+  carveRiver(cx,cy){
+    const w=this.w,h=this.h, horizontal=Math.random()<0.5;
+    const bed=[];
+    let x,y;
+    if(horizontal){ x=0; y=rndi(Math.floor(h*0.25),Math.floor(h*0.75)); }
+    else { x=rndi(Math.floor(w*0.25),Math.floor(w*0.75)); y=0; }
+    const carve=(px,py)=>{
+      for(let k=0;k<2;k++){ // width 2, perpendicular to flow
+        const nx=px+(horizontal?0:k), ny=py+(horizontal?k:0);
+        if(nx<0||nx>=w||ny<0||ny>=h) continue;
+        if(Math.abs(nx-cx)+Math.abs(ny-cy) < this.spawnClear) continue; // ford at centre
+        const idx=ny*w+nx;
+        if(this.water[idx]===0){ this.water[idx]=1; this.river[idx]=1; bed.push(idx); }
+      }
+    };
+    let steps=0, cap=(horizontal?w:h)*3;
+    while(steps++<cap){
+      carve(x,y);
+      if(horizontal){ x++; y=clamp(y+rndi(-1,1),1,h-2); if(x>=w) break; }
+      else { y++; x=clamp(x+rndi(-1,1),1,w-2); if(y>=h) break; }
+    }
+    this.riverBed=bed;
+  }
+
+  walkable(x,y){ return x>=0&&x<this.w&&y>=0&&y<this.h && this.water[y*this.w+x]===0; }
+  // Predators can't enter water OR vegetation — the grass is the mice's refuge.
+  canEnter(x,y,isPred){
+    if(x<0||x>=this.w||y<0||y>=this.h) return false;
+    const idx=y*this.w+x;
+    if(this.water[idx]) return false;
+    if(isPred && this.veg[idx]>0) return false;
+    return true;
+  }
+
+  // BFS distance fields (over land only) to nearest drink spot and nearest veg.
+  recomputeFields(){
+    const w=this.w,h=this.h,N=w*h,water=this.water,veg=this.veg;
+    const wd=this.waterDist.fill(-1), vd=this.vegDist.fill(-1);
+    const wq=[], vq=[];
+    this.waterCells.length=0; this.vegCells.length=0;
+    for(let idx=0;idx<N;idx++){
+      if(water[idx]){ this.waterCells.push(idx); continue; }
+      if(veg[idx]>0){ this.vegCells.push(idx); vd[idx]=0; vq.push(idx); }
+      // drink spot = land cell touching water
+      const x=idx%w, y=(idx/w)|0;
+      let touchesWater=false;
+      for(const [dx,dy] of DIRS4){ const nx=x+dx,ny=y+dy; if(nx>=0&&nx<w&&ny>=0&&ny<h&&water[ny*w+nx]){touchesWater=true;break;} }
+      if(touchesWater){ wd[idx]=0; wq.push(idx); }
+    }
+    const bfs=(q,dist)=>{
+      let head=0;
+      while(head<q.length){
+        const idx=q[head++], x=idx%w, y=(idx/w)|0, d=dist[idx];
+        for(const [dx,dy] of DIRS4){
+          const nx=x+dx,ny=y+dy;
+          if(nx<0||nx>=w||ny<0||ny>=h) continue;
+          const ni=ny*w+nx;
+          if(water[ni] || dist[ni]!==-1) continue;
+          dist[ni]=d+1; q.push(ni);
+        }
+      }
+    };
+    bfs(wq,wd); bfs(vq,vd);
+    this.terrainDirty=false;
+  }
+
+  // Move an animal one step down a distance field (toward the resource),
+  // routing around water. Returns true if it advanced or is already there.
+  stepToward(a, field, isPred=false){
+    const w=this.w, cur=field[a.y*w+a.x];
+    if(cur===0) return true;         // already adjacent / on resource
+    let bx=a.x, by=a.y, best=cur<0?Infinity:cur;
+    for(const [dx,dy] of DIRS8){
+      const nx=a.x+dx, ny=a.y+dy;
+      if(!this.canEnter(nx,ny,isPred)) continue;
+      const f=field[ny*w+nx];
+      if(f>=0 && f<best){ best=f; bx=nx; by=ny; }
+    }
+    if(bx!==a.x||by!==a.y){ a.x=bx; a.y=by; return true; }
+    return false;
+  }
+
+  // Finite mode: vegetation regrows & spreads, water recedes like a drying river.
+  evolveTerrain(){
+    const w=this.w,h=this.h,veg=this.veg,water=this.water;
+    // regrow existing vegetation and spread to neighbours
+    const seeds=[];
+    for(const idx of this.vegCells){
+      if(veg[idx]<=0) continue;
+      veg[idx]=Math.min(TERR.VEG_MAX, veg[idx]+TERR.VEG_GROW);
+      if(veg[idx]>TERR.VEG_MAX*0.6 && Math.random()<TERR.VEG_SPREAD) seeds.push(idx);
+    }
+    for(const idx of seeds){
+      const x=idx%w, y=(idx/w)|0;
+      const [dx,dy]=DIRS4[rndi(0,3)];
+      const nx=x+dx, ny=y+dy;
+      if(nx>=0&&nx<w&&ny>=0&&ny<h){
+        const ni=ny*w+nx;
+        // don't grow grass onto water or onto a predator (would trap it)
+        const predThere=this.pcells[ni]&&this.pcells[ni].length;
+        if(!water[ni] && veg[ni]<=0 && !predThere){ veg[ni]=TERR.VEG_MAX*0.3; this.terrainDirty=true; }
+      }
+    }
+    // standing water (ponds/lakes) recede from the shore — the river is exempt (it flows)
+    const shore=[];
+    for(const idx of this.waterCells){
+      if(this.river[idx]) continue;
+      const x=idx%w, y=(idx/w)|0;
+      for(const [dx,dy] of DIRS4){ const nx=x+dx,ny=y+dy; if(nx>=0&&nx<w&&ny>=0&&ny<h&&!water[ny*w+nx]){ shore.push(idx); break; } }
+    }
+    let dry=Math.floor(shore.length*TERR.RECEDE_RATE);
+    for(let i=0;i<dry;i++){
+      const idx=shore[rndi(0,shore.length-1)];
+      if(water[idx]){ water[idx]=0; this.terrainDirty=true; }
+    }
+    // river flow: steady inflow refills it; heavy drinking draws it down and it
+    // recedes from the mouth. Overuse can run the whole river dry.
+    if(this.hasRiver && this.riverBed.length){
+      this.riverLevel=clamp(this.riverLevel + TERR.RIVER_FLOW - this.riverUse*TERR.RIVER_USE, 0, 1);
+      this.riverUse=0;
+      const wet=Math.floor(this.riverLevel*this.riverBed.length);
+      for(let i=0;i<this.riverBed.length;i++){ water[this.riverBed[i]] = i<wet ? 1 : 0; }
+      this.terrainDirty=true;
+    }
+    // push any animal off a cell that just became water/grass
+    this.resolveStuck();
+  }
+
+  // Toggle infinite resources; restore pristine terrain when turning it on.
+  setInfinite(v){
+    this.infinite=v;
+    if(v){ this.water.set(this.waterSeed); this.veg.set(this.vegSeed); this.riverLevel=1; this.riverUse=0; }
+    this.terrainDirty=true; this.recomputeFields(); this.resolveStuck();
+  }
+  // Nudge any animal that ended up on a water cell back onto land.
+  resolveStuck(){
+    const relocate=(a,isPred)=>{
+      if(this.canEnter(a.x,a.y,isPred)) return;
+      for(const [dx,dy] of DIRS8){ if(this.canEnter(a.x+dx,a.y+dy,isPred)){ a.x+=dx; a.y+=dy; a.px=a.x; a.py=a.y; return; } }
+    };
+    for(const m of this.mice) relocate(m,false);
+    for(const p of this.predators) relocate(p,true);
+  }
+  nearestPredator(x,y,r){
+    let best=null,bd=Infinity;
+    for(let yy=Math.max(0,y-r); yy<=Math.min(this.h-1,y+r); yy++){
+      for(let xx=Math.max(0,x-r); xx<=Math.min(this.w-1,x+r); xx++){
+        const b=this.pcells[yy*this.w+xx];
+        if(!b) continue;
+        for(const p of b){ if(!p.alive) continue; const d=(p.x-x)**2+(p.y-y)**2; if(d<bd){bd=d;best=p;} }
+      }
+    }
+    return best;
+  }
+  densityFactor(){ return this.maxCapacity>0?this.mice.length/this.maxCapacity:0; }
+  valid(x,y){ return x>=0&&x<this.w&&y>=0&&y<this.h; }
+
+  nearby(x,y,r){
+    const out=[];
+    for(let yy=Math.max(0,y-r); yy<=Math.min(this.h-1,y+r); yy++){
+      for(let xx=Math.max(0,x-r); xx<=Math.min(this.w-1,x+r); xx++){
+        const bucket=this.cells[yy*this.w+xx];
+        if(!bucket) continue;
+        for(const m of bucket) if(m.alive && (m.x!==x||m.y!==y)) out.push(m);
+      }
+    }
+    return out;
+  }
+  potentialMates(me){
+    const out=[];
+    for(let yy=Math.max(0,me.y-1); yy<=Math.min(this.h-1,me.y+1); yy++){
+      for(let xx=Math.max(0,me.x-1); xx<=Math.min(this.w-1,me.x+1); xx++){
+        const bucket=this.cells[yy*this.w+xx];
+        if(!bucket) continue;
+        for(const o of bucket){
+          if(o===me||!o.alive) continue;
+          if(o.gender===me.gender) continue;
+          if(o.age<CFG.ADULT_AGE) continue;
+          if(o.state===STATE.WITHDRAWN||o.state===STATE.BEAUTIFUL) continue;
+          out.push(o);
+        }
+      }
+    }
+    return out;
+  }
+  leastCrowdedDir(x,y){
+    const dirs=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+    let min=Infinity,best=null;
+    for(const [dx,dy] of dirs){
+      const nx=x+dx,ny=y+dy;
+      if(!this.valid(nx,ny)) continue;
+      const bucket=this.cells[ny*this.w+nx];
+      const c=bucket?bucket.length:0;
+      if(c<min){ min=c; best=[dx,dy]; }
+    }
+    return best;
+  }
+
+  step(){
+    this.tick++;
+    this.birthsThisTick=0; this.eatenThisTick=0; this.predBirthsThisTick=0;
+    this.fishCaughtThisTick=0; this.birdKillsThisTick=0;
+    this.buildIndex();
+    // Finite mode: vegetation grows/spreads and water recedes over time.
+    if(!this.infinite && this.tick % TERR.GROW_INTERVAL===0) this.evolveTerrain();
+    if(this.terrainDirty) this.recomputeFields();
+    let deaths=0;
+    // Snapshot current mice; babies born mid-tick get pushed onto this.mice
+    // and are correctly retained by the filter below (they start alive).
+    const current=this.mice.slice();
+    for(const m of current){
+      if(!(m.alive ? m.update() : false)){ deaths++; this.deadCount++; }
+    }
+    // Predators hunt after prey have moved (using live prey positions).
+    const curP=this.predators.slice();
+    for(const p of curP){ if(p.alive) p.update(); }
+    // Fish (in water) and birds (from above).
+    if(this.fish.length){ const cf=this.fish.slice(); for(const f of cf){ if(f.alive) f.update(); } }
+    if(this.birds.length){ const cb=this.birds.slice(); for(const b of cb){ if(b.alive) b.update(); } }
+
+    this.mice = this.mice.filter(m=>m.alive);
+    this.predators = this.predators.filter(p=>p.alive);
+    this.fish = this.fish.filter(f=>f.alive);
+    this.birds = this.birds.filter(b=>b.alive);
+    this.deathsThisTick=deaths;
+    this.totalEaten+=this.eatenThisTick;
+
+    this.peak=Math.max(this.peak,this.mice.length);
+    this.predPeak=Math.max(this.predPeak,this.predators.length);
+    this.updatePhase();
+
+    // record history
+    this.history.push(this.mice.length);
+    this.predHistory.push(this.predators.length);
+    this.fishHistory.push(this.fish.length);
+    this.birdHistory.push(this.birds.length);
+    const sc={0:0,1:0,2:0,3:0,4:0};
+    for(const m of this.mice) sc[m.state]++;
+    this.stateHistory.push(sc);
+    if(this.history.length>4000){ this.history.shift(); this.predHistory.shift(); this.fishHistory.shift(); this.birdHistory.shift(); this.stateHistory.shift(); }
+  }
+
+  updatePhase(){
+    const d=this.densityFactor();
+    if(this.phase===0 && d>=this.thresholds.growth) this.phase=1;
+    else if(this.phase===1 && d>=this.thresholds.breakdown) this.phase=2;
+    else if(this.phase===2 && d>=this.thresholds.collapse) this.phase=3;
+  }
+  stats(){
+    const sc={0:0,1:0,2:0,3:0,4:0};
+    for(const m of this.mice) sc[m.state]++;
+    return {pop:this.mice.length, density:this.densityFactor(), states:sc,
+      beautiful:sc[4], peak:this.peak, tick:this.tick, phase:this.phase,
+      births:this.birthsThisTick, deaths:this.deathsThisTick,
+      predators:this.predators.length, eaten:this.eatenThisTick,
+      predPeak:this.predPeak, predBirths:this.predBirthsThisTick,
+      fish:this.fish.length, birds:this.birds.length,
+      fishCaught:this.fishCaughtThisTick, birdKills:this.birdKillsThisTick};
+  }
+}
+
+// ===================== VIEW / DASHBOARD =====================
+const PHASES=[
+  {name:"Exploration & Settlement", short:"Phase 1 · Settlement",
+   desc:"A few pioneers claim territory. Life is calm and social bonds form."},
+  {name:"Rapid Population Growth", short:"Phase 2 · Growth",
+   desc:"The colony booms. Every corner fills; the first crowding stress appears."},
+  {name:"Social Breakdown", short:"Phase 3 · The Behavioral Sink",
+   desc:"Density turns toxic. Aggression, withdrawal, and neglect spread. Beautiful Ones emerge."},
+  {name:"Collapse", short:"Phase 4 · Collapse",
+   desc:"Birth rate craters. Even as numbers fall, the society never recovers."},
+];
+
+let sim, running=true, speed=2, selected=null, infiniteRes=true, riverOn=true, fishOn=false, birdsOn=false;
+const $=id=>document.getElementById(id);
+const grid=$("grid"), gctx=grid.getContext("2d");
+const popChart=$("popChart"), pctx=popChart.getContext("2d");
+const stateChart=$("stateChart"), sctx=stateChart.getContext("2d");
+let lastPhase=-1;
+
+function newSim(){
+  const pop=+$("popSlider").value;
+  const size=+document.querySelector("#resSeg button.on").dataset.size;
+  const pred=+$("predSlider").value;
+  const sites=+$("siteSlider").value;
+  sim=new Simulation(size,size,pop,pred,sites,infiniteRes,riverOn,fishOn,birdsOn);
+  selected=null; lastPhase=-1; predActivated=false; predGone=false;
+  hidePopup();
+  $("inspect").innerHTML='<div class="hint">Click any creature on the grid — a mouse to follow its life, or a predator to see its hunt.</div>';
+  fitGrid();
+}
+function fitGrid(){
+  const stage=$("stage");
+  if(document.fullscreenElement===stage){
+    // fill the screen when fullscreen
+    grid.width=window.innerWidth;
+    grid.height=window.innerHeight;
+  } else {
+    const target=Math.min(1000, grid.parentElement.clientWidth);
+    grid.width=target; grid.height=Math.round(target*0.66);
+  }
+}
+
+// ---- render grid ----
+function drawGrid(){
+  const W=grid.width, H=grid.height;
+  gctx.fillStyle="#080a0e"; gctx.fillRect(0,0,W,H);
+  const cw=W/sim.w, ch=H/sim.h, r=Math.max(1.4,Math.min(cw,ch)*0.42);
+  // draw terrain first (beneath animals)
+  drawTerrain(cw,ch);
+  // fish — mouse-sized but elongated (a clear fish shape), swimming in the water
+  if(sim.fish.length){
+    const fr=Math.max(1.2,Math.min(cw,ch)*0.32);
+    for(const f of sim.fish){
+      f.px += (f.x-f.px)*0.4; f.py += (f.y-f.py)*0.4;
+      const cx=(f.px+0.5)*cw, cy=(f.py+0.5)*ch;
+      gctx.beginPath(); gctx.ellipse(cx,cy,fr*1.5,fr,0,0,Math.PI*2);
+      gctx.fillStyle=FISH_COLOR; gctx.globalAlpha=f===selected?1:0.9; gctx.fill();
+      if(f===selected){ gctx.globalAlpha=1; gctx.lineWidth=2; gctx.strokeStyle="#fff"; gctx.beginPath(); gctx.arc(cx,cy,fr*2+2,0,Math.PI*2); gctx.stroke(); }
+    }
+    gctx.globalAlpha=1;
+  }
+  // subtle grid glow by density
+  for(const m of sim.mice){
+    // smooth interpolate toward logical pos
+    m.px += (m.x-m.px)*0.35;
+    m.py += (m.y-m.py)*0.35;
+    const cx=(m.px+0.5)*cw, cy=(m.py+0.5)*ch;
+    gctx.beginPath();
+    gctx.arc(cx,cy,r,0,Math.PI*2);
+    gctx.fillStyle=STATE_COLOR[m.state];
+    gctx.globalAlpha = m===selected?1:0.9;
+    gctx.fill();
+    if(m===selected){
+      gctx.globalAlpha=1;
+      gctx.lineWidth=2; gctx.strokeStyle="#fff";
+      gctx.beginPath(); gctx.arc(cx,cy,r+3.5,0,Math.PI*2); gctx.stroke();
+    }
+  }
+  // predators — larger, orange, with a dark outline so they stand out as hunters
+  const pr=Math.max(2.6,Math.min(cw,ch)*0.9);
+  for(const p of sim.predators){
+    p.px += (p.x-p.px)*0.4;
+    p.py += (p.y-p.py)*0.4;
+    const cx=(p.px+0.5)*cw, cy=(p.py+0.5)*ch;
+    const dormant = sim.mice.length < PRED.ACTIVATE;
+    gctx.beginPath();
+    gctx.arc(cx,cy,pr,0,Math.PI*2);
+    gctx.fillStyle=PRED_COLOR;
+    gctx.globalAlpha=dormant?0.5:1;
+    gctx.fill();
+    gctx.lineWidth=1.4; gctx.strokeStyle="#3a1e0a"; gctx.stroke();
+    if(p===selected){
+      gctx.lineWidth=2.2; gctx.strokeStyle="#fff";
+      gctx.beginPath(); gctx.arc(cx,cy,pr+3.5,0,Math.PI*2); gctx.stroke();
+    }
+  }
+  // birds — flying chevrons on top, with a faint shadow
+  if(sim.birds.length){
+    const bw=Math.max(3,Math.min(cw,ch)*1.1);
+    for(const b of sim.birds){
+      b.px += (b.x-b.px)*0.5; b.py += (b.y-b.py)*0.5;
+      const cx=(b.px+0.5)*cw, cy=(b.py+0.5)*ch;
+      gctx.strokeStyle="rgba(0,0,0,0.35)"; gctx.lineWidth=Math.max(1.4,bw*0.22);
+      gctx.beginPath();
+      gctx.moveTo(cx-bw, cy+bw*0.5); gctx.lineTo(cx, cy); gctx.lineTo(cx+bw, cy+bw*0.5);
+      gctx.stroke();
+      gctx.strokeStyle=b===selected?"#fff":BIRD_COLOR; gctx.lineWidth=Math.max(1.2,bw*0.2);
+      gctx.beginPath();
+      gctx.moveTo(cx-bw, cy+bw*0.42); gctx.lineTo(cx, cy-bw*0.08); gctx.lineTo(cx+bw, cy+bw*0.42);
+      gctx.stroke();
+      if(b===selected){ gctx.strokeStyle="#fff"; gctx.lineWidth=1.5; gctx.beginPath(); gctx.arc(cx,cy,bw+3,0,Math.PI*2); gctx.stroke(); }
+    }
+  }
+  gctx.globalAlpha=1;
+}
+
+// ---- terrain ----
+function drawTerrain(cw,ch){
+  const w=sim.w, drawPlants=cw>=6;
+  // vegetation (walkable) — little plants, taller/greener when well grown
+  for(const idx of sim.vegCells){
+    const amt=sim.veg[idx]; if(amt<=0) continue;
+    const x=idx%w, y=(idx/w)|0, cx=x*cw, cy=y*ch;
+    const f=Math.min(1,amt/TERR.VEG_MAX);
+    gctx.fillStyle="rgba(70,130,60,"+(0.16+0.24*f)+")";
+    gctx.fillRect(cx,cy,cw+0.5,ch+0.5);
+    if(drawPlants){
+      gctx.strokeStyle=FOOD_COLOR; gctx.lineWidth=Math.max(0.8,cw*0.09);
+      const bx=cx+cw*0.5, by=cy+ch*0.86, hgt=ch*(0.3+0.45*f);
+      gctx.beginPath();
+      gctx.moveTo(bx,by); gctx.lineTo(bx,by-hgt);
+      gctx.moveTo(bx,by-hgt*0.55); gctx.lineTo(bx-cw*0.24,by-hgt*0.8);
+      gctx.moveTo(bx,by-hgt*0.55); gctx.lineTo(bx+cw*0.24,by-hgt*0.8);
+      gctx.stroke();
+    }
+  }
+  // water (impassable) — ponds/lakes deep blue, the river a brighter flowing blue
+  for(const idx of sim.waterCells){
+    const x=idx%w, y=(idx/w)|0;
+    gctx.fillStyle = sim.river[idx] ? "#3aa9ea" : WATER_COLOR;
+    gctx.fillRect(x*cw-0.5,y*ch-0.5,cw+1,ch+1);
+  }
+  // subtle shoreline highlight on the top edge of each body
+  gctx.fillStyle="rgba(255,255,255,0.07)";
+  for(const idx of sim.waterCells){
+    const x=idx%w, y=(idx/w)|0;
+    if(y>0 && !sim.water[(y-1)*w+x]) gctx.fillRect(x*cw,y*ch,cw,Math.max(1,ch*0.28));
+  }
+}
+
+// ---- population chart ----
+function drawPopChart(){
+  const W=popChart.width, H=popChart.height, pad=4;
+  pctx.clearRect(0,0,W,H);
+  const hist=sim.history;
+  if(hist.length<2) return;
+  const maxY=Math.max(sim.maxCapacity*0.4, ...hist)*1.1;
+  const stepX=(W-pad*2)/Math.max(1,hist.length-1);
+  // phase-tinted area
+  pctx.beginPath();
+  pctx.moveTo(pad,H-pad);
+  for(let i=0;i<hist.length;i++){
+    const x=pad+i*stepX, y=H-pad-(hist[i]/maxY)*(H-pad*2);
+    pctx.lineTo(x,y);
+  }
+  pctx.lineTo(pad+(hist.length-1)*stepX,H-pad);
+  pctx.closePath();
+  const grad=pctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0,"rgba(110,168,254,.35)");
+  grad.addColorStop(1,"rgba(110,168,254,0)");
+  pctx.fillStyle=grad; pctx.fill();
+  // line
+  pctx.beginPath();
+  for(let i=0;i<hist.length;i++){
+    const x=pad+i*stepX, y=H-pad-(hist[i]/maxY)*(H-pad*2);
+    i?pctx.lineTo(x,y):pctx.moveTo(x,y);
+  }
+  pctx.strokeStyle="#6ea8fe"; pctx.lineWidth=2; pctx.stroke();
+  // Predators, fish and birds share one secondary scale so they're comparable
+  // to each other (all far smaller than the mouse population on the main axis).
+  const ph=sim.predHistory, fh=sim.fishHistory, bh=sim.birdHistory;
+  const secMax=Math.max(6,
+    ...(ph.length?[Math.max(...ph)]:[0]),
+    ...(sim.hasFish&&fh.length?[Math.max(...fh)]:[0]),
+    ...(sim.hasBirds&&bh.length?[Math.max(...bh)]:[0]))*1.2;
+  const plotLine=(hist,color)=>{
+    if(!hist.some(v=>v>0)) return;
+    pctx.beginPath();
+    for(let i=0;i<hist.length;i++){
+      const x=pad+i*stepX, y=H-pad-(hist[i]/secMax)*(H-pad*2);
+      i?pctx.lineTo(x,y):pctx.moveTo(x,y);
+    }
+    pctx.strokeStyle=color; pctx.lineWidth=1.6; pctx.stroke();
+  };
+  plotLine(ph,PRED_COLOR);
+  if(sim.hasFish) plotLine(fh,FISH_COLOR);
+  if(sim.hasBirds) plotLine(bh,BIRD_COLOR);
+  // peak marker
+  pctx.fillStyle="#8b95a7"; pctx.font="10px sans-serif";
+  pctx.fillText("mice peak "+sim.peak, 6, 12);
+}
+
+// ---- state stacked area ----
+function drawStateChart(){
+  const W=stateChart.width, H=stateChart.height;
+  sctx.clearRect(0,0,W,H);
+  const hist=sim.stateHistory;
+  if(hist.length<2) return;
+  const stepX=W/Math.max(1,hist.length-1);
+  const order=[0,1,3,2,4]; // normal, stressed, aggressive, withdrawn, beautiful
+  const tops=new Array(hist.length).fill(0);
+  for(const st of order){
+    sctx.beginPath();
+    sctx.moveTo(0,H);
+    const pts=[];
+    for(let i=0;i<hist.length;i++){
+      const total=Math.max(1,hist[i][0]+hist[i][1]+hist[i][2]+hist[i][3]+hist[i][4]);
+      const frac=hist[i][st]/total;
+      const yTop=tops[i]+frac;
+      pts.push(yTop);
+      const x=i*stepX, y=H-yTop*H;
+      i?sctx.lineTo(x,y):sctx.lineTo(0,H-tops[0]*H);
+    }
+    for(let i=hist.length-1;i>=0;i--){
+      const x=i*stepX, y=H-tops[i]*H;
+      sctx.lineTo(x,y);
+    }
+    sctx.closePath();
+    sctx.fillStyle=STATE_COLOR[st];
+    sctx.globalAlpha=.9; sctx.fill(); sctx.globalAlpha=1;
+    for(let i=0;i<hist.length;i++) tops[i]=pts[i];
+  }
+}
+
+// ---- metrics + banner ----
+function updateUI(){
+  const s=sim.stats();
+  $("tickLbl").textContent=s.tick;
+  $("mPop").textContent=s.pop;
+  $("mDens").innerHTML=Math.round(s.density*100)+'<small>%</small>';
+  $("mBirth").textContent=s.births;
+  $("mDeath").textContent=s.deaths;
+  $("mBeauty").textContent=s.beautiful;
+  $("mPeak").textContent=s.peak;
+  $("mPred").textContent=s.predators;
+  $("mEaten").textContent=s.eaten;
+  // fish / bird metrics (only shown when the mode is on)
+  $("tileFish").style.display = sim.hasFish?"":"none";
+  $("tileBirds").style.display = sim.hasBirds?"":"none";
+  if(sim.hasFish) $("mFish").textContent=s.fish;
+  if(sim.hasBirds) $("mBirds").textContent=s.birds;
+  // river level readout
+  const rl=$("riverLvl");
+  if(sim.hasRiver && !sim.infinite){ rl.textContent="· "+Math.round(sim.riverLevel*100)+"% full"; rl.style.color=sim.riverLevel<0.3?"#e5484d":"var(--muted)"; }
+  else rl.textContent="";
+  // phase bar
+  document.querySelectorAll("#phasebar .p").forEach((p,i)=>{
+    p.classList.toggle("on", i<=s.phase);
+  });
+  $("phaseName").textContent=PHASES[s.phase].name;
+  if(s.phase!==lastPhase){
+    lastPhase=s.phase;
+    showBanner(PHASES[s.phase]);
+  }
+  if(selected) renderInspect();
+
+  // ---- predator narrative ----
+  const predsActive = s.predators>0 && s.pop>=PRED.ACTIVATE;
+  if(predsActive && !predActivated){
+    predActivated=true;
+    showBanner({short:"The predators move in",
+      desc:"With a colony to hunt, the cats begin to stalk. Watch the mice scatter."});
+  }
+  if(predActivated && s.predators===0 && !predGone){
+    predGone=true;
+    showBanner({short:"Predators starved out",
+      desc:"The hunters ran out of prey and died off. Will the mouse colony now overcrowd?"});
+  }
+  if(s.predators>0) predGone=false;
+
+  // extinction
+  if(s.pop===0 && running){
+    running=false; $("playBtn").textContent="⏵ Play";
+    const why = s.predators>0
+      ? "The predators ate the last of them. Without prey, the hunters will starve too."
+      : "Just like Universe 25, abundance without space led to a society that could not survive itself.";
+    showBanner({short:"Extinction", name:"The colony is gone", desc:why},true);
+  }
+}
+let predActivated=false, predGone=false;
+let bannerTimer=null;
+function showBanner(p, sticky){
+  $("bannerPh").textContent=p.short||p.name;
+  $("bannerDesc").textContent=p.desc||"";
+  const b=$("banner"); b.classList.add("show");
+  clearTimeout(bannerTimer);
+  if(!sticky) bannerTimer=setTimeout(()=>b.classList.remove("show"),4200);
+}
+
+// ---- inspector (side panel + floating popup) ----
+function bar(v){ return `<div class="bar"><i style="width:${v}%"></i></div>`; }
+function hidePopup(){ $("popup").classList.remove("show"); }
+function inspectHTML(){
+  if(selected instanceof Fish){
+    const f=selected;
+    return {title:`<span style="color:${FISH_COLOR}">🐟 Fish</span>`, body:`
+      <div class="row"><span>Age</span><span>${f.age}</span></div>
+      <div class="row"><span>Home</span><span>water only</span></div>
+      <div class="hint" style="margin-top:8px">Lives and breeds in the water. Cats snatch fish from the water's edge; strands and dies if its water dries up.</div>`};
+  }
+  if(selected instanceof Bird){
+    const b=selected;
+    return {title:`<span style="color:#cfd6e6">🐦 Bird</span>`, body:`
+      <div class="row"><span>Age / Sex</span><span>${b.age} · ${b.gender}</span></div>
+      <div class="row"><span>Kills</span><span>${b.kills}</span></div>
+      <div style="margin-top:8px"><span class="hint">Food reserve</span>${bar(clamp(b.reserve,0,100))}</div>
+      <div class="hint" style="margin-top:8px">Nests in the grass and only leaves it to chase a nearby mouse. Eats mice and fish (never cats). Starves without prey.</div>`};
+  }
+  if(selected instanceof Predator){
+    const p=selected, dormant=sim.mice.length<PRED.ACTIVATE;
+    return {title:`<span style="color:${PRED_COLOR}">🐈 Predator (cat)</span>`, body:`
+      <div class="row"><span>Status</span><span>${dormant?"prowling (dormant)":"hunting"}</span></div>
+      <div class="row"><span>Age / Sex</span><span>${p.age} · ${p.gender}</span></div>
+      <div class="row"><span>Mice eaten</span><span>${p.kills}</span></div>
+      <div style="margin-top:8px">
+        <span class="hint">Food reserve</span>${bar(clamp(p.reserve,0,100))}
+        <span class="hint">Thirst</span>${bar(clamp(p.thirst,0,100))}
+      </div>
+      <div class="hint" style="margin-top:8px">Starves if food reserve hits zero, or dies of thirst if it can't reach water. Breeds when well-fed.</div>`};
+  }
+  const m=selected, stateName=Object.keys(STATE).find(k=>STATE[k]===m.state);
+  return {title:`<span style="color:${STATE_COLOR[m.state]}">🐁 Mouse — ${stateName}</span>`, body:`
+    <div class="row"><span>Age / Sex</span><span>${m.age} · ${m.gender}</span></div>
+    <div class="row"><span>Health</span><span>${Math.round(m.health)}</span></div>
+    <div class="row"><span>Offspring</span><span>${m.childrenCount}${m.pregnant?" · pregnant":""}</span></div>
+    <div style="margin-top:8px">
+      <span class="hint">Hunger</span>${bar(m.hunger)}
+      <span class="hint">Thirst</span>${bar(m.thirst)}
+    </div>
+    <div style="margin-top:8px">
+      <span class="hint">Aggression</span>${bar(m.aggression)}
+      <span class="hint">Sociability</span>${bar(m.sociability)}
+      <span class="hint">Parenting</span>${bar(m.parenting)}
+      <span class="hint">Grooming</span>${bar(m.grooming)}
+    </div>`};
+}
+function renderInspect(){
+  if(!selected||!selected.alive){
+    selected=null; hidePopup();
+    $("inspect").innerHTML='<div class="hint">That creature is gone. Click another to keep watching.</div>';
+    return;
+  }
+  const {title,body}=inspectHTML();
+  $("inspect").innerHTML=body;
+  $("popupBody").innerHTML=`<div class="ttl">${title}</div>`+body;
+  $("popup").classList.add("show");
+}
+
+grid.addEventListener("click",e=>{
+  const rect=grid.getBoundingClientRect();
+  const mx=(e.clientX-rect.left)/rect.width*grid.width;
+  const my=(e.clientY-rect.top)/rect.height*grid.height;
+  const cw=grid.width/sim.w, ch=grid.height/sim.h;
+  let best=null,bd=Infinity;
+  for(const m of [...sim.mice, ...sim.predators, ...sim.fish, ...sim.birds]){
+    const cx=(m.px+0.5)*cw, cy=(m.py+0.5)*ch;
+    const d=(cx-mx)**2+(cy-my)**2;
+    const bias=(m instanceof Predator||m instanceof Bird)?0.5:1; // bigger creatures easier to grab
+    if(d*bias<bd){ bd=d*bias; best=m; }
+  }
+  // generous, cell-scaled hit radius so clicks land easily
+  const hit=Math.max(16, Math.min(cw,ch)*1.6);
+  if(best && bd < hit*hit){ selected=best; renderInspect(); }
+  else { selected=null; hidePopup(); }
+});
+$("popupClose").onclick=()=>{ selected=null; hidePopup(); };
+
+// ---- loop ----
+let acc=0, lastT=0;
+function loop(t){
+  const dt=t-lastT; lastT=t;
+  if(running){
+    acc+=dt;
+    const stepMs = 1000/ (6*speed); // 6 base ticks/sec scaled by speed
+    let guard=0;
+    while(acc>=stepMs && guard<speed*4){ sim.step(); acc-=stepMs; guard++; }
+  }
+  drawGrid(); drawPopChart(); drawStateChart(); updateUI();
+  requestAnimationFrame(loop);
+}
+
+// ---- controls ----
+$("playBtn").onclick=()=>{ running=!running; $("playBtn").textContent=running?"⏸ Pause":"⏵ Play"; };
+$("stepBtn").onclick=()=>{ sim.step(); };
+$("resetBtn").onclick=()=>{ newSim(); running=true; $("playBtn").textContent="⏸ Pause"; };
+document.querySelectorAll("#speedSeg button").forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll("#speedSeg button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); speed=+b.dataset.s;
+  };
+});
+$("popSlider").oninput=e=>$("popVal").textContent=e.target.value;
+$("predSlider").oninput=e=>$("predVal").textContent=e.target.value;
+$("siteSlider").oninput=e=>$("siteVal").textContent=e.target.value;
+// resolution: discrete world sizes; changing rebuilds the world
+function setRes(size){
+  document.querySelectorAll("#resSeg button").forEach(x=>x.classList.toggle("on", x.dataset.size===String(size)));
+}
+document.querySelectorAll("#resSeg button").forEach(b=>{
+  b.onclick=()=>{ setRes(b.dataset.size); newSim(); running=true; $("playBtn").textContent="⏸ Pause"; };
+});
+// fullscreen
+function toggleFullscreen(){
+  const stage=$("stage");
+  if(document.fullscreenElement===stage) document.exitFullscreen();
+  else if(stage.requestFullscreen) stage.requestFullscreen();
+}
+$("fsBtn").onclick=toggleFullscreen;
+$("fsBtn2").onclick=toggleFullscreen;
+document.addEventListener("fullscreenchange",fitGrid);
+document.querySelectorAll("#infSeg button").forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll("#infSeg button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); infiniteRes = b.dataset.inf==="1";
+    if(sim) sim.setInfinite(infiniteRes); // apply live
+  };
+});
+document.querySelectorAll("#riverSeg button").forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll("#riverSeg button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); riverOn = b.dataset.river==="1";
+    newSim(); running=true; $("playBtn").textContent="⏸ Pause"; // structural: rebuild
+  };
+});
+document.querySelectorAll("#fishSeg button").forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll("#fishSeg button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); fishOn = b.dataset.fish==="1";
+    newSim(); running=true; $("playBtn").textContent="⏸ Pause";
+  };
+});
+document.querySelectorAll("#birdSeg button").forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll("#birdSeg button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); birdsOn = b.dataset.bird==="1";
+    newSim(); running=true; $("playBtn").textContent="⏸ Pause";
+  };
+});
+document.querySelectorAll("[data-preset]").forEach(b=>{
+  b.onclick=()=>{
+    const p=b.dataset.preset;
+    if(p==="predator"){ $("popSlider").value=14; setRes(58); $("predSlider").value=8; $("siteSlider").value=3; }
+    if(p==="classic"){ $("popSlider").value=12; setRes(58); $("predSlider").value=0; $("siteSlider").value=3; }
+    if(p==="crowded"){ $("popSlider").value=40; setRes(40); $("predSlider").value=5; $("siteSlider").value=2; }
+    if(p==="roomy"){ $("popSlider").value=12; setRes(98); $("predSlider").value=6; $("siteSlider").value=5; }
+    $("popVal").textContent=$("popSlider").value;
+    $("predVal").textContent=$("predSlider").value;
+    $("siteVal").textContent=$("siteSlider").value;
+    newSim(); running=true; $("playBtn").textContent="⏸ Pause";
+  };
+});
+window.addEventListener("resize",fitGrid);
+
+newSim();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+# Engine (required)
+numpy>=1.24
+
+# Storage (optional; CSV fallback is used when absent)
+pyarrow>=14.0
+
+# Analysis (optional, Milestone 3+)
+polars>=0.20
+duckdb>=0.10
+scipy>=1.11
+statsmodels>=0.14
+matplotlib>=3.8
+
+# Testing (optional)
+pytest>=8.0
+hypothesis>=6.100

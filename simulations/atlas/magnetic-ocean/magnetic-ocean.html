@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Magnetic Ocean — Marine magnetic survey</title>
+<meta name="description" content="Tow a magnetometer across a mid-ocean ridge, spend a finite survey budget, and infer the ridge axis, polarity history and spreading rate from a noisy trace before the hidden geology is shown.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/orbital.css">
+<script src="../assets/orbital.js" data-title="The Magnetic Ocean" data-tag="Marine magnetic survey" data-sim="magnetic-ocean" data-motion="on" data-pause-target="#btnPause"></script>
+<link rel="stylesheet" href="css/magnetic-ocean.css">
+<link rel="stylesheet" href="../assets/orbital-sim.css">
+<script src="../assets/catalogue.js"></script>
+</head>
+<body>
+<a class="rf-skip" href="#home">Skip to the instrument</a>
+
+<!-- ============================ home ============================ -->
+<div id="home">
+  <div class="hero">
+    <span class="rf-regmark" style="top:14px;left:14px"></span>
+    <span class="rf-regmark" style="top:14px;right:14px"></span>
+    <div class="eyebrow upper">Marine magnetic survey · after Vine, Matthews and Morley, 1963</div>
+    <h1>The Magnetic<br>Ocean</h1>
+    <p class="lede">
+      Nobody has ever seen a magnetic stripe on the seafloor. What a ship collects is one number every
+      kilometre or so — the strength of the magnetic field, with the Earth's main field already taken off —
+      trailing on a cable two or three kilometres above rock it cannot see.
+    </p>
+    <p class="lede sm">
+      You run the survey. You choose where the line goes, how often to read, how fast to steam and how much of
+      a finite budget of ship-hours to spend. Then you have to say what the seafloor is doing, and commit to it,
+      before the geology underneath is shown to you. This is an inverse problem: the effects are measured and
+      the system that produced them has to be reconstructed.
+    </p>
+    <span class="pill">Space runs a line · ← → move the cursor · S steps · R restarts on the same seed · T switches theme</span>
+  </div>
+
+  <div class="modes" id="homeModes"></div>
+
+  <div class="hero" style="padding-top:0">
+    <div class="assumption">
+      <b>On the history.</b> In 1963 Fred Vine and Drummond Matthews proposed in <i>Nature</i> that the magnetic
+      anomalies mapped over oceanic ridges are the record of a reversing geomagnetic field written into crust
+      that is spreading away from the axis. Lawrence Morley, in Canada, arrived at the same interpretation
+      independently and earlier; his letter was rejected, and the work appeared in 1964. Five years later
+      Heirtzler and colleagues used the pattern to build a timescale for the last 80 million years.
+      <b>This instrument is not a reconstruction of any of those surveys.</b> The worlds it builds are generic
+      and synthetic, the noise is invented, and no preset is named after a real ridge. What it reproduces is
+      the shape of the inference, not the data.
+      <a href="methods.html">Methods &amp; limitations →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ app ============================= -->
+<div id="app">
+
+  <div class="topbar">
+    <span class="tb-title">THE MAGNETIC OCEAN <span class="tb-mode" id="tbMode"></span></span>
+    <span class="sp"></span>
+    <span class="tb-budget" id="tbBudget"></span>
+    <button class="btn primary" type="button" id="btnBegin" data-act="begin">Begin survey</button>
+    <button class="btn" type="button" id="btnPause" data-act="pause">Pause</button>
+    <button class="btn" type="button" id="btnStep" data-act="step">Step</button>
+    <a class="btn" href="methods.html">Methods</a>
+    <button class="btn" type="button" data-act="home">Modes</button>
+  </div>
+
+  <div class="layout">
+
+    <aside class="rail" id="rail" aria-label="Survey design and interpretation controls"></aside>
+
+    <section class="scopewrap" aria-label="Instrument scopes">
+      <div id="toast" class="callout" style="display:none" role="status"></div>
+
+      <div class="scope" id="planScope">
+        <div class="sh">
+          <h4>Plan view — chart table</h4>
+          <span class="sp"></span>
+          <span class="cursorval">bathymetry from the echo sounder only</span>
+        </div>
+        <canvas id="planCv" data-h="210" role="img"
+          aria-label="Chart of the survey area showing seafloor contours, the trackline and the vessel."></canvas>
+        <div class="legend">
+          <span><i class="obs"></i>trackline run</span>
+          <span><i class="gap" style="background:var(--rf-gold)"></i>towed magnetometer</span>
+          <span>contours: echo sounder, 200 m interval</span>
+        </div>
+      </div>
+
+      <div class="scope" id="profScope">
+        <div class="sh">
+          <h4>Survey profile — total-field anomaly</h4>
+          <span class="sp"></span>
+          <span class="cursorval" id="cursorVal"></span>
+        </div>
+        <canvas id="profCv" data-h="270" tabindex="0" role="img"
+          aria-label="Magnetic anomaly against along-track distance."></canvas>
+        <div class="legend">
+          <span><i class="obs"></i>observed anomaly, nT</span>
+          <span><i class="gap"></i>reading lost — a gap, never a zero</span>
+          <span><i style="background:var(--rf-teal);border:0;height:3px"></i>sounding, km</span>
+        </div>
+      </div>
+
+      <div class="scope hide" id="benchScope">
+        <div class="sh">
+          <h4>Interpretation workbench — observed, predicted, residual</h4>
+        </div>
+        <canvas id="benchCv" data-h="300" role="img"
+          aria-label="Observed profile against the profile predicted by the current interpretation, with the residual below."></canvas>
+        <div class="legend">
+          <span><i class="obs"></i>observed</span>
+          <span><i class="pred"></i>predicted by your model</span>
+          <span><i style="background:var(--rf-oxide);border:0;height:3px"></i>residual</span>
+          <span><i style="background:var(--rf-violet);border:0;height:9px;width:2px"></i>polarity boundaries your model implies</span>
+        </div>
+      </div>
+
+      <div class="scope hide" id="revealScope">
+        <div class="sh">
+          <h4>Reveal — the hidden crust</h4>
+        </div>
+        <canvas id="revealCv" data-h="330" role="img"
+          aria-label="The hidden magnetised crust, its age, the true ridge axis and the axis you proposed."></canvas>
+        <div class="legend">
+          <span><i class="pn"></i>N — normally magnetised crust</span>
+          <span><i class="pr"></i>R — reversely magnetised crust</span>
+          <span><i style="background:var(--rf-violet);border:0;height:3px"></i>crustal age</span>
+          <span><i style="background:var(--rf-oxide);border:0;height:3px"></i>true axis</span>
+          <span><i style="background:var(--rf-teal);border:0;height:3px"></i>your axis</span>
+        </div>
+      </div>
+
+      <div class="scope">
+        <div class="sh"><h4>Text equivalent</h4></div>
+        <div style="padding:10px 12px;font-size:12.5px;color:var(--rf-ink-dim)" id="srSummary"></div>
+      </div>
+    </section>
+
+    <aside class="inspector" id="inspector" aria-label="Readouts and interpretation"></aside>
+  </div>
+</div>
+
+<!-- ============================ modal =========================== -->
+<div class="veil" id="veil" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="mh">
+      <div class="upper muted" id="modalKicker"></div>
+      <h2 id="modalTitle"></h2>
+    </div>
+    <div class="mb" id="modalBody"></div>
+    <div class="mf" id="modalFoot"></div>
+  </div>
+</div>
+
+<div class="rf-sr" id="live" role="status" aria-live="polite"></div>
+
+<script src="data/polarity-timescale.js"></script>
+<script src="js/config.js"></script>
+<script src="js/model.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/events.js"></script>
+<script src="js/screens.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

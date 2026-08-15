@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-world="ai-ml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Facial Emotion Detection — Candice Cantrelle</title>
+<meta name="description" content="Four-class facial expression recognition with VGG16 transfer learning: 72.66% test accuracy, 72.80% F1, and the class imbalance that partly explains both.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/ai-ml/facial-emotion-detection/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Facial Emotion Detection — Candice Cantrelle">
+<meta property="og:description" content="Four-class facial expression recognition with VGG16 transfer learning: 72.66% test accuracy, 72.80% F1, and the class imbalance that partly explains both.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/ai-ml/facial-emotion-detection/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/shell.css">
+<link rel="stylesheet" href="../../assets/css/cards.css">
+<link rel="stylesheet" href="../../assets/css/worlds.css">
+<script src="../../assets/js/shell.js"></script>
+
+<style>
+.case { display:grid; grid-template-columns: minmax(0,1fr) 300px; gap: var(--s-8); align-items:start; }
+@media (max-width: 980px) { .case { grid-template-columns: 1fr; gap: var(--s-6); } }
+.case__aside { position: sticky; top: 84px; display: grid; gap: var(--s-5); }
+@media (max-width: 980px) { .case__aside { position: static; } }
+.facts { border:1px solid var(--rf-line); border-radius:var(--w-radius);
+         background:var(--rf-panel); padding:var(--s-5); margin:0; }
+.facts dt { font-family:var(--rf-mono); font-size:var(--t-nano); letter-spacing:var(--rf-track-s);
+            text-transform:uppercase; color:var(--rf-muted); font-weight:600; }
+.facts dd { margin:3px 0 var(--s-4); font-size:var(--t-small); color:var(--rf-ink); }
+.facts dd:last-child { margin-bottom:0; }
+.linklist { list-style:none; padding:0; margin:0; display:grid; gap:var(--s-2); }
+.linklist li { margin:0; }
+.linklist a { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track-s);
+              text-transform:uppercase; font-weight:600; }
+.q { font-family:var(--rf-display); font-size:clamp(19px,2.2vw,26px); font-weight:500;
+     line-height:1.32; letter-spacing:-.02em; color:var(--rf-ink); margin:0 0 var(--s-5);
+     padding-left:var(--s-5); border-left:3px solid var(--w-accent); max-width:34ch; }
+.caveat { border:1px solid var(--rf-watch); border-left-width:3px; border-radius:var(--rf-radius);
+          padding:var(--s-5); background:var(--rf-panel); }
+.caveat h3 { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+             text-transform:uppercase; color:var(--rf-watch); margin:0 0 var(--s-3); font-weight:600; }
+.caveat p { font-size:var(--t-small); color:var(--rf-ink-dim); }
+h2.case-h { font-family:var(--rf-display); font-size:var(--t-h2); margin:var(--s-8) 0 var(--s-4);
+            padding-bottom:var(--s-3); border-bottom:1px solid var(--rf-line); }
+h2.case-h:first-child { margin-top:0; }
+h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+               color:var(--w-accent); margin-right:var(--s-3); }
+</style>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+<div class="wrap"><ol class="crumbs"><li><a href="../../">Portfolio</a></li><li><a href="../../ai-ml/">AI + ML</a></li><li><span aria-current="page">Facial Emotion Detection</span></li></ol></div>
+  <header class="plate">
+    <div class="wrap plate__grid">
+      <div>
+        <p class="plate__kicker">Case study · AI + ML</p>
+        <h1>Facial Emotion Detection</h1>
+        <p class="plate__lede">A transfer-learning classifier for four facial expressions, reported at the accuracy it reached rather than the accuracy it was aiming for.</p>
+      </div>
+      <p class="stamp"><b>Showcase</b><br>VGG16 · TensorFlow/Keras<br>March 2025</p>
+    </div>
+    <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
+  </header>
+
+
+  <section class="doc">
+    <div class="wrap case">
+      <div>
+        <p class="q">Which architecture balances recognition accuracy against what it costs to train?</p>
+
+        <h2 class="case-h"><span class="n">01</span>What it is</h2>
+        <p>
+          A convolutional classifier that sorts facial photographs into four expressions —
+          happy, sad, neutral and surprise — using VGG16 as a frozen feature extractor with a
+          fine-tuned head. The work sits in affective computing: the attempt to get machines to
+          register something about human emotional state.
+        </p>
+
+        <h2 class="case-h"><span class="n">02</span>Why</h2>
+        <p>
+          Expressions are a good problem for learning what a classifier can and cannot do,
+          because humans disagree with each other about them. Happiness is easy — a smile is a
+          large, unambiguous change in facial geometry. Neutral is hard, because &ldquo;neutral&rdquo;
+          is defined by the absence of the features the model has learned to look for. That
+          asymmetry is visible in the results, and it is the interesting part.
+        </p>
+
+        <h2 class="case-h"><span class="n">03</span>My role</h2>
+        <p>
+          Dataset exploration and class-distribution analysis, architecture selection, the
+          training loop with per-run logging of hyperparameters and metrics, evaluation, and the
+          write-up. Rather than sweeping many architectures, this project committed to one and
+          iterated it, logging each run so the iterations could be compared against one another.
+        </p>
+
+        <h2 class="case-h"><span class="n">04</span>Results</h2>
+        <dl class="metrics">
+          <div class="metric"><dt>Test accuracy</dt><dd>72.66%</dd></div>
+          <div class="metric"><dt>Precision</dt><dd>75.27%</dd></div>
+          <div class="metric"><dt>Recall</dt><dd>72.66%</dd></div>
+          <div class="metric"><dt>F1 score</dt><dd>72.80%</dd></div>
+          <div class="metric"><dt>Validation accuracy</dt><dd>70.77%</dd></div>
+        </dl>
+        <p class="metric-note">
+          Figures as reported in the project notebook, 3 March 2025. These are the numbers the
+          model produced; they have not been rounded up or re-run to a better seed.
+        </p>
+        <p style="margin-top:var(--s-5)">
+          Validation and test accuracy sit within two points of each other, which suggests the
+          model generalises about as well as it fits — no severe overfitting, and no evidence
+          that a longer run would have closed the gap. Precision exceeding recall by roughly
+          three points means the model is somewhat conservative: when it commits to a class it is
+          more often right than its overall hit rate suggests, and it misses more than it
+          misfires.
+        </p>
+
+        <h2 class="case-h"><span class="n">05</span>What the numbers do not say</h2>
+        <p>
+          The dataset is not balanced. Happy, sad and neutral each account for roughly 26% of
+          the images; surprise is around 21%. A four-class problem with that distribution has a
+          majority-class baseline near 26%, so 72.66% is a real result rather than an artefact —
+          but the underrepresented class is also the one most likely to be carrying the error,
+          and a single overall accuracy figure hides that entirely.
+        </p>
+        <p>
+          This is why the class distribution is reported here next to the accuracy rather than in
+          a methods appendix. An accuracy number without its class balance is not a claim anyone
+          can check.
+        </p>
+
+        <h2 class="case-h"><span class="n">06</span>Limitations</h2>
+        <ul>
+          <li>Four classes only. Real expression recognition needs at least six, and the
+              difficult ones — fear, disgust, contempt — are not among these four.</li>
+          <li>Per-class precision and recall were computed during the run but are not preserved
+              in the committed notebook, so the specific confusion pattern cannot be reported
+              here without re-running.</li>
+          <li>No demographic breakdown of the dataset was performed, so nothing can be said about
+              whether performance is even across groups. For a system that classifies faces,
+              that is a material gap, not a minor one.</li>
+          <li>Accuracy in the low seventies is well short of deployment quality for anything
+              consequential.</li>
+        </ul>
+
+        <h2 class="case-h"><span class="n">07</span>What I would do next</h2>
+        <p>
+          Re-run with per-class metrics and a confusion matrix preserved in the notebook, then
+          address the surprise class specifically — either with augmentation or with class
+          weighting — and measure whether overall accuracy moves or simply redistributes. The
+          second outcome would be more informative than the first.
+        </p>
+      </div>
+
+      <aside class="case__aside">
+<dl class="facts"><dt>Status</dt><dd>Showcase</dd><dt>Date</dt><dd>March 2025</dd><dt>Task</dt><dd>4-class image classification</dd><dt>Architecture</dt><dd>VGG16 + fine-tuned head</dd><dt>Framework</dt><dd>TensorFlow / Keras</dd><dt>Technique</dt><dd>Transfer learning</dd><dt>Classes</dt><dd>Happy · Sad · Neutral · Surprise</dd><dt>Class balance</dt><dd>~26% each; surprise ~21%</dd></dl><div class="facts"><dt style="font-family:var(--rf-mono);font-size:var(--t-nano);letter-spacing:var(--rf-track-s);text-transform:uppercase;color:var(--rf-muted);font-weight:600;margin-bottom:12px">Links</dt><ul class="linklist"><li><a href="https://github.com/Unicorn0-0Cakes/machine-learning/blob/main/Final_CCantrelle_2025_Facial_Emotion_Detector.ipynb" rel="noopener">Notebook &rarr;</a></li><li><a href="https://github.com/Unicorn0-0Cakes/machine-learning" rel="noopener">Repository &rarr;</a></li></ul></div>
+      </aside>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="../../data/projects.js"></script>
+<script src="../../assets/js/cards.js"></script>
+</body>
+</html>

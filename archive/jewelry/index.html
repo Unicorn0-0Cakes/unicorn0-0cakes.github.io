@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jewelry Visualization for Modern Luxury Brands - 3D rendering and digital art services.">
+    <meta property="og:title" content="Jewelry Visualization for Modern Luxury Brands">
+    <meta property="og:description" content="Create stunning digital jewelry visualizations with total creative control. No studio costs. No photoshoot delays.">
+    <title>Jewelry Visualization | Candice Cantrelle</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../../archive/legacy-style.css">
+    <link rel="icon" type="image/png" href="../../favicon.png">
+
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #2c2c2c;
+            background-color: #fafaf8;
+            margin: 0;
+            padding: 0;
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section {
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #1a1a1a;
+            letter-spacing: 0.5px;
+        }
+        
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 700px;
+            margin: 0 auto 60px;
+            color: #555;
+            font-weight: 300;
+        }
+        
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 60px 0;
+            align-items: center;
+        }
+        
+        .comparison-item {
+            text-align: center;
+        }
+        
+        .comparison-item h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #8b7355;
+        }
+        
+        .placeholder-image {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(135deg, #f5f1ed 0%, #e8dfd6 100%);
+            border: 1px solid #d4c9be;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #999;
+            border-radius: 2px;
+        }
+        
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin: 60px 0;
+        }
+        
+        .portfolio-item {
+            position: relative;
+        }
+        
+        .portfolio-item-image {
+            width: 100%;
+            height: 320px;
+            background: linear-gradient(135deg, #f5f1ed 0%, #e8dfd6 100%);
+            border: 1px solid #d4c9be;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: #999;
+            border-radius: 2px;
+            margin-bottom: 15px;
+        }
+        
+        .portfolio-item-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: #8b7355;
+            margin: 0;
+        }
+        
+        .pricing-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin: 60px 0;
+        }
+        
+        .pricing-card {
+            background: #fff;
+            padding: 50px 30px;
+            border: 1px solid #e0d7ce;
+            position: relative;
+            text-align: left;
+        }
+        
+        .pricing-card.featured {
+            border: 2px solid #d4af37;
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.1);
+        }
+        
+        .pricing-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            margin: 0 0 20px 0;
+            color: #1a1a1a;
+        }
+        
+        .pricing-description {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .price {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: #8b7355;
+            margin: 30px 0;
+            font-weight: 600;
+        }
+        
+        .cta-section {
+            padding: 80px 20px;
+            text-align: center;
+        }
+        
+        .cta-text {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            color: #555;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 18px 45px;
+            background-color: #8b7355;
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        
+        .cta-button:hover {
+            background-color: #6d5847;
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .comparison-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+<div style="background:#241C14;color:#EFE7D8;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;text-align:center">
+Archived page &mdash; superseded &middot; <a href="../../" style="color:#FF8A3D">Return to the current portfolio</a>
+</div>
+
+    <header id="header"></header>
+    
+    <main>
+        <section class="section">
+            <h1 class="section-title">Jewelry Visualization for Modern Luxury Brands</h1>
+            
+            <p class="intro-text">
+                Transform your designs into stunning digital art without the constraints of traditional photography. 
+                Eliminate studio costs, photoshoot delays, and model coordination. With complete creative control, 
+                visualize every angle, material nuance, and environmental context before production.
+            </p>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title" style="font-size: 2.5rem; margin-bottom: 50px;">Before & After</h2>
+            <div class="comparison-container">
+                <div class="comparison-item">
+                    <h3>Raw Design Model</h3>
+                    <!-- Before Image: Raw jewelry model -->
+                        <img src="images/before.png" alt="Raw Design Model" style="width: 100%; height: 350px; object-fit: cover; border-radius: 2px;">                </div>
+                <div class="comparison-item">
+                    <h3>Final Visualization</h3>
+                    <!-- After Image: Professional final render -->
+                        <img src="images/after.png" alt="Final Visualization" style="width: 100%; height: 350px; object-fit: cover; border-radius: 2px;">                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title" style="font-size: 2.5rem; margin-bottom: 50px;">Curated Portfolio</h2>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <!-- Portfolio Image 1: Ring Showcase -->
+                    <div class="portfolio-item-image"><img src="images/ring-collection.png" alt="Signature Ring Collection" style="width: 100%; height: 320px; object-fit: cover; border-radius: 2px;"></div>
+                    <p class="portfolio-item-title">Signature Ring Collection</p>
+                </div>
+                
+                <div class="portfolio-item">
+                    <!-- Portfolio Image 2: Necklace Detail -->
+                    <div class="portfolio-item-image"><img src="images/pendant-visualization.png" alt="Pendant Visualization" style="width: 100%; height: 320px; object-fit: cover; border-radius: 2px;"></div>
+                    <p class="portfolio-item-title">Pendant Visualization</p>
+                </div>
+                
+                <div class="portfolio-item">
+                    <!-- Portfolio Image 3: Earring Pair -->
+                    <div class="portfolio-item-image"><img src="images/earring-artistry.png" alt="Earring Artistry" style="width: 100%; height: 320px; object-fit: cover; border-radius: 2px;"></div>
+                    <p class="portfolio-item-title">Earring Artistry</p>
+                </div>
+                
+                <div class="portfolio-item">
+                    <!-- Portfolio Image 4: Luxury Set -->
+<div class="portfolio-item-image"><img src="images/luxury-set-showcase.png" alt="Luxury Jewelry Set Showcase" style="width: 100%; height: 320px; object-fit: cover; border-radius: 2px;"></div>                    <p class="portfolio-item-title">Luxury Set Showcase</p>
+                </div>
+                
+                <div class="portfolio-item">
+                    <!-- Portfolio Image 5: Bridal Collection -->
+                    <div class="portfolio-item-image"><img src="images/bridal-visualization.png" alt="Bridal Visualization" style="width: 100%; height: 320px; object-fit: cover; border-radius: 2px;"></div>
+                    <p class="portfolio-item-title">Bridal Visualization</p>
+                </div>
+                
+                <div class="portfolio-item">
+                    <!-- Portfolio Image 6: Showcase Environment -->
+                    <div class="portfolio-item-image"><img src="images/luxury-enviroment.png" alt="Luxury Enviroment" style="width: 100%; height: 320px; object-fit: cover; border-radius: 2px;"></div>
+                    <p class="portfolio-item-title">Luxury Environment</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title" style="font-size: 2.5rem; margin-bottom: 50px;">Investment Tiers</h2>
+            <div class="pricing-container">
+                <div class="pricing-card">
+                    <h3>Single Hero Piece</h3>
+                    <p class="pricing-description">
+                        Perfect for launching a signature collection or flagship design. One stunning, fully-detailed visualization with multiple angle options.
+                    </p>
+                    <div class="price">Custom Quote</div>
+                    <p style="font-size: 0.9rem; color: #999;">Ideal for: New flagship designs, limited editions</p>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <h3>Full Collection</h3>
+                    <p class="pricing-description">
+                        Showcase your complete lineup with cohesive branding and styling. 5-8 pieces with consistent luxury presentation and environmental context.
+                    </p>
+                    <div class="price">Custom Quote</div>
+                    <p style="font-size: 0.9rem; color: #999;">Ideal for: Full season releases, collection launches</p>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3>Seasonal Showcase</h3>
+                    <p class="pricing-description">
+                        Comprehensive visual strategy for seasonal campaigns. Complete collection with lifestyle imagery, before/after comparisons, and detailed close-ups.
+                    </p>
+                    <div class="price">Custom Quote</div>
+                    <p style="font-size: 0.9rem; color: #999;">Ideal for: Seasonal campaigns, trend-setting launches</p>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+    
+    <footer id="footer"></footer>
+    
+    <script src="../../archive/legacy-header-footer.js"></script>
+</body>
+</html>

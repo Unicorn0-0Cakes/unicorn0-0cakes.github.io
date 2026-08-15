@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" data-world="software">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Key → STL — Candice Cantrelle</title>
+<meta name="description" content="A four-surface system for recovering a printable profile from a photograph of a key: OpenCV core, FastAPI service, browser client, desktop build and an automated release pipeline.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/software/key-to-stl/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Key → STL — Candice Cantrelle">
+<meta property="og:description" content="A four-surface system for recovering a printable profile from a photograph of a key: OpenCV core, FastAPI service, browser client, desktop build and an automated release pipeline.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/software/key-to-stl/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/shell.css">
+<link rel="stylesheet" href="../../assets/css/cards.css">
+<link rel="stylesheet" href="../../assets/css/worlds.css">
+<script src="../../assets/js/shell.js"></script>
+
+<style>
+.case { display:grid; grid-template-columns: minmax(0,1fr) 300px; gap: var(--s-8); align-items:start; }
+@media (max-width: 980px) { .case { grid-template-columns: 1fr; gap: var(--s-6); } }
+.case__aside { position: sticky; top: 84px; display: grid; gap: var(--s-5); }
+@media (max-width: 980px) { .case__aside { position: static; } }
+.facts { border:1px solid var(--rf-line); border-radius:var(--w-radius);
+         background:var(--rf-panel); padding:var(--s-5); margin:0; }
+.facts dt { font-family:var(--rf-mono); font-size:var(--t-nano); letter-spacing:var(--rf-track-s);
+            text-transform:uppercase; color:var(--rf-muted); font-weight:600; }
+.facts dd { margin:3px 0 var(--s-4); font-size:var(--t-small); color:var(--rf-ink); }
+.facts dd:last-child { margin-bottom:0; }
+.linklist { list-style:none; padding:0; margin:0; display:grid; gap:var(--s-2); }
+.linklist li { margin:0; }
+.linklist a { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track-s);
+              text-transform:uppercase; font-weight:600; }
+.q { font-family:var(--rf-display); font-size:clamp(19px,2.2vw,26px); font-weight:500;
+     line-height:1.32; letter-spacing:-.02em; color:var(--rf-ink); margin:0 0 var(--s-5);
+     padding-left:var(--s-5); border-left:3px solid var(--w-accent); max-width:34ch; }
+.caveat { border:1px solid var(--rf-watch); border-left-width:3px; border-radius:var(--rf-radius);
+          padding:var(--s-5); background:var(--rf-panel); }
+.caveat h3 { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+             text-transform:uppercase; color:var(--rf-watch); margin:0 0 var(--s-3); font-weight:600; }
+.caveat p { font-size:var(--t-small); color:var(--rf-ink-dim); }
+h2.case-h { font-family:var(--rf-display); font-size:var(--t-h2); margin:var(--s-8) 0 var(--s-4);
+            padding-bottom:var(--s-3); border-bottom:1px solid var(--rf-line); }
+h2.case-h:first-child { margin-top:0; }
+h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+               color:var(--w-accent); margin-right:var(--s-3); }
+</style>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+<div class="wrap"><ol class="crumbs"><li><a href="../../">Portfolio</a></li><li><a href="../../software/">Software</a></li><li><span aria-current="page">Key → STL</span></li></ol></div>
+  <header class="plate">
+    <div class="wrap plate__grid">
+      <div>
+        <p class="plate__kicker">Case study · Software</p>
+        <h1>Key &rarr; STL</h1>
+        <p class="plate__lede">One idea — recover a printable profile from an ordinary photograph — delivered four different ways, because the delivery turned out to be the hard part.</p>
+      </div>
+      <p class="stamp"><b>Prototype</b><br>Python · FastAPI · OpenCV<br>2026</p>
+    </div>
+    <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
+  </header>
+
+
+  <section class="doc">
+    <div class="wrap case">
+      <div>
+        <p class="q">How much of a physical object can be recovered from a single ordinary photograph?</p>
+
+        <h2 class="case-h"><span class="n">01</span>What it is</h2>
+        <p>
+          Key &rarr; STL takes a photograph of a physical key and produces an STL file you can send
+          to a 3D printer. It exists as four separate delivery surfaces built over one idea: a
+          processing core, an HTTP service that wraps it, a browser client, and a standalone
+          desktop application for people who will not upload a photograph of their key to
+          somebody else's server.
+        </p>
+
+        <h2 class="case-h"><span class="n">02</span>Why</h2>
+        <p>
+          The interesting question is not whether you can 3D-print a key — you can — but how much
+          geometry survives the trip from a three-dimensional object, through a lens, into a
+          flat array of pixels, and back out into a solid. A key is a good test case because it
+          is almost two-dimensional, its important features are small, and you can tell
+          immediately whether the result is right: it either turns or it does not.
+        </p>
+
+        <h2 class="case-h"><span class="n">03</span>My role</h2>
+        <p>
+          All of it. The OpenCV work, the FastAPI service and its licence integration, the
+          browser client, the desktop application and its build scripts, the GitHub Actions
+          workflow that produces executables, and the documentation — including the photography
+          guidelines, which turned out to matter more than any single algorithmic choice.
+        </p>
+
+        <h2 class="case-h"><span class="n">04</span>How it works</h2>
+        <dl class="layers">
+          <div class="layer"><dt>Capture</dt><dd>
+            Documented requirements: vertical orientation, plain light background, even diffused
+            lighting, no glare on the metal, sharp bitting edges, at least 1920&times;1080. Almost
+            every failure downstream traces back to a photograph that broke one of these.</dd></div>
+          <div class="layer"><dt>Detection</dt><dd>
+            Greyscale, Gaussian blur, Canny edge detection, contour extraction, largest contour by
+            area taken as the key. Standard, and adequate — given a photograph that follows the
+            guidelines.</dd></div>
+          <div class="layer"><dt>Profile</dt><dd>
+            The outline is reduced to a bounding box and sampled along its length. This is the
+            step that is not finished — see below.</dd></div>
+          <div class="layer"><dt>Mesh</dt><dd>
+            Vertices generated along the sampled profile at a fixed blank thickness, faces
+            stitched between them, exported through <code>trimesh</code>. The desktop path does
+            this from a thresholded silhouette contour and produces a real extrusion of the shape
+            in the photograph.</dd></div>
+          <div class="layer"><dt>Delivery</dt><dd>
+            FastAPI service with Keygen licence validation and file download; a browser client;
+            a desktop build with a machine-fingerprint licence cache; and a GitHub Actions
+            workflow that compiles executables on release.</dd></div>
+        </dl>
+
+        <h2 class="case-h"><span class="n">05</span>Outcome</h2>
+        <p>
+          What works: the desktop application loads an image, thresholds it, finds the outer
+          contour and extrudes it into a mesh you can open in a slicer. Licence validation works
+          end to end against the Keygen API, on both the server and the desktop, with the
+          desktop caching a machine fingerprint so it does not need a round trip every launch.
+          The release pipeline builds and publishes executables without manual steps.
+        </p>
+        <p>
+          What I actually learned from it was about scope. Four surfaces is not four times the
+          work of one — it is roughly four different projects that happen to share a core, and
+          each surface generated its own class of problem that had nothing to do with computer
+          vision: licence caching offline, file lifetimes on the server, build reproducibility,
+          and explaining to a person how to hold a phone.
+        </p>
+
+        <h2 class="case-h"><span class="n">06</span>Limitations</h2>
+        <div class="caveat">
+          <h3>The bitting extraction is not implemented</h3>
+          <p>
+            The bitting — the cut teeth along the blade, which is the part that makes a key a
+            specific key rather than a key-shaped object — is not being measured from the image.
+            In <code>backend/key_processor.py</code> the sampled depths are generated with
+            <code>np.random.uniform</code>, under a comment that reads
+            <em>&ldquo;Simplified: vary depth randomly for demo&rdquo;</em>.
+          </p>
+          <p>
+            Separately, the hosted <code>/api/generate-stl</code> endpoint carries a
+            <code>TODO: Implement actual key-to-STL conversion</code> and currently writes a
+            placeholder file. The desktop path does produce a genuine silhouette extrusion; the
+            server path does not.
+          </p>
+          <p style="margin-bottom:0">
+            So the accurate claim is: the system architecture is finished and the silhouette
+            pipeline works, while the measurement at the centre of it is still a stub. That is
+            why this is filed as a <strong>prototype</strong> and not a showcase, and why there
+            is no public demo link — there is nothing an anonymous visitor could usefully do
+            with it yet.
+          </p>
+        </div>
+        <p style="margin-top:var(--s-5)">Beyond that:</p>
+        <ul>
+          <li>Detection depends heavily on photograph quality; the guidelines are a workaround
+              for a pipeline that is not yet robust to background clutter or glare.</li>
+          <li>Blank dimensions are hard-coded to a single standard size, so a key that is not
+              close to that geometry will scale incorrectly.</li>
+          <li>No depth information is recovered — the model is an extrusion of a silhouette,
+              which cannot represent a key's warding profile.</li>
+          <li>The service requires a Keygen account and product token to run at all.</li>
+        </ul>
+
+        <h2 class="case-h"><span class="n">07</span>What would finish it</h2>
+        <p>
+          One thing, done properly: measure the bitting. Detect the blade edge as a
+          one-dimensional signal along the key's long axis, calibrate against a reference of known
+          size placed in the frame, and validate against a set of keys whose cut depths are known.
+          Everything else on the list is downstream of having a real measurement to deliver.
+        </p>
+      </div>
+
+      <aside class="case__aside">
+<dl class="facts"><dt>Status</dt><dd>Prototype</dd><dt>Year</dt><dd>2026</dd><dt>Role</dt><dd>Whole system</dd><dt>Languages</dt><dd>Python, JavaScript</dd><dt>Libraries</dt><dd>OpenCV, NumPy, trimesh, Pillow</dd><dt>Service</dt><dd>FastAPI, Uvicorn, Pydantic</dd><dt>Licensing</dt><dd>Keygen API</dd><dt>CI</dt><dd>GitHub Actions release build</dd><dt>Surfaces</dt><dd>Core · API · Web · Desktop</dd></dl><div class="facts"><dt style="font-family:var(--rf-mono);font-size:var(--t-nano);letter-spacing:var(--rf-track-s);text-transform:uppercase;color:var(--rf-muted);font-weight:600;margin-bottom:12px">Links</dt><ul class="linklist"><li><a href="https://github.com/Unicorn0-0Cakes/key-to-stl" rel="noopener">Source &rarr;</a></li><li><a href="https://github.com/Unicorn0-0Cakes/key-to-stl/blob/main/DOCS.md" rel="noopener">Documentation &rarr;</a></li><li><a href="https://github.com/Unicorn0-0Cakes/key-to-stl/blob/main/IMAGE_GUIDELINES.md" rel="noopener">Image guidelines &rarr;</a></li><li><a href="https://github.com/Unicorn0-0Cakes/key-to-stl/blob/main/desktop_app/BUILD.md" rel="noopener">Desktop build notes &rarr;</a></li></ul></div>
+      </aside>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="../../data/projects.js"></script>
+<script src="../../assets/js/cards.js"></script>
+</body>
+</html>

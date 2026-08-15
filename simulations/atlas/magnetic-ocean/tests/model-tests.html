@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Model tests — The Magnetic Ocean</title>
+<meta name="description" content="Browser runner for the Magnetic Ocean model test suite: reproducibility, age–distance conversion, the forward magnetic model, observation effects, inversion and the catalogue record.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../assets/orbital.css">
+<script src="../../assets/orbital.js" data-title="The Magnetic Ocean" data-tag="Model tests"></script>
+<script src="../../assets/catalogue.js"></script>
+<style>
+  body { margin: 0; font-family: var(--rf-sans); }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 22px 80px; }
+  h1 { font-size: 26px; margin: 0 0 6px; }
+  .lede { color: var(--rf-ink-dim); max-width: 60ch; margin: 0 0 22px; font-size: 14px; }
+  .tally {
+    font-family: var(--rf-mono); font-size: 13px; letter-spacing: .1em;
+    text-transform: uppercase; padding: 12px 16px; margin: 0 0 22px;
+    border: 1px solid var(--rf-line); border-radius: var(--rf-radius);
+    background: var(--rf-panel);
+  }
+  .tally.good { color: var(--rf-ok); border-color: var(--rf-ok); }
+  .tally.bad  { color: var(--rf-danger); border-color: var(--rf-danger); }
+  h2 { font-size: 13px; font-family: var(--rf-mono); letter-spacing: .16em;
+       text-transform: uppercase; color: var(--rf-orange); margin: 26px 0 8px; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { font-family: var(--rf-mono); font-size: 12px; line-height: 1.75;
+       display: flex; gap: 10px; align-items: baseline; }
+  .mark { flex: none; width: 4.5em; font-weight: 600; }
+  li.ok .mark { color: var(--rf-ok); }
+  li.no .mark { color: var(--rf-danger); }
+  li.no { color: var(--rf-danger); }
+  .detail { color: var(--rf-muted); }
+  a { color: var(--rf-orange); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Model tests</h1>
+  <p class="lede">
+    The same suite that runs headless as <code>node tests/model-tests.js</code>, executed here in
+    the browser against the files the instrument itself loads. If a number in
+    <a href="../magnetic-ocean.html">the instrument</a> is wrong, it should be wrong here first.
+  </p>
+  <div class="tally" id="tally">running…</div>
+  <div id="out"></div>
+</div>
+
+<script src="../data/polarity-timescale.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/model.js"></script>
+<script src="model-tests.js"></script>
+<script>
+(function () {
+  var res = window.runMagneticOceanTests();
+  var out = document.getElementById("out"), ul = null;
+  res.results.forEach(function (r) {
+    if (r.heading) {
+      var h = document.createElement("h2"); h.textContent = r.heading; out.appendChild(h);
+      ul = document.createElement("ul"); out.appendChild(ul);
+      return;
+    }
+    if (!ul) { ul = document.createElement("ul"); out.appendChild(ul); }
+    var li = document.createElement("li");
+    li.className = r.ok ? "ok" : "no";
+    li.innerHTML = '<span class="mark">' + (r.ok ? "ok" : "FAIL") + '</span><span>' +
+      r.name.replace(/[<>&]/g, "") +
+      (r.detail ? ' <span class="detail">[' + String(r.detail).replace(/[<>&]/g, "") + ']</span>' : "") +
+      '</span>';
+    ul.appendChild(li);
+  });
+  var t = document.getElementById("tally");
+  t.textContent = res.pass + " passed · " + res.fail + " failed";
+  t.className = "tally " + (res.fail ? "bad" : "good");
+})();
+</script>
+</body>
+</html>

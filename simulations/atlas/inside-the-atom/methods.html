@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methods — Inside the Atom</title>
+<meta name="description" content="Methods and limitations for Inside the Atom: source, rules, parameters, simplifications, what it cannot establish, validation status and version history.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/orbital.css">
+<link rel="stylesheet" href="../assets/methods.css">
+<script src="../assets/orbital.js" data-title="Inside the Atom" data-tag="Methods"></script>
+<script src="../assets/catalogue.js"></script>
+</head>
+<body>
+<a class="rf-skip" href="#s1">Skip to methods</a>
+<div class="wrap">
+  <header class="mhead">
+    <span class="rf-regmark rm-tl"></span>
+    <span class="rf-regmark rm-tr"></span>
+    <div class="kicker">Methods &amp; limitations</div>
+    <h1>Inside the Atom</h1>
+    <p class="q">Can you infer the atom's hidden internal structure from how alpha particles scatter?</p>
+    <div class="badges" id="badges"></div>
+    <div class="actions">
+      <a class="rf-btn primary" href="inside-the-atom.html">Run instrument</a>
+      <a class="rf-btn" href="../index.html#catalogue">All instruments</a>
+    </div>
+    <dl class="spec" id="spec"></dl>
+    <nav class="toc" aria-label="Sections">
+      <a href="#s1">01 Source</a><a href="#s2">02 Rules &amp; equations</a>
+      <a href="#s3">03 Parameters</a><a href="#s4">04 What is simplified</a>
+      <a href="#s5">05 What this cannot establish</a><a href="#s6">06 Validation</a>
+      <a href="#s7">07 Version history</a>
+    </nav>
+  </header>
+
+  <!-- ================================================================ -->
+  <section id="s1"><h2><span class="idx">01</span> The source <span class="trail"></span></h2>
+
+    <p>Three papers, all from Rutherford's laboratory at Manchester.</p>
+
+    <ul>
+      <li><b>Geiger, H. and Marsden, E. (1909).</b> "On a Diffuse Reflection of the α-Particles."
+        <i>Proceedings of the Royal Society A</i> <b>82</b>, 495–500. Received 19 May, read 17 June 1909.</li>
+      <li><b>Rutherford, E. (1911).</b> "The Scattering of α and β Particles by Matter and the Structure
+        of the Atom." <i>Philosophical Magazine</i>, series 6, <b>21</b>(125), 669–688. Written at the
+        University of Manchester, April 1911; a brief account had been given to the Manchester Literary
+        and Philosophical Society in February.</li>
+      <li><b>Geiger, H. and Marsden, E. (1913).</b> "The Laws of Deflexion of α Particles through Large
+        Angles." <i>Philosophical Magazine</i>, series 6, <b>25</b>(148), 604–623. The quantitative test
+        of the 1911 theory, and the source of every number in this instrument that has a number attached
+        to it.</li>
+    </ul>
+
+    <h3>What happened</h3>
+
+    <p>In 1909 Geiger and Marsden put a tube of radium emanation behind a lead plate, arranged a
+    zinc-sulphide screen so that no α particle could reach it directly, and set a metal reflector in
+    front of the tube. Scintillations appeared at once. They counted them for eight metals and found
+    the rate rising with atomic weight — 3.4 a minute for aluminium against 67 for gold, a ratio of
+    about twenty, where for β particles the same ratio is about two. Varying the number of gold foils
+    showed the effect was a volume effect and not a surface one. Finally, using radium C deposited on
+    a plate and a platinum reflector of about a square centimetre, they estimated the fraction: of the
+    incident α particles, <b>about 1 in 8,000 was reflected</b>.</p>
+
+    <p>Their own comment is the point of the whole thing:</p>
+
+    <pre>"If the high velocity and mass of the α-particle be taken into account, it seems
+surprising that some of the α-particles, as the experiment shows, can be turned
+within a layer of 6 × 10⁻⁵ cm. of gold through an angle of 90°, and even more. To
+produce a similar effect by a magnetic field, the enormous field of 10⁹ absolute
+units would be required."
+                            — Geiger and Marsden 1909, p. 498</pre>
+
+    <p>In 1911 Rutherford showed that a multitude of small deflections could not account for it. On
+    Thomson's atom the chance of a 90° deflection is, in his phrase, "vanishingly small"; the
+    observed rate was not. He proposed instead a charge concentrated at the centre of the atom, worked
+    out the hyperbolic orbit of a particle passing near it, and derived the distribution that the
+    scattered particles must follow.</p>
+
+    <p>In 1913 Geiger and Marsden tested that distribution. Over several weeks they counted more than
+    a hundred thousand scintillations at angles from 5° to 150°, across which the number of scattered
+    particles varied by a factor of about 250,000, and found the predicted 1/sin⁴(φ/2) law held. They
+    also confirmed the proportionality to foil thickness, the dependence on the square of the atomic
+    weight, and the inverse fourth power of the velocity — and made one absolute measurement, from
+    which they deduced that "the number of elementary charges composing the centre of the atom is
+    equal to half the atomic weight."</p>
+
+    <p>That last conclusion is wrong, and instructively so. Half the atomic weight of gold is 98.5;
+    the nuclear charge is 79. The instrument uses the modern value and section 06 shows what the
+    difference costs.</p>
+
+    <div class="panel note">
+      <div class="ptitle">What this instrument is</div>
+      <p>A <b>historical reconstruction using a classical computational model</b>. The two competing
+      angular distributions are implemented as Rutherford set them out, side by side, in the 1911
+      paper. The apparatus is schematic and the exposures are counted in particles rather than in
+      weeks. It is not a reconstruction of the apparatus, and the catalogue's evidence field is left
+      unset until the validation in section 06 is extended — see the note there.</p>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <section id="s2"><h2><span class="idx">02</span> Rules and equations <span class="trail"></span></h2>
+
+    <h3>The nuclear model</h3>
+
+    <p>An α particle of charge Z₁e and kinetic energy E passes an atom whose central charge is Z₂e.
+    Rutherford's §2 gives the head-on distance of closest approach, the point at which all the kinetic
+    energy has become potential energy:</p>
+
+    <pre>b = Z₁ Z₂ k e² / E</pre>
+
+    <p>and the deflection in terms of the impact parameter p:</p>
+
+    <pre>cot(φ/2) = 2p / b</pre>
+
+    <p>His §3 turns this into a distribution. For a beam falling on a foil of thickness t containing n
+    atoms per unit volume, the fraction deflected through more than φ is his equation (3),</p>
+
+    <pre>P(&gt; φ) = (π/4) · n · t · b² · cot²(φ/2)</pre>
+
+    <p>and the number arriving per unit area of screen is his equation (5), which in modern notation is
+    a density per unit solid angle:</p>
+
+    <pre>dP/dΩ = n · t · (b/4)² · cosec⁴(φ/2)</pre>
+
+    <p>From these he reads off the four dependences that Geiger and Marsden went on to check: the
+    scattering goes as cosec⁴(φ/2), as the thickness t, as the square of the central charge, and as the
+    inverse fourth power of the velocity.</p>
+
+    <h3>How the model samples it</h3>
+
+    <p>The impact parameter is taken uniformly in area over the projected area per atom in the foil,</p>
+
+    <pre>p_max = 1 / √(π n t) ,   p = p_max √u ,   u ~ U(0,1)
+φ = 2 · arctan( b / 2p )</pre>
+
+    <p>which reproduces equation (3) exactly. This is worth stating plainly because it also solves a
+    numerical problem: the Rutherford cross-section diverges as φ → 0, and bounding p at p_max cuts the
+    distribution off at a smallest possible deflection</p>
+
+    <pre>φ_min = 2 · arctan( b / 2 p_max )</pre>
+
+    <p>below which no particle emerges. The distribution is therefore normalised on [φ_min, π] by
+    construction. There is no divergence to regularise by hand, no probability greater than one, and no
+    arbitrary cut-off angle. For the reference gold foil φ_min is 0.335°.</p>
+
+    <p>In the real world that cut-off comes from screening by the atomic electrons instead. The two
+    mechanisms are different and reach a similar place; this is noted again in section 04.</p>
+
+    <h3>The diffuse model</h3>
+
+    <p>Rutherford's §5 states Thomson's compound-scattering result in the form that makes the two
+    theories comparable. The average deflection from a single atom of radius R with charge N e
+    distributed through it is π b_T / 8R; after a thickness t the particle has passed through π R² n t
+    atoms, and the deflections add in quadrature, so the characteristic angle is</p>
+
+    <pre>θ_t = (π b_T / 8R) · √(π R² n t) = (π b_T / 8) · √(π n t)</pre>
+
+    <p>— R cancels, which is convenient, because no atomic radius has to be invented. Rutherford then
+    gives the survival function for compound scattering directly:</p>
+
+    <pre>P(&gt; φ) = exp( −φ² / θ_t² )</pre>
+
+    <p>This is the whole implementation. It is not a ray-trace through a Thomson atom; it is the
+    published law, sampled by inverting it.</p>
+
+    <div class="panel">
+      <div class="ptitle">The charge in the diffuse model</div>
+      <p>b_T is built from Thomson's charge, not Rutherford's. On the diffuse picture the deflecting
+      charge is the atom's whole complement of corpuscles, and Crowther had deduced from β-ray
+      scattering "that the number of electrons in an atom was about three times its atomic weight"
+      (Rutherford 1911, §1). The model uses <b>N_T = 3A</b> — 591 for gold.</p>
+      <p>This matters. A Thomson atom given N = Z would fail at both ends and the comparison would be
+      a straw man. With N_T = 3A the diffuse model reproduces roughly the small-angle scattering that
+      was actually observed in 1910 — at 1° it predicts <i>more</i> scattering than the nuclear model
+      does — and still predicts nothing whatever past twenty degrees. That is the historical situation,
+      and it is why the experiment had to be done at large angles.</p>
+    </div>
+
+    <h3>The detector</h3>
+
+    <p>The detector is a circular aperture of angular radius ρ whose axis makes an angle φ_d with the
+    beam. Its solid angle is Ω = 2π(1 − cos ρ), and the acceptance is the integral of the exit density
+    over that cap.</p>
+
+    <p>The integral is done over the polar angle rather than over the cap, because the density can vary
+    by ten orders of magnitude inside a wide aperture and no fixed rule on the cap will resolve a
+    forward peak a third of a degree across. Integrating over φ instead — where the structure is, and
+    where the model says exactly where it is — leaves the azimuthal part in closed form. A point on the
+    ring at polar angle φ and azimuth ψ, measured from the plane through the beam and the detector axis,
+    is inside the cap when</p>
+
+    <pre>cos φ cos φ_d + sin φ sin φ_d cos ψ ≥ cos ρ</pre>
+
+    <p>so the fraction of that ring inside the cap is arccos(X)/π with
+    X = (cos ρ − cos φ cos φ_d)/(sin φ sin φ_d), clipped to all or none. Only φ in
+    [φ_d − ρ, φ_d + ρ] contributes at all, which bounds the range, and φ_min and θ_t are inserted as
+    breakpoints inside it. The result agrees with the analytic P(&gt;φ) to eight figures whenever the two
+    can be compared (section 06).</p>
+
+    <h3>Where randomness enters</h3>
+
+    <p>Three places, and nowhere else:</p>
+
+    <table>
+      <thead><tr><th>Stage</th><th>Distribution</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Particles reaching the aperture</td><td>Binomial(N, acceptance)</td>
+          <td>Each of N particles independently either lands in the cap or does not.</td></tr>
+        <tr><td>Particles the screen records</td><td>Binomial(reached, ε)</td>
+          <td>Nested inside the first, which is what makes <i>detected ≤ eligible ≤ fired</i> true by
+          construction rather than by a clamp after the fact.</td></tr>
+        <tr><td>Background counts</td><td>Poisson(rate × N / 10⁹)</td>
+          <td>Stray particles off the diaphragm and the vessel walls, proportional to beam intensity.</td></tr>
+      </tbody>
+    </table>
+
+    <p>The acceptance itself is computed by quadrature rather than by simulating particles one at a
+    time. An exposure of 10⁹ therefore costs the same as one of 10³, and the counting statistics are
+    exact rather than approximated by a small sample. The trajectories drawn on the apparatus view are
+    a separate subsample from the same laws, used for illustration only; no count anywhere derives
+    from them.</p>
+
+    <p>The generator is Mulberry32. A session has a seed; exposure <i>k</i> derives its own generator
+    from (seed, k), so the same seed and the same sequence of actions reproduce a run exactly, while two
+    exposures at identical settings are still independent counts. In blind mode the hidden model is
+    chosen from the seed as well, so a whole session including its answer is reproducible.</p>
+
+    <h3>Numerical guards</h3>
+
+    <ul>
+      <li>Every value leaving the model passes a finiteness check with a fallback; nothing that is not
+      a number reaches a screen or an export.</li>
+      <li>Probabilities are clamped to [0,1] and the exit distribution is checked against unity — the
+      analytic path is normalised by construction, the beam-convolved table integrates to within
+      0.2 per cent and is renormalised.</li>
+      <li>Angles are clamped to [0, π] at every entry and exit. cos values into arccos are clamped to
+      [−1, 1].</li>
+      <li>Counts are integers, non-negative, and bounded above by the stage before them.</li>
+      <li>Energy is clamped to [0.1, 60] MeV, Z to [1, 120], thickness to [0.1, 10⁶] nm, before any
+      arithmetic touches them.</li>
+      <li>The 0/0 case that would produce a NaN — impact parameter exactly zero — instead produces
+      arctan(∞) = π/2 and a deflection of exactly π, which is the physically correct answer.</li>
+    </ul>
+  </section>
+
+  <!-- ================================================================ -->
+  <section id="s3"><h2><span class="idx">03</span> Parameters <span class="trail"></span></h2>
+
+    <p>Provenance is marked <span class="tagp documented">documented</span> for a value read off a
+    primary source or a standard constant table,
+    <span class="tagp invented">pedagogical</span> for one chosen so the instrument can be operated,
+    and <span class="tagp emergent">derived</span> for one computed from the others.</p>
+
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Parameter</th><th class="num">Value</th><th>Units</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>k·e²</td><td class="num">1.439964</td><td>MeV·fm</td>
+          <td><span class="tagp documented">documented</span> CODATA-derived; the combination that puts
+          b in femtometres directly.</td></tr>
+        <tr><td>Avogadro constant</td><td class="num">6.02214076 × 10²³</td><td>mol⁻¹</td>
+          <td><span class="tagp documented">documented</span> Exact by SI definition.</td></tr>
+        <tr><td>α rest energy</td><td class="num">3727.3794</td><td>MeV</td>
+          <td><span class="tagp documented">documented</span> Standard value; used for the velocity
+          readout only.</td></tr>
+        <tr><td>α kinetic energy, radium C′</td><td class="num">7.687</td><td>MeV</td>
+          <td><span class="tagp documented">documented</span> ²¹⁴Po α decay. The decay Q-value is
+          7.833 MeV; the α carries 7.833 × 210/214 and the recoiling ²¹⁰Pb takes the rest.</td></tr>
+        <tr><td>α velocity quoted in 1913</td><td class="num">2.06 × 10⁹</td><td>cm s⁻¹</td>
+          <td><span class="tagp documented">documented</span> Geiger &amp; Marsden 1913, p. 622. On the
+          modern α mass this implies 8.80 MeV — their range–velocity scale u³ = aR ran about 7 per cent
+          high. Both numbers are offered in the instrument; the discrepancy is real and is discussed in
+          section 06.</td></tr>
+        <tr><td>Reference gold foil</td><td class="num">2.1 × 10⁻⁵ = 210 nm</td><td>cm, nm</td>
+          <td><span class="tagp documented">documented</span> "a gold foil of air equivalent 1 mm.
+          (actual thickness 2.1 × 10⁻⁵ cm.)", 1913, p. 622. The instrument's default.</td></tr>
+        <tr><td>Detector efficiency, default</td><td class="num">0.85</td><td>—</td>
+          <td><span class="tagp documented">documented</span> "with the particular screens used only
+          about 85 per cent of the incident α particles" were counted, 1913, p. 622.</td></tr>
+        <tr><td>Target Z, A, density</td><td class="num">Au: 79, 196.967, 19.32</td><td>—, —, g cm⁻³</td>
+          <td><span class="tagp documented">documented</span> Modern values. Every metal offered appears
+          in the 1909 reflector table, the 1913 foil table, or both.</td></tr>
+        <tr><td>Thomson charge N_T</td><td class="num">3A  (591 for gold)</td><td>elementary charges</td>
+          <td><span class="tagp documented">documented</span> Crowther's deduction from β-ray
+          scattering, cited in Rutherford 1911 §1: "the number of electrons in an atom was about three
+          times its atomic weight."</td></tr>
+        <tr><td>Large-angle threshold</td><td class="num">90</td><td>degrees</td>
+          <td><span class="tagp documented">documented</span> Geiger and Marsden's own criterion — the
+          particle emerges on the side it entered.</td></tr>
+        <tr><td>Backscatter threshold</td><td class="num">150</td><td>degrees</td>
+          <td><span class="tagp documented">documented</span> The largest angle the 1913 apparatus could
+          reach; beyond it the lead shielding round the source got in the way.</td></tr>
+        <tr><td>Background rate, default</td><td class="num">2.0</td><td>counts per 10⁹ fired</td>
+          <td><span class="tagp invented">pedagogical</span> Geiger and Marsden measured their stray
+          rate with the foil removed and subtracted it — at 150° they record 0.2 a minute against 4.95
+          with the foil. The <i>form</i> is theirs; the magnitude here is chosen so that a rare count
+          can be genuinely ambiguous.</td></tr>
+        <tr><td>Beam angular spread, default</td><td class="num">0.5</td><td>degrees</td>
+          <td><span class="tagp invented">pedagogical</span> The 1913 diaphragms are not reproduced. A
+          Rayleigh profile of this width is convolved onto the exit distribution.</td></tr>
+        <tr><td>Exposure size, default</td><td class="num">10⁸</td><td>particles</td>
+          <td><span class="tagp invented">pedagogical</span> An exposure is a number of particles
+          delivered, not a length of time. The 1913 programme counted about 100,000 scintillations
+          across several weeks from a source of 100 millicuries.</td></tr>
+        <tr><td>Thickness range offered</td><td class="num">20 – 4000</td><td>nm</td>
+          <td><span class="tagp invented">pedagogical</span> The upper end is deliberately past the
+          point where single scattering holds, so that the failure can be seen and is flagged. See
+          section 04.</td></tr>
+        <tr><td>Single-scattering warning / failure</td><td class="num">P(&gt;5°) = 0.05 / 0.20</td><td>—</td>
+          <td><span class="tagp invented">pedagogical</span> Thresholds chosen so the flag appears well
+          before the model is badly wrong. Rutherford's own criterion is qualitative: the chance of a
+          second large deflection must be negligible.</td></tr>
+        <tr><td>b at the default settings</td><td class="num">29.60</td><td>fm</td>
+          <td><span class="tagp emergent">derived</span> Z₁Z₂ke²/E with Z = 79, E = 7.687 MeV.</td></tr>
+        <tr><td>n·t at the default settings</td><td class="num">1.240 × 10¹⁸</td><td>cm⁻²</td>
+          <td><span class="tagp emergent">derived</span> Gold at 210 nm. Only the product enters the
+          scattering law; thickness and density never appear separately.</td></tr>
+        <tr><td>φ_min at the default settings</td><td class="num">0.335</td><td>degrees</td>
+          <td><span class="tagp emergent">derived</span> 2·arctan(b / 2p_max).</td></tr>
+        <tr><td>θ_t at the default settings</td><td class="num">0.983</td><td>degrees</td>
+          <td><span class="tagp emergent">derived</span> (π b_T / 8)·√(π n t) for the diffuse model.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="panel warn">
+      <div class="ptitle">What still needs a decision</div>
+      <p>Three of the pedagogical values above — the background rate, the beam spread and the exposure
+      scale — have no counterpart in the papers and were chosen for playability. They set how ambiguous
+      a small exposure feels, which is a teaching choice rather than a physical one, and they are the
+      obvious things to argue about. Changing any of them changes the difficulty of the instrument and
+      none of its physics.</p>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <section id="s4"><h2><span class="idx">04</span> What is simplified <span class="trail"></span></h2>
+
+    <h3>Multiple scattering is not implemented</h3>
+
+    <p>Every deflection is a single encounter. This is exactly the regime Rutherford's theory was
+    derived for — he notes that if the probability of one deflection φ is 1/1000, the probability of
+    two is 1/10⁶ and "is negligibly small" — and it holds comfortably for the reference foil, where
+    0.45 per cent of particles are deflected past 5°.</p>
+
+    <p>It stops holding for thick foils. The instrument monitors P(&gt;5°) and labels the run
+    <i>strained</i> above 5 per cent and <i>failing</i> above 20 per cent, on the apparatus screen and
+    in the exported configuration. The 4000 nm setting is past the failure threshold and is offered
+    anyway, because watching a model announce its own breakdown is more useful than being prevented
+    from reaching it. In that regime the small-angle end of the distribution is understated; counts
+    past about 30° are still trustworthy, because a large deflection is still overwhelmingly likely to
+    have been a single encounter. Geiger and Marsden found the scattering strictly proportional to
+    thickness for thin foils and rising somewhat faster for thicker ones; that excess is absent here.</p>
+
+    <h3>Energy loss in the foil</h3>
+
+    <p>The beam leaves the foil at the energy it entered with. Geiger and Marsden applied a correction
+    for this, "amounted to 9 per cent in this experiment for the thickest foil used", and it matters
+    because the scattering goes as 1/E². For the reference foil it is negligible; at 4000 nm it is not,
+    and it compounds with the multiple-scattering failure above.</p>
+
+    <h3>Nuclear recoil</h3>
+
+    <p>The scattering centre is treated as infinitely heavy. Rutherford calculates the real effect in
+    his §4: an α deflected 90° by gold loses about 2 per cent of its velocity, but by aluminium it
+    loses 14 per cent, and "the general theory of single scattering will require modification" when the
+    target mass approaches the α mass. The light targets offered here — aluminium and carbon — are
+    therefore the least accurate, and carbon is the worst.</p>
+
+    <h3>Electron screening</h3>
+
+    <p>The atomic electrons are absent. Rutherford shows their contribution to large deflections is
+    negligible for heavy atoms, which justifies leaving them out of the nuclear model's mechanism. But
+    they are also what cuts off the divergence at very small angles in reality, and here that cut-off
+    comes instead from the finite projected area per atom. Two different mechanisms reaching a similar
+    place: the smallest deflections in this instrument are right in magnitude and wrong in origin.</p>
+
+    <h3>Trajectories versus scintillations</h3>
+
+    <p>The apparatus view draws particle paths. Nothing of the sort was ever visible. What Geiger and
+    Marsden saw, after half an hour in a dark room getting their eyes in, was a faint flash on a
+    zinc-sulphide screen, one particle at a time, counted through a microscope by a person who could
+    not manage "more than 90 scintillations per minute or less than about 5". The paths on screen are
+    drawn from the same laws that produce the counts, but they are an illustration of the model's
+    working and the view labels them as such. No number in the ledger comes from them.</p>
+
+    <h3>The apparatus itself</h3>
+
+    <p>Schematic. The 1913 chamber was a brass ring 3.5 cm deep with internal and external diameters of
+    5.5 and 7.5 cm, evacuated with charcoal cooled by liquid air, with the source 2.5 cm from the foil
+    and the screen moving on a circle of 1.6 cm radius. None of that is reproduced, and none of it would
+    change a count in this model, which depends on the foil only through n·t and on the detector only
+    through its angle and its solid angle.</p>
+
+    <h3>No quantum mechanics anywhere</h3>
+
+    <p>The model is entirely classical: a hyperbolic orbit in an inverse-square field. The Rutherford
+    cross-section happens to survive the transition to quantum theory for pure Coulomb scattering —
+    the Born approximation and the exact non-relativistic quantum treatment both return the same
+    formula — which is a famous accident and not a general licence. Nothing else in the classical
+    picture survives. There is also no nuclear force: at high enough energy the α reaches the nucleus
+    and Coulomb's law stops describing the encounter, and that limit is neither modelled nor flagged.</p>
+  </section>
+
+  <!-- ================================================================ -->
+  <section id="s5"><h2><span class="idx">05</span> What this cannot establish <span class="trail"></span></h2>
+
+    <ul class="cannot">
+      <li><b>The quantum structure of the atom.</b> Rutherford's nucleus is a point charge in a
+      classical orbit problem. It says nothing about energy levels or spectra, and the atom it implies
+      is unstable — an orbiting electron radiates. Rutherford knew this and set it aside explicitly:
+      "The question of the stability of the atom proposed need not be considered at this stage."</li>
+
+      <li><b>Electron orbitals.</b> There are no electrons in this model at all, only a compensating
+      charge that has been shown to be negligible for the deflections of interest. Nothing about the
+      arrangement of the outer charge can be inferred from anything the instrument produces.</li>
+
+      <li><b>Nuclear substructure.</b> The nucleus here has a charge and no size, no constituents, no
+      excited states and no strong force. It is a point, and the model breaks down exactly where a real
+      nucleus would start to be interesting.</li>
+
+      <li><b>The sign of the central charge.</b> Rutherford's own conclusion, and this instrument
+      inherits it: "The deductions from the theory so far considered are independent of the sign of the
+      central charge, and it has not so far been found possible to obtain definite evidence to
+      determine whether it be positive or negative."</li>
+
+      <li><b>An exact reconstruction of the historical experiment.</b> The geometry is schematic, the
+      exposure is measured in particles rather than in weeks of counting, the background is a
+      pedagogical number, and several apparatus dimensions are not reproduced. Counterfactuals run in
+      the instrument are statements about this model, not about what Geiger and Marsden would have
+      found.</li>
+
+      <li><b>The nuclear charge, from your own data.</b> You can measure a distribution consistent with
+      a concentrated charge. Extracting Z from it requires the absolute normalisation, which this
+      instrument gives you rather than asking you to measure — so the agreement in section 06 is a
+      check on the arithmetic, not a result you derived.</li>
+
+      <li><b>That the diffuse-charge model is impossible.</b> What the instrument shows is that a
+      particular diffuse model, with a particular charge, predicts nothing at large angles. A count at
+      120° rules that model out. It does not rule out every conceivable distribution of charge, and no
+      finite set of exposures could.</li>
+    </ul>
+  </section>
+
+  <!-- ================================================================ -->
+  <section id="s6"><h2><span class="idx">06</span> Validation status <span class="trail"></span></h2>
+
+    <p>Two suites run headlessly, without a browser:
+    <code>node js/test.js</code> (53 assertions on the physics, the accounting and the numerics) and
+    <code>node js/smoke.js</code> (99 assertions on rendering, exports, theming, reduced motion,
+    keyboard operation and layout). All 152 pass. Stochastic assertions use statistical tolerances,
+    stated in the test.</p>
+
+    <h3>Against the published numbers</h3>
+
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Check</th><th class="num">Published</th><th class="num">This model</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>b for Z = 100 at u = 2.09 × 10⁹ cm/s (Rutherford 1911, p. 671)</td>
+          <td class="num">≈ 3.4 × 10⁻¹² cm</td><td class="num">3.18 × 10⁻¹² cm</td>
+          <td>Agrees. The 6 per cent is Rutherford's e = 4.65 × 10⁻¹⁰ esu against the modern
+          4.803 × 10⁻¹⁰.</td></tr>
+        <tr><td>N for gold, inverted from Geiger's most probable angle (Rutherford 1911, p. 683)</td>
+          <td class="num">97</td><td class="num">97.0</td>
+          <td>Exact. The model's own survival function, fed his t, n, u and p₂ = 0.46, returns his
+          number.</td></tr>
+        <tr><td>Fraction scattered to 45° onto 1 mm² at 1 cm, gold 2.1 × 10⁻⁵ cm
+          (Geiger &amp; Marsden 1913, p. 622)</td>
+          <td class="num">3.7 × 10⁻⁷ ± 20%</td><td class="num">3.17 × 10⁻⁷</td>
+          <td>Agrees, 14 per cent low, inside their stated accuracy. Using their Z = A/2 = 98.5 and
+          their velocity instead of the modern values gives 3.76 × 10⁻⁷ — which is how they deduced
+          Z ≈ A/2 in the first place.</td></tr>
+        <tr><td>cosec⁴ law, 15° to 150° (Geiger &amp; Marsden 1913, Table II)</td>
+          <td class="num">flat to a factor of 1.5</td><td class="num">flat to 1 part in 10⁹</td>
+          <td>The model satisfies the law by construction; the published ratios are carried in the
+          instrument so a reader can see what "in good agreement" looked like in 1913.</td></tr>
+        <tr><td>Scattering per atom against Z</td><td class="num">∝ A², i.e. ∝ Z²</td>
+          <td class="num">Au/Cu per atom = 7.42</td><td>Matches (79/29)² = 7.42 to 2 per cent.</td></tr>
+        <tr><td>Scattering against velocity</td><td class="num">∝ 1/u⁴, i.e. ∝ 1/E²</td>
+          <td class="num">P(&gt;90°) at 4 MeV / at 8 MeV = 4.00</td><td>Matches to 2 per cent.</td></tr>
+        <tr><td>Scattering against thickness</td><td class="num">∝ t for thin foils</td>
+          <td class="num">50 nm → 500 nm gives 10.0×</td><td>Matches to 2 per cent.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>Internal consistency</h3>
+
+    <ul>
+      <li><b>Normalisation.</b> Across six configurations × two models, the exit distribution integrated
+      over the whole sphere differs from one by at most 2 × 10⁻³. Every P(&gt;φ) sampled at 5° intervals
+      is in [0,1] and finite; every density is non-negative and finite.</li>
+      <li><b>Quadrature.</b> The cap integral at φ_d = 0 agrees with the analytic P(&gt;ρ) to eight
+      significant figures for ρ from 1° to 90°. The acceptance summed over a partition of the sphere
+      into 10° annuli comes to 1 within 3 × 10⁻³.</li>
+      <li><b>Determinism.</b> The same seed and the same sequence of exposures reproduce identical
+      observations; a different seed does not. Two exposures at identical settings within a session draw
+      independently. The hidden model in blind mode is a function of the seed alone, and across 400
+      seeds both models are chosen a comparable number of times.</li>
+      <li><b>Accounting.</b> Across every exposure taken in the suite, detected ≤ eligible ≤ fired, and
+      raw = detected + background, with no exceptions. Ledger totals match the sum of the exposures.</li>
+      <li><b>Numerical integrity.</b> Nine deliberately awkward configurations — detector at 0° and at
+      180°, the widest and narrowest apertures, the thinnest and thickest foils, Z overridden to 1,
+      10¹⁰ particles at full efficiency with maximum background — produce no NaN, no infinity, no
+      out-of-range probability and no impossible count, in either model.</li>
+      <li><b>Counting statistics.</b> Over 400 exposures the mean count matches the model's prediction
+      within four standard errors and the variance matches the mean, as Poisson counting requires.</li>
+      <li><b>Rare events stay rare.</b> A small exposure at 150° returns nothing at all in a substantial
+      fraction of trials but not in all of them. The diffuse model returns zero counts at 60° in 100
+      trials of 10¹⁰ particles each.</li>
+      <li><b>Exports match the screen.</b> The observation CSV is compared field by field against the
+      ledger objects it was built from — angle, raw count, corrected count and seed on every row. The
+      model-comparison CSV is compared against the comparison table. Blind mode is checked not to leak
+      the hidden model into either.</li>
+      <li><b>Reset.</b> A new session starts empty and leaves the old one untouched.</li>
+    </ul>
+
+    <h3>Interface and accessibility, checked in the suite</h3>
+
+    <p>These were tested against the source and against a stubbed DOM, not by a person looking at a
+    screen — see the caveat below.</p>
+
+    <ul>
+      <li><b>Theming.</b> Every <code>--rf-*</code> token the canvases read is defined in both the day
+      and the night block of <code>orbital.css</code>, and so is every token the page stylesheet maps.
+      No colour is hard-coded anywhere outside the print rule. Every canvas repaints under both themes
+      without error.</li>
+      <li><b>Reduced motion.</b> Detected from the media query and from the chrome bar's Pause class;
+      in that state the animation step is a no-op, the paths are drawn statically, and the view says so.
+      Counts are byte-identical whether the animation is running or not. Scintillation marks fade over
+      900 ms with a 400 ms minimum gap, so the view cannot exceed 2.5 transitions a second.</li>
+      <li><b>Keyboard.</b> Every shortcut is driven through the real handler: exposure, sweep, detector
+      angle and aperture with their bounds, all seven screens, reset, help, Escape. Shortcuts do not
+      fire on the mode chooser, while a dialogue is open, while a field has focus, or with a modifier
+      held. Every control the screens emit is a <code>button</code>, <code>input</code>,
+      <code>select</code> or <code>a</code> — nothing is clickable without being focusable.</li>
+      <li><b>Layout.</b> No fixed width above 340 px anywhere in the stylesheet; breakpoints at 1080 px
+      and 720 px; tables scroll inside their own container; charts size from the element rather than a
+      constant; a print stylesheet exists.</li>
+      <li><b>Charts have text.</b> Every canvas carries an <code>aria-label</code>, and every chart has
+      a written summary element that is non-empty after painting. The distribution plot also offers the
+      same data as a table.</li>
+      <li><b>Offline.</b> No <code>fetch</code>, no <code>XMLHttpRequest</code>, no CDN, no
+      <code>localStorage</code>, and no URL outside the Google Fonts stylesheet in the head.</li>
+      <li><b>Links.</b> Every <code>src</code> and <code>href</code> in both pages resolves on disk;
+      every element id the scripts ask for exists; every <code>data-screen</code> has a section. The
+      badges on this page are read from <code>assets/catalogue.js</code> rather than written here, and
+      the catalogue record's taxonomy strings are checked against <code>TAXONOMY</code>.</li>
+    </ul>
+
+    <div class="panel warn">
+      <div class="ptitle">Not yet checked by a person in a browser</div>
+      <p>Everything above was verified headlessly. Nobody has yet opened this instrument in a real
+      browser, watched the animation, tabbed through it with a screen reader, or looked at it on a
+      phone. The tests establish that the mechanisms are wired correctly; they cannot establish that
+      the result is legible, that the night theme has enough contrast where it matters, or that the
+      apparatus view reads as an apparatus. That pass is outstanding.</p>
+    </div>
+
+    <div class="panel warn">
+      <div class="ptitle">Why the evidence badge is not set</div>
+      <p>The catalogue's <code>evidence</code> field is <code>null</code>, which renders as a dashed
+      "Status pending" chip. On the site's own definitions this instrument is a candidate for
+      <i>Historical reconstruction</i>, and the checks above are more than most things carry. What is
+      missing is a comparison against the <i>full</i> 1913 dataset rather than the single absolute point
+      — the angular series for all six metals, the thickness series and the velocity series, each fitted
+      and residuals reported, with the arbitrary scale factors of each block handled properly. Until
+      that table exists in this section, the badge would be asserting more than has been shown.</p>
+      <p>Two known discrepancies belong in it when it is written. The 1913 velocity scale runs about
+      7 per cent high against modern α energies, which propagates to about 30 per cent in b². And their
+      Z = A/2 is 25 per cent above the true nuclear charge for gold, which is a factor of 1.55 in the
+      predicted rate. Both are understood; neither has been quantified across the whole dataset.</p>
+    </div>
+  </section>
+
+  <!-- ================================================================ -->
+  <section id="s7"><h2><span class="idx">07</span> Version history <span class="trail"></span></h2>
+
+    <div class="vhist">
+      <div class="v">
+        <div class="vno">v0.1.0 · August 2026</div>
+        <p>First working version. Both scattering laws implemented from Rutherford 1911 — the nuclear
+        model from §§2–3 by sampling the impact parameter uniformly in area, the diffuse model from §5
+        by inverting the compound-scattering survival function with Crowther's N_T = 3A. Detector
+        acceptance by closed-form azimuthal integration over a polar quadrature. Four modes: guided
+        reconstruction, blind identification, model comparison, free laboratory. Angular histogram,
+        polar plot, detector sweep, model overlays and evidence ledger. Exports for configuration,
+        observations, angular distribution, model comparison and methods summary, plus a printable
+        report. 53 physics assertions and 99 interface assertions, both suites passing. Validated
+        against Rutherford's own arithmetic for b and for N = 97, and against the 1913 absolute
+        measurement to within its stated 20 per cent. Evidence badge left unset pending the full 1913
+        dataset comparison described in section 06.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="mfoot">
+    <div><a href="../index.html">← All instruments</a></div>
+    <div><a href="inside-the-atom.html">Run Inside the Atom →</a></div>
+    <div>Candice Cantrelle · 2026</div>
+  </footer>
+</div>
+
+<script>
+/* Badges and the spec block come from assets/catalogue.js so this page can
+   never disagree with the card that links to it. */
+(function () {
+  var s = byId("inside-the-atom");
+  if (!s) return;
+  document.getElementById("badges").innerHTML =
+    Orbital.evidenceBadge(s.evidence) + Orbital.basisBadge(s.basis) +
+    Orbital.stateBadge(s.state) + Orbital.flagChips(s.flags);
+  document.getElementById("spec").innerHTML = [
+    ["Domain", s.domain],
+    ["What you do", s.mode.join(", ")],
+    ["Duration", s.duration],
+    ["Difficulty", s.complexity],
+    ["Model type", s.model.join(" + ")],
+    ["Version", "v" + s.version + " · " + s.updated]
+  ].concat(s.basis ? [["Built on", s.basis.detail, "wide"]] : []).map(function (r) {
+    return "<div class=\"" + (r[2] || "") + "\"><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>";
+  }).join("");
+})();
+</script>
+</body>
+</html>

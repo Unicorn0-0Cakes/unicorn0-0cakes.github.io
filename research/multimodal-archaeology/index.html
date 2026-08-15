@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" data-world="research">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multimodal Archaeological Site Detection — Candice Cantrelle</title>
+<meta name="description" content="A proposed three-tier pipeline for locating unrecorded archaeological sites from satellite, LiDAR and archival text. Architecture built; nothing trained; no performance claimed.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/research/multimodal-archaeology/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Multimodal Archaeological Site Detection — Candice Cantrelle">
+<meta property="og:description" content="A proposed three-tier pipeline for locating unrecorded archaeological sites from satellite, LiDAR and archival text. Architecture built; nothing trained; no performance claimed.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/research/multimodal-archaeology/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/shell.css">
+<link rel="stylesheet" href="../../assets/css/cards.css">
+<link rel="stylesheet" href="../../assets/css/worlds.css">
+<script src="../../assets/js/shell.js"></script>
+
+<style>
+.case { display:grid; grid-template-columns: minmax(0,1fr) 300px; gap: var(--s-8); align-items:start; }
+@media (max-width: 980px) { .case { grid-template-columns: 1fr; gap: var(--s-6); } }
+.case__aside { position: sticky; top: 84px; display: grid; gap: var(--s-5); }
+@media (max-width: 980px) { .case__aside { position: static; } }
+.facts { border:1px solid var(--rf-line); border-radius:var(--w-radius);
+         background:var(--rf-panel); padding:var(--s-5); margin:0; }
+.facts dt { font-family:var(--rf-mono); font-size:var(--t-nano); letter-spacing:var(--rf-track-s);
+            text-transform:uppercase; color:var(--rf-muted); font-weight:600; }
+.facts dd { margin:3px 0 var(--s-4); font-size:var(--t-small); color:var(--rf-ink); }
+.facts dd:last-child { margin-bottom:0; }
+.linklist { list-style:none; padding:0; margin:0; display:grid; gap:var(--s-2); }
+.linklist li { margin:0; }
+.linklist a { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track-s);
+              text-transform:uppercase; font-weight:600; }
+.q { font-family:var(--rf-display); font-size:clamp(19px,2.2vw,26px); font-weight:500;
+     line-height:1.32; letter-spacing:-.02em; color:var(--rf-ink); margin:0 0 var(--s-5);
+     padding-left:var(--s-5); border-left:3px solid var(--w-accent); max-width:34ch; }
+.caveat { border:1px solid var(--rf-watch); border-left-width:3px; border-radius:var(--rf-radius);
+          padding:var(--s-5); background:var(--rf-panel); }
+.caveat h3 { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+             text-transform:uppercase; color:var(--rf-watch); margin:0 0 var(--s-3); font-weight:600; }
+.caveat p { font-size:var(--t-small); color:var(--rf-ink-dim); }
+h2.case-h { font-family:var(--rf-display); font-size:var(--t-h2); margin:var(--s-8) 0 var(--s-4);
+            padding-bottom:var(--s-3); border-bottom:1px solid var(--rf-line); }
+h2.case-h:first-child { margin-top:0; }
+h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+               color:var(--w-accent); margin-right:var(--s-3); }
+
+     .prose p, .prose li { font-family: var(--rf-serif); }
+     .caveat p, .caveat h3, .facts dd, .facts dt, .layer dd, .layer dt { font-family: var(--rf-sans); }
+</style>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+<div class="wrap"><ol class="crumbs"><li><a href="../../">Portfolio</a></li><li><a href="../../research/">Research</a></li><li><span aria-current="page">Multimodal Archaeology</span></li></ol></div>
+  <header class="plate">
+    <div class="wrap plate__grid">
+      <div>
+        <p class="plate__kicker">Case study · Research</p>
+        <h1>Multimodal Archaeological Site Detection</h1>
+        <p class="plate__lede">A three-tier detection pipeline, designed and scaffolded, with no dataset behind it and no result to report — which is the honest state of it and the reason it is here.</p>
+      </div>
+      <p class="stamp"><b>Research</b><br>Python · PyTorch<br>Conceptual prototype<br>2026</p>
+    </div>
+    <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
+  </header>
+
+
+  <section class="doc">
+    <div class="wrap case prose">
+      <div>
+        <p class="q">Could a staged detector triage satellite, LiDAR and archival text faster than survey alone — and how would you know?</p>
+
+        <div class="caveat">
+          <h2 style="font:inherit">Read this first</h2>
+          <p style="margin-bottom:0">
+            This project has produced no detection, segmentation or classification results. No
+            dataset has been acquired or processed end to end, no model has been trained on real
+            data, and the training script currently runs on placeholder inputs with dummy
+            declining loss values. Everything below describes an architecture and a set of design
+            decisions. None of it describes a validated system.
+          </p>
+        </div>
+
+        <h2 class="case-h"><span class="n">01</span>What it is</h2>
+        <p>
+          A proposed method for finding archaeological sites that nobody has recorded, by
+          combining data sources that are each individually insufficient: multispectral satellite
+          imagery, LiDAR-derived terrain products, and historical text. The proposal is a
+          three-tier cascade, where each tier is cheap relative to the one after it and exists to
+          reduce how much work the next tier has to do.
+        </p>
+
+        <h2 class="case-h"><span class="n">02</span>Why</h2>
+        <p>
+          Archaeological prospection is bounded by survey time. The area that might contain
+          something is enormous; the area anyone can walk is not. Any method that reliably
+          narrows the search is valuable even if its precision is poor, provided its recall is
+          good and its cost is low — which is a different optimisation target from the one most
+          detection models are built for, and the reason a cascade is the interesting shape.
+        </p>
+        <p>
+          It is also a domain where a false positive and a false negative are not symmetrical
+          errors, and where the consequences of publishing coordinates are not purely academic.
+        </p>
+
+        <h2 class="case-h"><span class="n">03</span>My role</h2>
+        <p>
+          The architecture and its staging, the configuration system, the model cards, the
+          preprocessing scaffolding for three different data modalities, the pipeline
+          orchestration, and the documentation — including the decision to state the project's
+          incompleteness in the first line of its README rather than at the bottom.
+        </p>
+
+        <h2 class="case-h"><span class="n">04</span>The proposed pipeline</h2>
+        <dl class="layers">
+          <div class="layer"><dt>Tier 1 — Scan</dt><dd>
+            A modified YOLOv8 detector sweeping wide areas of multispectral satellite imagery to
+            flag points of interest quickly. Optimised for recall and throughput; precision is
+            explicitly the next tier's problem.</dd></div>
+          <div class="layer"><dt>Tier 2 — Delineate</dt><dd>
+            SegFormer over high-resolution patches centred on the flagged points, to produce
+            boundaries rather than points. Expensive per unit area, which is why it only ever
+            sees what Tier 1 hands it.</dd></div>
+          <div class="layer"><dt>Tier 3 — Characterise</dt><dd>
+            A Swin Transformer over fused modalities — imagery, LiDAR derivatives, processed text —
+            for classification and significance assessment. The tier where the multimodal claim
+            actually lives, and the least specified of the three.</dd></div>
+        </dl>
+
+        <h2 class="case-h"><span class="n">05</span>Implemented and not implemented</h2>
+        <div class="ledger">
+          <div class="ledger__col">
+            <h3>Implemented</h3>
+            <ul>
+              <li>Three-stage pipeline structure and an orchestration script that sets out the intended call sequence</li>
+              <li>YAML configuration management, global and per-model</li>
+              <li>Draft architecture definitions for all three models</li>
+              <li>Preprocessing scaffolding for Sentinel imagery, LiDAR and text</li>
+              <li>Model cards in <code>docs/</code> for each of the three components</li>
+              <li>MLflow experiment-tracking scaffolding</li>
+            </ul>
+          </div>
+          <div class="ledger__col ledger__col--open">
+            <h3>Not implemented</h3>
+            <ul>
+              <li>No dataset acquired, licensed or processed end to end</li>
+              <li><code>train.py</code> uses placeholder data loading, a placeholder optimiser and dummy declining loss values</li>
+              <li>No checkpoint has been produced from real training</li>
+              <li>Evaluation is not connected to held-out data or ground truth</li>
+              <li>No detection, segmentation or classification metrics exist</li>
+              <li>Several features described in the model cards are explicitly hypothetical</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2 class="case-h"><span class="n">06</span>Outcome</h2>
+        <p>
+          What this project produced is a design and an honest account of its own state. That is
+          a smaller claim than the repository could have made — the scaffolding is complete
+          enough that it would have been easy to write about it in the present tense and let a
+          reader assume the rest.
+        </p>
+        <p>
+          The more useful output was recognising why it stalled. The architecture was specified
+          top-down, all three tiers at once, before a single tier had touched real data. Three
+          model cards were written for models that had never been trained. The scope ran ahead of
+          the evidence, and the correct response to that is not to build the fourth thing.
+        </p>
+
+        <h2 class="case-h"><span class="n">07</span>Limitations</h2>
+        <ul>
+          <li>The three-tier cascade is a design proposal. It has not been validated as more
+              effective or more efficient than a simpler baseline, and no such comparison has
+              been run.</li>
+          <li>Data acquisition depends on external satellite, LiDAR and archival sources that are
+              not integrated. GDAL and Rasterio are notoriously difficult to install and are not
+              fully tested in this repository.</li>
+          <li>No ethical, legal or cultural-heritage review has been conducted. That review would
+              be required before this pipeline ran against real archaeological data, not
+              afterwards.</li>
+          <li>Archaeological site locations are sensitive information. Any future work on real
+              data has to handle the risk of disclosing exact coordinates, which is a design
+              constraint on the output format and not just an operational note.</li>
+        </ul>
+
+        <h2 class="case-h"><span class="n">08</span>The next reproducible milestone</h2>
+        <p>
+          Narrow, rather than extend. One small, lawful, publicly available dataset — a satellite
+          tile set with known reference sites. One real training loop, for Tier 1 only. One honest
+          baseline to compare against, such as a classical thresholding detector. One evaluation
+          with real precision and recall, reported plainly, including a null result if that is
+          what comes out. Then write down what worked and what did not, before adding a second
+          tier.
+        </p>
+        <p>
+          If that milestone produces a Tier 1 detector that cannot beat simple thresholding, the
+          project has still answered its question. That outcome would be worth publishing here
+          exactly as readily as the other one.
+        </p>
+      </div>
+
+      <aside class="case__aside">
+<dl class="facts"><dt>Status</dt><dd>Research — conceptual prototype</dd><dt>Year</dt><dd>2026</dd><dt>Role</dt><dd>Architecture &amp; documentation</dd><dt>Language</dt><dd>Python</dd><dt>Models</dt><dd>YOLOv8, SegFormer, Swin Transformer</dd><dt>Framework</dt><dd>PyTorch</dd><dt>Tracking</dt><dd>MLflow (scaffolded)</dd><dt>Geospatial</dt><dd>GDAL, Rasterio</dd><dt>Config</dt><dd>YAML, per-model</dd><dt>Results</dt><dd>None. Nothing has been trained.</dd></dl><div class="facts"><dt style="font-family:var(--rf-mono);font-size:var(--t-nano);letter-spacing:var(--rf-track-s);text-transform:uppercase;color:var(--rf-muted);font-weight:600;margin-bottom:12px">Links</dt><ul class="linklist"><li><a href="https://github.com/Unicorn0-0Cakes/multimodal-archaeology-research-framework" rel="noopener">Repository &rarr;</a></li><li><a href="https://github.com/Unicorn0-0Cakes/multimodal-archaeology-research-framework/tree/main/docs" rel="noopener">Model cards &rarr;</a></li><li><a href="https://github.com/Unicorn0-0Cakes/multimodal-archaeology-research-framework#readme" rel="noopener">README &rarr;</a></li></ul></div>
+      </aside>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="../../data/projects.js"></script>
+<script src="../../assets/js/cards.js"></script>
+</body>
+</html>

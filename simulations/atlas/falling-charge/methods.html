@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methods — The Falling Charge</title>
+<meta name="description" content="Methods and limitations for The Falling Charge: the physical model, the distinction between Millikan's measurement and the modern SI definition, sources, what is simplified, what it cannot establish, and validation status.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/orbital.css">
+<link rel="stylesheet" href="../assets/methods.css">
+<script src="../assets/orbital.js" data-title="The Falling Charge" data-tag="Methods"></script>
+<script src="../assets/catalogue.js"></script>
+</head>
+<body>
+
+<a class="rf-skip" href="#s1">Skip to methods</a>
+
+<div class="wrap">
+
+  <header class="mhead">
+    <span class="rf-regmark rm-tl"></span>
+    <span class="rf-regmark rm-tr"></span>
+    <div class="kicker">Methods &amp; limitations</div>
+    <h1>The Falling Charge</h1>
+    <p class="q">Can an invisible unit of charge be recovered from the motion of falling oil droplets?</p>
+    <div class="badges" id="badges"></div>
+    <div class="actions">
+      <a class="rf-btn primary" href="index.html">Open instrument</a>
+      <a class="rf-btn" href="../index.html#catalogue">All instruments</a>
+    </div>
+    <dl class="spec" id="spec"></dl>
+    <nav class="toc" aria-label="Sections">
+      <a href="#s1">01 What is being recreated</a><a href="#s2">02 The physical model</a>
+      <a href="#s3">03 Inference</a><a href="#s4">04 Uncertainty</a>
+      <a href="#s5">05 Safeguards</a><a href="#s6">06 What is simplified</a>
+      <a href="#s7">07 What this cannot establish</a><a href="#s8">08 Validation</a>
+      <a href="#s9">09 References</a>
+    </nav>
+    <hr style="margin-top:20px">
+  </header>
+
+  <!-- ============================================================ -->
+  <section id="s1">
+    <h2><span class="idx">01</span> What is being recreated <span class="trail"></span></h2>
+
+    <p>In 1913 Robert Millikan published measurements of the motion of charged oil droplets between
+    two parallel plates, and argued from them that electric charge comes in a common indivisible
+    unit. The apparatus cannot show a charge. It shows how fast a droplet falls, and how that changes
+    when a field is applied. Everything else is inference.</p>
+
+    <div class="panel note">
+      <div class="ptitle">The distinction that matters</div>
+      <p>Since the 2019 revision of the SI, the elementary charge is <strong>exact by
+      definition</strong>: <code>e = 1.602 176 634 × 10⁻¹⁹ C</code>, and the ampere is defined in
+      terms of it. <strong>No experiment measures the elementary charge any more.</strong> It is a
+      fixed number, with zero uncertainty, and modern experiments measure other things against it.</p>
+      <table class="t">
+        <thead><tr><th></th><th>Millikan, 1913</th><th>Modern SI, since 2019</th></tr></thead>
+        <tbody>
+          <tr><td><code>e</code> is</td><td>an unknown quantity to be measured</td><td>an exact defined constant</td></tr>
+          <tr><td>the experiment</td><td>estimates <code>e</code> from droplet motion</td><td>cannot estimate <code>e</code>; <code>e</code> defines the coulomb</td></tr>
+          <tr><td>uncertainty in <code>e</code></td><td>real, dominated by air viscosity</td><td>zero, by definition</td></tr>
+          <tr><td>an oil-drop apparatus today</td><td>—</td><td>a teaching instrument for measurement and inference</td></tr>
+        </tbody>
+      </table>
+      <p>This simulation recreates the <em>inference</em>, not the measurement of a modern constant.
+      The exact SI value is used internally as the hidden ground truth that generates the droplets,
+      and it is sealed until the user locks their analysis. The user is not redefining anything.</p>
+    </div>
+
+    <div class="panel warn">
+      <div class="ptitle">Historical position</div>
+      <p>The apparatus is <strong>period-informed, not a reconstruction</strong>. The plate spacing,
+      chamber dimensions, oil density and observer reaction-time figures used in historical mode are
+      plausible inventions. They have <em>not</em> been read from Millikan's paper. Historical mode
+      is labelled <em>period-inspired</em> throughout for that reason, and the claim will not be
+      upgraded until the primary text has been used as a source.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="s2">
+    <h2><span class="idx">02</span> The physical model <span class="trail"></span></h2>
+
+    <p><strong>Sign convention</strong>, fixed once and used everywhere. The vertical axis is
+    positive <em>upward</em>, with its origin at the lower plate. <code>V</code> is the potential of
+    the upper plate minus the lower, so <code>E_y = −V/d</code>: a positive voltage puts the field
+    downward, and a positive droplet moves down. Oil-drop simulations usually go wrong here, so the
+    canvas converts to screen coordinates in exactly one function.</p>
+
+    <h3>Forces</h3>
+    <table class="t">
+      <tbody>
+        <tr><td>Effective weight</td><td><code>W = (ρ_oil − ρ_air)·(4/3)πr³·g</code></td><td>gravity and buoyancy, never used separately</td></tr>
+        <tr><td>Electric</td><td><code>F = qE_y = −qV/d</code></td><td>uniform parallel-plate field assumed</td></tr>
+        <tr><td>Drag</td><td><code>F = −6πηr·v / C_c</code></td><td>Stokes, with slip correction</td></tr>
+        <tr><td>Brownian</td><td>diffusive displacement</td><td>overdamped, not a random force</td></tr>
+      </tbody>
+    </table>
+
+    <h3>The Cunningham slip correction</h3>
+    <p>An 0.5 µm droplet is about eight mean free paths across, so gas molecules slip past its
+    surface and the drag is less than the continuum law predicts. Ignoring this makes the inferred
+    radius too large and the charge too large by roughly 11 %.</p>
+    <p><code>C_c = 1 + Kn·(α + β·exp(−γ/Kn))</code>, with <code>Kn = λ/r</code> — the Knudsen number
+    defined against the <em>radius</em>, not the diameter, because that is the convention the
+    coefficients were fitted under, and mixing conventions produces a silent factor-of-two error.</p>
+    <p>Default coefficients <code>α = 1.155, β = 0.471, γ = 0.596</code>, from Allen and Raabe's
+    least-squares re-evaluation of Millikan's own raw oil-drop data. Chosen because they were fitted
+    to oil droplets in a Millikan apparatus, which is exactly the system being simulated. An
+    alternative 1985 set and a no-correction option are both selectable.</p>
+
+    <h3>Inverting the measurements</h3>
+    <p>Radius, from the field-off fall speed. Because <code>C_c</code> depends on <code>r</code> the
+    equation is implicit and is solved by bisection, with the iteration count and residual shown in
+    the interface rather than hidden:</p>
+    <p class="eq"><code>r²·C_c(r) = 9η·v_f / (2g(ρ_oil − ρ_air))</code></p>
+    <p>Charge, from the field-off fall and the field-on motion of the <em>same</em> droplet. One
+    expression covers balanced suspension, slowed fall and terminal rise:</p>
+    <p class="eq"><code>q = −6πηr·d·(v_f − v_s) / (C_c·V)</code></p>
+    <p>where <code>v_s</code> is the field-on velocity as a downward-positive speed — zero at
+    balance, negative when rising. There is no code path from a voltage reading to a charge; the
+    function throws unless both observations exist.</p>
+
+    <h3>Integration</h3>
+    <p>The velocity relaxation time is about 3 microseconds, so the system is extremely stiff and an
+    explicit integrator would be useless. Because the drag is linear in velocity, the equation has a
+    closed-form solution over each step, and that exact exponential update is what the model uses. It
+    is unconditionally stable and exact for constant forces at any step size — which matters most
+    near balance, the case that breaks naive schemes.</p>
+    <p>Physics advances in fixed 2 ms steps of <em>simulated</em> time. Frame rate cannot change the
+    trajectory; this is asserted by running identical simulated time in chunks of 1, 7 and 331 steps
+    and comparing bit for bit.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="s3">
+    <h2><span class="idx">03</span> Inferring the unit <span class="trail"></span></h2>
+
+    <p>Given a set of measured charges, the task is to find the common unit they are multiples of,
+    without dividing by a known answer. The analysis module imports nothing that contains the
+    accepted value; the search range is derived from the data.</p>
+
+    <div class="panel note">
+      <div class="ptitle">Why chi-squared alone cannot do this</div>
+      <p>Two problems, and only the second is usually noticed.</p>
+      <p><strong>Exact ties.</strong> If <code>e</code> explains the data then <code>e/2</code>
+      explains it identically: every integer doubles and every residual is unchanged. Chi-squared
+      cannot distinguish them at all.</p>
+      <p><strong>Finer lattices genuinely fit better.</strong> Once measurement noise is comparable
+      to <code>e</code>, a finer lattice has more rungs to absorb noise into, so <code>χ²(e/3)</code>
+      is strictly <em>lower</em> than <code>χ²(e)</code>. Minimising chi-squared drives the estimate
+      toward zero. The first implementation of this simulation did exactly that and returned
+      <code>ê ≈ e/3</code>.</p>
+      <p>The fix is a penalty for model flexibility, and it is derived rather than tuned. Writing the
+      honest marginal likelihood of the quantised model — summing over the integer assignments
+      instead of fitting them for free, with a uniform prior over the integers available in a data
+      set spanning <code>[0,Q]</code> — gives</p>
+      <p class="eq"><code>−2 ln L ≈ χ²(e) + 2N·ln(Q/e)</code></p>
+      <p>The penalty difference between <code>e</code> and <code>e/2</code> is <code>2N ln 2</code>,
+      independent of the data, so more droplets make the ladder easier to see rather than harder.
+      Both curves are plotted, so the user can see what the penalty did.</p>
+      <p>This is a load-bearing modelling choice. A different prior over integer states would give a
+      different penalty and could move the estimate. A reviewer who disagrees should say so.</p>
+    </div>
+
+    <p><strong>Implemented:</strong> Method A, the candidate-lattice search on the penalised
+    objective, reporting the full curve, every local minimum including the sub-multiples, the integer
+    assignments, ambiguous assignments, and the residuals. Method B, weighted regression through the
+    origin using those assignments. Method B is <em>not</em> an independent confirmation of Method A
+    — it consumes A's assignments — and the interface says so.</p>
+    <p><strong>Not implemented:</strong> robust estimation, the likelihood mixture over integer
+    states, and pairwise charge-step analysis.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="s4">
+    <h2><span class="idx">04</span> Uncertainty <span class="trail"></span></h2>
+
+    <div class="panel note">
+      <div class="ptitle">The correlated-residual correction, and what it broke</div>
+      <p>For a diffusing droplet the tracked positions are not independent — the noise is a random
+      walk. Ordinary least squares assumes otherwise, and on simulated tracks its standard error
+      understates the true velocity uncertainty by a factor of <strong>13 to 50</strong>.</p>
+      <p>That was not a cosmetic error. With a tenfold overconfident velocity error, a
+      <strong>neutral</strong> droplet passed a three-sigma "did it respond to the field?" test,
+      entered the dataset carrying an apparent charge of a few hundredths of an elementary unit, and
+      pulled the inferred lattice onto a sub-multiple. A bad uncertainty produced a wrong physical
+      conclusion.</p>
+      <p>For Brownian motion the endpoints are a sufficient statistic for the drift, so the honest
+      standard error is <code>√(2D/T)</code> — independent of how many samples were taken — with
+      <code>D</code> estimated from the mean squared increment of the residuals. The instrument
+      reports the larger of that and the OLS value, and shows both.</p>
+      <p>The same correlation wrecks the usual terminal-velocity check. On 3000 simulated tracks with
+      no acceleration whatsoever, the median <code>|t|</code> on the quadratic coefficient is
+      <strong>8.0</strong>: the textbook <code>|t| &gt; 2</code> rule would reject 87 % of perfectly
+      settled droplets. The instrument compares the size of the implied curvature against the
+      observed noise instead, with a threshold set from that measured null distribution.</p>
+    </div>
+
+    <p>Random and systematic uncertainty are reported separately and never silently summed, because
+    they behave differently: only the random part falls as more droplets are measured. A session can
+    produce a beautiful integer ladder with reduced chi-squared of 1.0 and be 4 % wrong, because
+    every droplet was measured with the same mis-scaled reticle. With a fixed systematic, interval
+    coverage <em>degrades</em> as the sample grows — more data makes an uncorrected experiment more
+    confidently wrong. That is the single most useful thing this instrument can demonstrate.</p>
+
+    <p>Propagation is Monte Carlo over the user's <em>declared</em> calibration uncertainties,
+    because the radius inversion is implicit and analytic partials would require differentiating
+    through a root-find. Sensitivity is computed by numerically perturbing the model, so the
+    uncertainty budget reflects this model rather than a textbook ranking.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="s5">
+    <h2><span class="idx">05</span> Safeguards <span class="trail"></span></h2>
+    <ul>
+      <li><strong>No hidden correction.</strong> Nothing is adjusted toward the accepted value.</li>
+      <li><strong>No outcome-aware hints.</strong> The instrument never comments on whether an estimate is close to anything.</li>
+      <li><strong>No disappearing observations.</strong> The storage layer has no delete operation for observations. Rejected measurements remain in the tables, the exports, the sensitivity analysis and the reveal.</li>
+      <li><strong>No circular inference.</strong> The analysis module has no reference to the accepted value, no import of the constants file, and no access to the truth vault. Reading the vault before the reveal throws. A test strips comments and greps for violations — crude, and not a proof.</li>
+      <li><strong>No false precision.</strong> Uncertainties are quoted to one significant figure (two if the leading digit is 1) and the estimate is rounded to match.</li>
+      <li><strong>No erased protocol changes.</strong> Amendments preserve the previous rules, require a written reason, and record whether an intermediate estimate had already been seen.</li>
+      <li><strong>Locking is irreversible.</strong> A locked analysis is deep-frozen; everything after the reveal is labelled outcome-aware exploratory analysis.</li>
+    </ul>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="s6">
+    <h2><span class="idx">06</span> What is simplified <span class="trail"></span></h2>
+    <ul>
+      <li><strong>One transit per droplet.</strong> Millikan reversed the field repeatedly and averaged over many transits of the same droplet. This build derives a charge from one fall and one field-on observation, which is why per-measurement uncertainties sit at 5–10 % rather than under 1 %.</li>
+      <li><strong>Uniform field.</strong> No edge or fringing effects near the plate boundary.</li>
+      <li><strong>Dry air.</strong> Humidity affects both density and viscosity; not modelled.</li>
+      <li><strong>No evaporation.</strong> Droplets carry the state field; nothing changes their radius.</li>
+      <li><strong>No air currents.</strong> The quality indicator exists and is always false.</li>
+      <li><strong>Tilt is half modelled.</strong> The velocity projection is applied; the lateral drift that would let a user <em>notice</em> the tilt is not rendered, which makes it an invisible systematic.</li>
+      <li><strong>Local gravity is exact.</strong> Real local gravity varies by ±0.3 %, a 0.15 % systematic.</li>
+      <li><strong>The mean free path is unsettled.</strong> Standard expressions give 66–67 nm; a 2023 molecular-dynamics study reports 38.5 nm. This model computes ≈65 nm from kinetic theory.</li>
+      <li><strong>The visible sample is biased.</strong> Small droplets scatter less light, so the droplets a user can find are systematically larger than the droplets that exist. Realistic, disclosed at the reveal, and still a non-random sample.</li>
+    </ul>
+    <p>Of the 40 registered parameters, 5 are exact SI definitions, 3 are sourced, 8 come from
+    secondary summaries of primary papers, and <strong>24 are marked <em>not yet calibrated</em></strong>
+    — invented modelling choices with no external justification. The apparatus error magnitudes and
+    the entire droplet population model are in that last category.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="s7">
+    <h2><span class="idx">07</span> What this cannot establish <span class="trail"></span></h2>
+    <div class="panel warn">
+      <div class="ptitle">Read this before quoting anything from it</div>
+      <p>Simulated data are evidence about this model, not about the physical world. No number this
+      instrument produces is a measurement of anything.</p>
+    </div>
+    <ul>
+      <li><strong>Nothing about interval coverage.</strong> Coverage requires many replicated experiments. Batch mode is not built, so no claim about coverage is made anywhere.</li>
+      <li><strong>Nothing about quantisation versus a continuous model.</strong> Model comparison is not implemented. It is deliberately withheld until it can be shown to <em>fail</em> to select quantisation when given continuously distributed synthetic charges — the risk that the comparison is rigged by construction is the most serious in the project, and shipping it untested would be worse than leaving it out.</li>
+      <li><strong>Nothing about exclusion policy.</strong> The Analyst's Dilemma mode, which is the part that actually teaches the difference between defensible rejection and cherry-picking, is not built.</li>
+      <li><strong>Nothing about how real users behave.</strong> Hypothesis H8 concerns people, not software, and would need a study with participants.</li>
+    </ul>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="s8">
+    <h2><span class="idx">08</span> Validation <span class="trail"></span></h2>
+    <p>176 automated tests, run with <code>node tests/run.js</code>. Layers refer to
+    <code>docs/VALIDATION_PLAN.md</code>.</p>
+    <table class="t">
+      <thead><tr><th>Layer</th><th>Status</th><th>What it shows</th></tr></thead>
+      <tbody>
+        <tr><td>1 · Equations</td><td>executed</td><td>Viscosity, air density, mean free path, three slip-correction values, effective weight, fall speed, balancing voltage and the radius and charge round trips all match hand-calculated references. The round trips are exact to 1 part in 10¹³.</td></tr>
+        <tr><td>2 · Noiseless recovery</td><td>executed</td><td>The hidden unit is recovered to better than 1 part in 10⁹, and every integer assignment is correct. <em>This layer caught the sub-multiple defect described in section 03.</em></td></tr>
+        <tr><td>3 · Controlled noise</td><td>partial</td><td>Recovery under Brownian motion; sample size reduces random spread; a 4 % systematic persists undiminished at N=10 and N=60. Interval coverage not tested — needs batch mode.</td></tr>
+        <tr><td>4 · Systematic bias</td><td>partial</td><td>Ignoring the slip correction inflates charges by ~19 % with a correlation of −1.0 against droplet radius — the size-dependent signature H7 predicts. Other miscalibrations not swept.</td></tr>
+        <tr><td>5 · Model comparison</td><td>not executed</td><td>Feature not built.</td></tr>
+        <tr><td>6 · Exclusion policy</td><td>not executed</td><td>Feature not built.</td></tr>
+        <tr><td>7 · Interface</td><td>partial</td><td>A complete blind experiment runs headlessly through the real apparatus, tracker, inversions and analysis, recovering the hidden unit to within a few per cent across seeds. The truth vault throws throughout. No automated DOM inspection for leaked truth.</td></tr>
+        <tr><td>8 · Independent review</td><td><strong>not executed</strong></td><td>No physicist or laboratory instructor has reviewed the equations, signs, correction factors, parameter ranges or explanatory language.</td></tr>
+      </tbody>
+    </table>
+    <p>Until Layer 8 is complete this remains a <strong>research prototype</strong> and the catalogue
+    badge reads <em>uncalibrated prototype</em>. That will not change because the tests pass; passing
+    tests show the code is self-consistent, which is the weakest useful kind of evidence.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="s9">
+    <h2><span class="idx">09</span> References <span class="trail"></span></h2>
+    <p>Sources actually consulted. Where a value came from a secondary summary rather than the
+    primary paper, that is stated — no citation here is decorative.</p>
+    <ul>
+      <li>Millikan, R. A. (1913). "On the Elementary Electrical Charge and the Avogadro Constant."
+        <em>Physical Review</em> <strong>2</strong>(2), 109–143.
+        <a href="https://link.aps.org/doi/10.1103/PhysRev.2.109">doi:10.1103/PhysRev.2.109</a>.
+        <em>Citation and pagination verified; the apparatus parameters used in historical mode were
+        not taken from it.</em></li>
+      <li>Allen, M. D. &amp; Raabe, O. G. (1982). "Re-evaluation of Millikan's oil drop data for the
+        motion of small particles in air." <em>Journal of Aerosol Science</em> <strong>13</strong>(6),
+        537–547. <em>Source of the default slip coefficients; values taken from published summaries,
+        and the stated validity range is <strong>not yet calibrated</strong>.</em></li>
+      <li>Allen, M. D. &amp; Raabe, O. G. (1985). "Slip Correction Measurements of Spherical Solid
+        Aerosol Particles in an Improved Millikan Apparatus." <em>Aerosol Science and Technology</em>
+        <strong>4</strong>(3), 269–286. <em>Alternative coefficient set; secondary source.</em></li>
+      <li>NIST CODATA, elementary charge — exact by definition since 2019.
+        <a href="https://physics.nist.gov/cgi-bin/cuu/Value?e">physics.nist.gov</a></li>
+      <li>BIPM, <em>SI Brochure</em>, 9th edition (2019), for the definition of the ampere.
+        <a href="https://www.bipm.org/en/publications/si-brochure">bipm.org</a>.
+        <em>The brochure text has not been fetched and quoted directly in this build; the summary
+        above is the standard statement of the 2019 revision, and is marked
+        <strong>not yet calibrated</strong> until cited from the primary source.</em></li>
+      <li>Sutherland's formula constants for air (η_ref = 1.716×10⁻⁵ Pa·s, S = 110.4 K) — conventional
+        values from fluid-dynamics references. <strong>Secondary sources only; no primary
+        metrological source consulted.</strong></li>
+      <li>Tsalikis et al. (2023), "Dynamics of molecular collisions in air and its mean free path,"
+        <em>Physics of Fluids</em> <strong>35</strong>, 097131 — consulted because it reports a mean
+        free path substantially different from the established 66–67 nm, so the quantity is disclosed
+        as unsettled.</li>
+    </ul>
+    <p><strong>Deliberately uncited:</strong> the atomiser size distribution, the charge-magnitude
+    distribution, the ionisation hazard rate, all instrument error magnitudes, and the reaction-time
+    statistics. These are invented. Inventing a citation for them would be worse than admitting it.</p>
+    <p>Full documentation: <a href="docs/PHYSICS_MODEL.md">physics model</a> ·
+      <a href="docs/UNCERTAINTY_ANALYSIS.md">uncertainty</a> ·
+      <a href="docs/PARAMETER_REGISTER.md">parameter register</a> ·
+      <a href="docs/LIMITATIONS.md">limitations</a> ·
+      <a href="docs/RISK_REGISTER.md">risk register</a> ·
+      <a href="docs/VALIDATION_PLAN.md">validation plan</a> ·
+      <a href="docs/REFERENCES.md">references</a></p>
+  </section>
+
+  <footer class="mfoot">
+    <div><a href="../index.html">← All instruments</a></div>
+    <div><a href="index.html">Open The Falling Charge →</a></div>
+    <div>Candice Cantrelle · 2026</div>
+  </footer>
+
+</div>
+
+<script>
+/* Badges and the spec block come from assets/catalogue.js so this page can
+   never disagree with the card that links to it. */
+(function () {
+  var s = byId("falling-charge");
+  if (!s) return;
+  document.getElementById("badges").innerHTML =
+    Orbital.evidenceBadge(s.evidence) + Orbital.basisBadge(s.basis) +
+    Orbital.stateBadge(s.state) + Orbital.flagChips(s.flags);
+  document.getElementById("spec").innerHTML = [
+    ["Domain", s.domain],
+    ["What you do", s.mode.join(", ")],
+    ["Duration", s.duration],
+    ["Difficulty", s.complexity],
+    ["Model type", s.model.join(" + ")],
+    ["Version", "v" + s.version + " · " + s.updated]
+  ].concat(s.basis ? [["Built on", s.basis.detail, "wide"]] : []).map(function (r) {
+    return "<div class=\"" + (r[2] || "") + "\"><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>";
+  }).join("");
+})();
+</script>
+</body>
+</html>

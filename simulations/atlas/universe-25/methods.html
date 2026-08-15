@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methods — Universe 25</title>
+<meta name="description" content="Methods and limitations for Universe 25: source, rules, parameters, simplifications, what it cannot establish, validation status and version history.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/orbital.css">
+<link rel="stylesheet" href="../assets/methods.css">
+<script src="../assets/orbital.js" data-title="Universe 25" data-tag="Methods"></script>
+<script src="../assets/catalogue.js"></script>
+</head>
+<body>
+
+<a class="rf-skip" href="#s1">Skip to methods</a>
+
+<div class="wrap">
+
+  <header class="mhead">
+    <span class="rf-regmark rm-tl"></span>
+    <span class="rf-regmark rm-tr"></span>
+    <div class="kicker">Methods &amp; limitations</div>
+    <h1>Universe 25</h1>
+    <p class="q">Can abundance without space collapse a society — and can predation prevent it?</p>
+    <div class="badges" id="badges"></div>
+    <div class="actions">
+      <a class="rf-btn primary" href="universe25.html">Run instrument</a>
+      <a class="rf-btn" href="../index.html#catalogue">All instruments</a>
+    </div>
+    <dl class="spec" id="spec"></dl>
+    <nav class="toc" aria-label="Sections">
+      <a href="#s1">01 Source</a><a href="#s2">02 Rules &amp; equations</a>
+      <a href="#s3">03 Parameters</a><a href="#s4">04 What is simplified</a>
+      <a href="#s5">05 What this cannot establish</a><a href="#s6">06 Validation</a>
+      <a href="#s7">07 Version history</a>
+    </nav>
+    <hr style="margin-top:20px">
+  </header>
+
+  <section id="s1">
+    <h2><span class="idx">01</span> The source <span class="trail"></span></h2>
+
+    <p>Universe 25 was a real behavioural experiment run by the ethologist <strong>John B. Calhoun</strong>
+    at the National Institute of Mental Health between 1968 and 1972. A "mouse utopia" was provisioned
+    with unlimited food, water and nesting material, but with a fixed physical space. Despite the
+    abundance, the colony collapsed — not from starvation, but through behavioural change driven by
+    density.</p>
+    <p>Calhoun described a progression that this simulation reproduces as four named phases:</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Phase</th><th>What characterises it</th></tr></thead>
+      <tbody>
+        <tr><td>Exploration &amp; settlement</td><td>A small population explores; healthy interaction, balanced territory.</td></tr>
+        <tr><td>Rapid growth</td><td>Exponential increase, social structures form, early crowding signs.</td></tr>
+        <tr><td>Social breakdown</td><td>Aggression rises, maternal neglect rises, withdrawn "Beautiful Ones" appear, birth rate turns.</td></tr>
+        <tr><td>Collapse</td><td>Births plummet; behaviour does not recover even as density falls.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="panel note">
+      <div class="ptitle">What this adds to the original</div>
+      <p>The historical experiment had no predators, no terrain, no water and no resource limit — the
+      constraint was space alone. Predators, vegetation, water bodies, a flowing river, fish and birds
+      are all <span class="tagp invented">invented</span> extensions, added so that "what if the
+      constraint had not been space alone" becomes a question you can ask.</p>
+    </div>
+
+  </section>
+  <section id="s2">
+    <h2><span class="idx">02</span> Rules and equations <span class="trail"></span></h2>
+
+    <p>This is an <strong>agent-based</strong> model on a square lattice. There are no population
+    equations: every mouse, cat, bird and fish is an individual with its own age, health, hunger,
+    thirst and traits, and every population curve on the chart is a count of survivors rather than a
+    solved trajectory.</p>
+
+    <h3>Mental state</h3>
+    <p>Each mouse occupies one of five discrete states, driven by local density and its own traits:</p>
+    <div class="eq">NORMAL · STRESSED · WITHDRAWN · AGGRESSIVE · BEAUTIFUL ONE</div>
+    <p>Aggressors disrupt social structure; withdrawn "Beautiful Ones" avoid contact, groom, and do
+    not reproduce; neglectful parents abandon offspring. The collapse is produced by these states
+    accumulating, not by a death rate being raised.</p>
+
+    <h3>Needs and movement</h3>
+    <p>Hunger and thirst rise every tick. Above a seeking threshold an animal travels to a source;
+    above a deprivation threshold it loses health, weakens, and dies. Water is <strong>impassable</strong>,
+    so lakes act as barriers that shape movement, hunting and escape; animals route around them using
+    a distance-field pathfinder rather than straight-line steering.</p>
+
+    <h3>Predation</h3>
+    <p>Cats stay dormant until the colony establishes, then stalk the nearest mouse, pounce when
+    adjacent, gain reserve from each kill, breed when well fed and starve when prey run short. Mice
+    sense nearby predators and flee — but in a crowded crush, escape often fails, which ties predation
+    back to the density theme rather than bolting it on.</p>
+
+    <h3>Cover, and its twist</h3>
+    <p>Only mice can enter vegetation. A mouse inside grass cannot be caught by a cat — but it must
+    break into the open to reach water, where the cats hunt. Good cover therefore lets a colony escape
+    predation and boom, straight into overcrowding collapse. Birds nest <em>in</em> the vegetation, so
+    cover from cats is not cover from above. <span class="tagp emergent">emergent</span></p>
+
+  </section>
+  <section id="s3">
+    <h2><span class="idx">03</span> Parameters <span class="trail"></span></h2>
+
+    <h3>Controls exposed in the page</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Control</th><th class="num">Range</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>Starting mice</td><td class="num">4 – 60</td><td>Founder population.</td></tr>
+        <tr><td>World size</td><td class="num">40 / 58 / 78 / 98</td><td>Burrow, Colony, City, Metropolis — the largest holds roughly 8,000 mice.</td></tr>
+        <tr><td>Predators</td><td class="num">0 – 30</td><td>Starting cats. Too many and mice are hunted out; too few and the crowding collapse plays out.</td></tr>
+        <tr><td>Food &amp; water bodies</td><td class="num">slider</td><td>How many vegetation patches and water bodies to generate.</td></tr>
+        <tr><td>Resources</td><td class="num">Infinite / Finite</td><td>Infinite is Calhoun's premise. Finite makes vegetation deplete and regrow, ponds recede, and the river drawdown-limited.</td></tr>
+        <tr><td>River</td><td class="num">on / off</td><td>Steady inflow, drawn down by use, with a central ford so it never splits the colony.</td></tr>
+        <tr><td>Fish · Birds</td><td class="num">on / off</td><td>Two optional species, independently toggled.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Internal tuning</h3>
+    <p>Time is deliberately compressed against a real colony so that a full rise and fall is
+    watchable. The headline constants (<code>js/config.js</code>):</p>
+    <div class="eq">ADULT_AGE 45   MAX_AGE 260   PREG_DURATION 26   MAX_DENSITY 0.85
+HUNGER_RATE 0.42/tick   THIRST_RATE 0.50/tick
+SEEK_HUNGER 55   SEEK_THIRST 50   DEPRIVE 88   DEPRIVE_DMG 0.9/tick</div>
+    <p class="dim">Predator tuning (<code>PRED</code>) was balanced by headless testing until
+    coexistence was reachable rather than assumed. Terrain constants live in <code>TERR</code>.</p>
+
+    <h3>Presets</h3>
+    <p><strong>Predator &amp; Prey</strong> · <strong>Classic (no cats)</strong> ·
+    <strong>Instant Crowding</strong> · <strong>Wide Open</strong></p>
+
+  </section>
+  <section id="s4">
+    <h2><span class="idx">04</span> What is simplified <span class="trail"></span></h2>
+
+    <ul>
+      <li><strong>Behaviour is five discrete labels</strong>, not continuous psychology. A real
+      Calhoun observation sheet had far more categories and much less certainty about them.</li>
+      <li><strong>No disease, no parasitism, no thermoregulation.</strong> Death arrives through
+      deprivation, predation, age or violence, and through nothing else.</li>
+      <li><strong>Inheritance is trait-level only.</strong> Offspring take blended parental traits;
+      there is no genome and no selection acting on one.</li>
+      <li><strong>Space is a lattice.</strong> Territory is emergent from occupancy rather than
+      defended explicitly, and there are no nest sites as physical objects.</li>
+      <li><strong>Time is compressed.</strong> The tick is not a day, and generations are not
+      calibrated to mouse biology — they are set so a full run is watchable.</li>
+      <li><strong>The predator–prey balance was tuned for reachability.</strong> Coexistence being
+      achievable is a design decision, not a discovery.</li>
+    </ul>
+    <p class="dim">A note in the repository records that the original Python/pygame version was
+    incomplete — <code>visualizer.py</code> was missing its <code>update()</code> and
+    <code>draw()</code> methods and crashed on launch. The browser version is the working one; the
+    Python files are kept for reference only.</p>
+
+  </section>
+  <section id="s5">
+    <h2><span class="idx">05</span> What this cannot establish <span class="trail"></span></h2>
+
+    <ul class="cannot">
+      <li>It is not evidence about mice, and still less about people. Calhoun's experiment became a
+      metaphor for urban overpopulation and social alienation; this model inherits the metaphor, not
+      the standing to test it.</li>
+      <li>It cannot show that density <em>causes</em> behavioural collapse, because the causal link is
+      written into the state-transition rules rather than discovered by them.</li>
+      <li>It cannot tell you the real carrying capacity of anything. The capacities here follow from
+      lattice size and tuned rates.</li>
+      <li>It cannot support a claim about predation policy. That predators can hold a colony below the
+      behavioural-sink threshold is a property of this parameterisation; the model was tuned until
+      coexistence was reachable.</li>
+      <li>It reports no uncertainty. There is no seeding control in the interface, so two runs of the
+      same configuration differ and neither is a replicate of the other.</li>
+    </ul>
+
+  </section>
+  <section id="s6">
+    <h2><span class="idx">06</span> Validation status <span class="trail"></span></h2>
+
+    <div class="panel warn">
+      <div class="ptitle">No quantitative calibration</div>
+      <p>Unlike the flask and biosphere models, this one has <strong>no benchmark table</strong>. Its
+      parameters were set by headless testing until the qualitative behaviour matched the described
+      phase progression and until predator–prey coexistence was reachable. That is tuning, not
+      calibration, and results should be read accordingly.</p>
+    </div>
+    <h3>What was checked</h3>
+    <ul>
+      <li><strong>Phase progression.</strong> A default run reaches Growth → Breakdown → Collapse
+      without the phases being scripted; they are detected from population and state statistics.</li>
+      <li><strong>Predator–prey balance.</strong> Headless runs confirm all three regimes are
+      reachable: prey extinction at high predator load, coexistence in a middle band, crowding
+      collapse with no predators.</li>
+      <li><strong>Resource coupling.</strong> In finite mode without predators the colony overshoots,
+      strips vegetation, drinks the river down and collapses; with predation holding numbers below
+      carrying capacity the river stays full. <span class="tagp emergent">emergent</span></li>
+    </ul>
+
+  </section>
+  <section id="s7">
+    <h2><span class="idx">07</span> Version history <span class="trail"></span></h2>
+
+    <div class="vhist">
+      <div class="v"><div class="vno">v1.4 · Aug 2026</div>
+        <p>Fish and birds added as independent toggles; all four populations tracked on the
+        population chart and clickable in the inspector.</p></div>
+      <div class="v"><div class="vno">v1.3</div>
+        <p>Terrain: vegetation as grazeable cover, impassable water bodies, a flowing river with a
+        ford, distance-field pathfinding, and the finite/infinite resource switch.</p></div>
+      <div class="v"><div class="vno">v1.2</div>
+        <p>Predators added — dormancy, stalking, pouncing, breeding and starvation — producing a
+        genuine predator–prey balance.</p></div>
+      <div class="v"><div class="vno">v1.0</div>
+        <p>Browser rebuild of the incomplete Python original: live grid, mental-state colouring,
+        phase tracker, charts, presets and the click-to-inspect popup.</p></div>
+    </div>
+
+  </section>
+
+
+  <footer class="mfoot">
+    <div><a href="../index.html">← All instruments</a></div>
+    <div><a href="universe25.html">Run Universe 25 →</a></div>
+    <div>Candice Cantrelle · 2026</div>
+  </footer>
+
+</div>
+
+<script>
+/* Badges and the spec block come from assets/catalogue.js so this page can
+   never disagree with the card that links to it. */
+(function () {
+  var s = byId("universe-25");
+  if (!s) return;
+  document.getElementById("badges").innerHTML =
+    Orbital.evidenceBadge(s.evidence) + Orbital.basisBadge(s.basis) +
+    Orbital.stateBadge(s.state) + Orbital.flagChips(s.flags);
+  document.getElementById("spec").innerHTML = [
+    ["Domain", s.domain],
+    ["What you do", s.mode.join(", ")],
+    ["Duration", s.duration],
+    ["Difficulty", s.complexity],
+    ["Model type", s.model.join(" + ")],
+    ["Version", "v" + s.version + " · " + s.updated]
+  ].concat(s.basis ? [["Built on", s.basis.detail, "wide"]] : []).map(function (r) {
+    return "<div class=\"" + (r[2] || "") + "\"><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>";
+  }).join("");
+})();
+</script>
+</body>
+</html>

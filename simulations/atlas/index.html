@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulations — An Atlas of Scientific Ways of Knowing</title>
+<meta name="description" content="A catalogue of self-contained browser instruments. Each one is a working model you can operate: set the conditions, run the world, and read what comes out.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="assets/orbital.css">
+<script src="assets/orbital.js" data-motion="on"></script>
+<script src="assets/catalogue.js"></script>
+
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: var(--rf-oxide); text-decoration: none; }
+  html[data-theme="night"] a { color: var(--rf-amber); }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; position: relative; }
+  p { max-width: 74ch; }
+  .dim { color: var(--rf-ink-dim); }
+
+  /* ================= MASTHEAD ================= */
+  header.mast { padding: 40px 0 14px; position: relative; }
+  .mast .row1 { display: flex; align-items: flex-end; justify-content: space-between;
+                gap: 26px; flex-wrap: wrap; }
+  .wordmark { font-family: var(--rf-display); font-size: clamp(28px, 6.4vw, 56px);
+              font-weight: 700; letter-spacing: var(--rf-track-w); text-transform: uppercase;
+              line-height: 1; margin: 0; }
+  .wordmark em { font-style: normal; color: var(--rf-orange); }
+  html[data-theme="night"] .wordmark em { text-shadow: var(--rf-text-glow); }
+  .mast .tagline { font-family: var(--rf-mono); font-size: 11px; letter-spacing: var(--rf-track);
+                   text-transform: uppercase; color: var(--rf-ink-dim); margin-top: 11px; }
+  .stamp { font-family: var(--rf-mono); font-size: 10px; letter-spacing: .14em;
+           text-transform: uppercase; color: var(--rf-muted); text-align: right;
+           line-height: 1.85; white-space: nowrap; }
+  .stamp b { color: var(--rf-orange); font-weight: 600; }
+  .mast-rule { border: 0; border-top: 3px double var(--rf-ink); opacity: .55; margin: 18px 0 0; }
+  .rm-tl { left: 8px; top: 18px; } .rm-tr { right: 8px; top: 18px; }
+
+  /* ================= HERO (short) ================= */
+  .hero { padding: 34px 0 30px; display: grid; grid-template-columns: 1.5fr 1fr;
+          gap: 44px; align-items: center; }
+  @media (max-width: 880px) { .hero { grid-template-columns: 1fr; gap: 24px; }
+                              .orbit { max-width: 210px; } }
+  .hero h1 { font-family: var(--rf-display); font-size: clamp(25px, 3.6vw, 38px);
+             font-weight: 600; line-height: 1.14; letter-spacing: -.015em; margin: 12px 0 14px; }
+  .hero h1 mark { background: none; color: var(--rf-orange); }
+  .hero .lede { font-size: 16px; color: var(--rf-ink-dim); max-width: 56ch; margin: 0 0 20px; }
+  .hero .cta { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+  .orbit { width: 100%; max-width: 260px; margin: 0 auto; display: block; }
+  .orbit .o-ring { fill: none; stroke: var(--rf-line); stroke-width: 1; }
+  .orbit .o-path { fill: none; stroke: var(--rf-orange); stroke-width: 1.4; opacity: .85; }
+  .orbit .o-body { fill: var(--rf-orange); }
+  .orbit .o-core { fill: var(--rf-panel); stroke: var(--rf-ink); stroke-width: 1.4; }
+  .orbit .o-tick { stroke: var(--rf-line); stroke-width: 1; }
+  .orbit .o-lbl  { fill: var(--rf-muted); font-family: var(--rf-mono); font-size: 6px;
+                   letter-spacing: .12em; }
+  html[data-theme="night"] .orbit .o-path,
+  html[data-theme="night"] .orbit .o-body { filter: drop-shadow(0 0 5px var(--rf-orange)); }
+  .spin { transform-origin: 110px 110px; animation: spin 34s linear infinite; }
+  .spin.rev { animation-duration: 54s; animation-direction: reverse; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ================= SECTION HEADS ================= */
+  section.doc { padding: 34px 0 4px; scroll-margin-top: 56px; }
+  h2.sec { font-family: var(--rf-mono); font-size: 12px; letter-spacing: var(--rf-track);
+           text-transform: uppercase; font-weight: 600; margin: 0 0 8px; padding-bottom: 9px;
+           border-bottom: 1px solid var(--rf-line); display: flex; align-items: baseline; gap: 14px; }
+  h2.sec .idx { color: var(--rf-orange); font-size: 11px; }
+  h2.sec .trail { flex: 1; border-bottom: 1px solid var(--rf-line-soft); }
+  .sechint { font-size: 13.5px; color: var(--rf-ink-dim); margin: 0 0 20px; max-width: 78ch; }
+
+  /* ================= FEATURED ================= */
+  .feat { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+  .fcard { position: relative; display: flex; flex-direction: column;
+           background: var(--rf-panel); border: 1px solid var(--rf-line);
+           border-top: 3px solid var(--rf-orange);
+           border-radius: var(--rf-radius); padding: 18px 20px 20px;
+           box-shadow: var(--rf-shadow); transition: .18s ease; }
+  .fcard:nth-child(2) { border-top-color: var(--rf-teal); }
+  .fcard:nth-child(3) { border-top-color: var(--rf-violet); }
+  .fcard:hover { transform: translateY(-3px); box-shadow: var(--rf-shadow-lg); }
+  .fcard .kind { font-family: var(--rf-mono); font-size: 10px; letter-spacing: .2em;
+                 text-transform: uppercase; color: var(--rf-orange); font-weight: 600; }
+  .fcard:nth-child(2) .kind { color: var(--rf-teal); }
+  .fcard:nth-child(3) .kind { color: var(--rf-violet); }
+  .fcard h3 { font-family: var(--rf-display); font-size: 19px; font-weight: 600;
+              margin: 9px 0 8px; letter-spacing: -.015em; line-height: 1.18; }
+  .fcard .why { font-size: 13.5px; color: var(--rf-ink-dim); margin: 0 0 14px; flex: 1; max-width: none; }
+  .fcard .meta { font-family: var(--rf-mono); font-size: 9.5px; letter-spacing: .12em;
+                 text-transform: uppercase; color: var(--rf-muted); margin-bottom: 14px; }
+  .fcard .go { align-self: flex-start; }
+
+  /* ================= FILTER BAR ================= */
+  .filters { background: var(--rf-panel); border: 1px solid var(--rf-line);
+             border-radius: var(--rf-radius); padding: 16px 18px 8px;
+             box-shadow: var(--rf-shadow); position: sticky; top: 42px; z-index: 40; }
+  html[data-theme="night"] .filters { background: var(--rf-panel); backdrop-filter: blur(8px); }
+  .frow { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 10px; }
+  .fgroup { display: flex; flex-direction: column; gap: 6px; }
+  .fgroup > .flabel { font-family: var(--rf-mono); font-size: 9px; letter-spacing: .18em;
+                      text-transform: uppercase; color: var(--rf-muted); }
+  .fopts { display: flex; gap: 5px; flex-wrap: wrap; }
+  .fopt { font-family: var(--rf-mono); font-size: 9.5px; letter-spacing: .1em;
+          text-transform: uppercase; padding: 5px 10px 4px; cursor: pointer;
+          background: var(--rf-panel2); color: var(--rf-ink-dim);
+          border: 1px solid var(--rf-line); border-radius: 999px; transition: .14s; }
+  .fopt:hover:not(:disabled) { border-color: var(--rf-orange); color: var(--rf-orange); }
+  .fopt:disabled { opacity: .38; cursor: not-allowed; }
+  .fopt .cnt { margin-left: 6px; opacity: .6; font-size: 8.5px; }
+  .fopt[aria-pressed="true"] { background: var(--rf-orange); color: var(--rf-on-accent);
+                               border-color: var(--rf-orange); font-weight: 600; }
+  html[data-theme="night"] .fopt[aria-pressed="true"] { box-shadow: var(--rf-glow); }
+
+  .fsearch { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 6px; }
+  .fsearch input { font-family: var(--rf-mono); font-size: 12px; padding: 8px 11px;
+                   background: var(--rf-bg); color: var(--rf-ink);
+                   border: 1px solid var(--rf-line); border-radius: var(--rf-radius); width: 100%; }
+  .fsearch input::placeholder { color: var(--rf-muted); }
+
+  .fbar-foot { display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+               border-top: 1px solid var(--rf-line-soft); padding: 10px 0 8px;
+               font-family: var(--rf-mono); font-size: 10px; letter-spacing: .14em;
+               text-transform: uppercase; color: var(--rf-muted); }
+  .fbar-foot .spacer { flex: 1; }
+  .linkbtn { background: none; border: 0; padding: 0; cursor: pointer; color: var(--rf-orange);
+             font: inherit; text-transform: uppercase; letter-spacing: .14em; }
+  .linkbtn:hover { text-decoration: underline; }
+
+  /* ================= CATALOGUE ================= */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+          gap: 22px; padding: 20px 0 12px; }
+
+  .card { position: relative; display: flex; flex-direction: column;
+          background: var(--rf-panel); border: 1px solid var(--rf-line);
+          border-radius: var(--rf-radius); overflow: hidden;
+          box-shadow: var(--rf-shadow); transition: .18s ease; }
+  .card:hover { transform: translateY(-3px); border-color: var(--rf-orange);
+                box-shadow: var(--rf-shadow-lg); }
+  html[data-theme="night"] .card:hover { box-shadow: var(--rf-shadow-lg), var(--rf-glow); }
+  .card.is-dev { opacity: .62; }
+  .card.is-dev:hover { transform: none; }
+
+  .card .thumb { aspect-ratio: 16 / 9; border-bottom: 1px solid var(--rf-line);
+                 background: var(--rf-canvas); overflow: hidden; position: relative; }
+  .card .thumb svg, .card .thumb img { width: 100%; height: 100%; display: block; object-fit: cover; }
+  .card .flags { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; }
+
+  .card .hd { display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+              padding: 14px 18px 0; font-family: var(--rf-mono); font-size: 9.5px;
+              letter-spacing: .16em; text-transform: uppercase; color: var(--rf-muted); }
+  .card .hd .no { color: var(--rf-orange); font-weight: 600; }
+  .card .body { padding: 6px 18px 18px; display: flex; flex-direction: column; flex: 1; }
+  .card h3 { font-family: var(--rf-display); font-size: 20px; font-weight: 600;
+             margin: 4px 0 12px; letter-spacing: -.015em; line-height: 1.16; }
+
+  /* the five questions, same shape on every card */
+  .qa { border-top: 1px solid var(--rf-line-soft); padding-top: 11px; margin-bottom: 12px; }
+  .qa dt { font-family: var(--rf-mono); font-size: 9px; letter-spacing: .18em;
+           text-transform: uppercase; color: var(--rf-teal); margin-bottom: 3px; }
+  html[data-theme="night"] .qa dt { color: var(--rf-teal); }
+  .qa dd { margin: 0 0 11px; font-size: 13.6px; color: var(--rf-ink); }
+  .qa dd:last-child { margin-bottom: 0; color: var(--rf-ink-dim); }
+
+  .specline { font-family: var(--rf-mono); font-size: 9.5px; letter-spacing: .12em;
+              text-transform: uppercase; color: var(--rf-muted);
+              border-top: 1px solid var(--rf-line-soft); padding-top: 10px; margin-top: auto; }
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0 14px; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .actions .rf-btn { position: relative; z-index: 3; }
+
+  .empty { padding: 44px 8px; text-align: center; color: var(--rf-muted);
+           font-family: var(--rf-mono); font-size: 12px; letter-spacing: .14em;
+           text-transform: uppercase; }
+
+  /* ================= INSTRUCTIONAL SECTIONS ================= */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0; }
+  .step { padding: 22px 22px 24px; border: 1px solid var(--rf-line); margin: 0 -1px -1px 0;
+          background: var(--rf-panel); }
+  .step .n { font-family: var(--rf-mono); font-size: 28px; font-weight: 500;
+             color: var(--rf-orange); line-height: 1; }
+  html[data-theme="night"] .step .n { text-shadow: var(--rf-text-glow); }
+  .step h4 { font-family: var(--rf-display); font-size: 16.5px; font-weight: 600;
+             margin: 11px 0 7px; letter-spacing: -.01em; }
+  .step p { font-size: 13.4px; color: var(--rf-ink-dim); margin: 0; max-width: none; }
+
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; }
+  .cols h3 { font-family: var(--rf-mono); font-size: 11px; letter-spacing: .18em;
+             text-transform: uppercase; color: var(--rf-teal); margin: 0 0 10px; font-weight: 600; }
+  .cols p { margin: 0 0 11px; font-size: 14px; }
+
+  .pull { border-left: 4px solid var(--rf-orange); background: var(--rf-panel);
+          border-top: 1px solid var(--rf-line); border-right: 1px solid var(--rf-line);
+          border-bottom: 1px solid var(--rf-line);
+          padding: 17px 21px; margin: 24px 0 0; box-shadow: var(--rf-shadow); }
+  .pull p { margin: 0; font-size: 15px; }
+  .pull .who { font-family: var(--rf-mono); font-size: 10px; letter-spacing: .16em;
+               text-transform: uppercase; color: var(--rf-muted); margin-top: 9px; }
+
+  /* legend of evidentiary levels */
+  .evkey { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+           gap: 10px 22px; margin-top: 16px; }
+  .evkey div { font-size: 13.2px; color: var(--rf-ink-dim); }
+  .evkey .rf-badge { margin-right: 8px; }
+
+  /* ================= FOOTER ================= */
+  footer { margin-top: 50px; border-top: 3px double var(--rf-ink); padding: 24px 0 70px; }
+  footer .frow2 { display: flex; justify-content: space-between; gap: 22px; flex-wrap: wrap;
+                  font-family: var(--rf-mono); font-size: 10.5px; letter-spacing: .14em;
+                  text-transform: uppercase; color: var(--rf-muted); }
+  footer a { color: var(--rf-ink-dim); }
+  footer a:hover { color: var(--rf-orange); }
+</style>
+</head>
+<body id="top">
+
+<a class="rf-skip" href="#catalogue">Skip to catalogue</a>
+
+<div class="wrap">
+
+  <!-- ============ MASTHEAD ============ -->
+  <header class="mast">
+    <span class="rf-regmark rm-tl"></span>
+    <span class="rf-regmark rm-tr"></span>
+    <div class="row1">
+      <div>
+        <h1 class="wordmark">Simul<em>a</em>tions</h1>
+        <div class="tagline">An atlas of scientific ways of knowing</div>
+      </div>
+      <div class="stamp">
+        Catalogue <b id="stampCount">—</b><br>
+        Site rev. 2026.08 · Self-contained<br>
+        Press <b>T</b> to change the light
+      </div>
+    </div>
+    <hr class="mast-rule">
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div>
+      <div class="rf-eyebrow">Interactive research instruments</div>
+      <h1>Small worlds built to answer <mark>difficult questions</mark>.</h1>
+      <p class="lede">
+        Every entry runs entirely in your browser — no install, no account, no server doing
+        the thinking. Set the conditions, let the world proceed, and read the instruments.
+      </p>
+      <div class="cta">
+        <a class="rf-btn primary" href="#catalogue">Explore the catalogue ↓</a>
+        <button class="rf-btn" id="pickBtn" type="button">Choose one for me</button>
+      </div>
+    </div>
+
+    <svg class="orbit" viewBox="0 0 220 220" role="img" aria-label="Diagram: two bodies orbiting a marked centre, captioned run, observe, revise">
+      <circle class="o-ring" cx="110" cy="110" r="96"/>
+      <circle class="o-ring" cx="110" cy="110" r="72"/>
+      <circle class="o-ring" cx="110" cy="110" r="46"/>
+      <g class="o-tick">
+        <line x1="110" y1="4"   x2="110" y2="14"/>
+        <line x1="110" y1="206" x2="110" y2="216"/>
+        <line x1="4"   y1="110" x2="14"  y2="110"/>
+        <line x1="206" y1="110" x2="216" y2="110"/>
+      </g>
+      <ellipse class="o-path" cx="110" cy="110" rx="96" ry="34" transform="rotate(-24 110 110)"/>
+      <ellipse class="o-path" cx="110" cy="110" rx="72" ry="26" transform="rotate(38 110 110)" opacity=".6"/>
+      <g class="spin"><circle class="o-body" cx="206" cy="110" r="5.4" transform="rotate(-24 110 110)"/></g>
+      <g class="spin rev"><circle class="o-body" cx="182" cy="110" r="3.6" opacity=".7" transform="rotate(38 110 110)"/></g>
+      <circle class="o-core" cx="110" cy="110" r="17"/>
+      <circle class="o-body" cx="110" cy="110" r="5"/>
+      <text class="o-lbl" x="110" y="150" text-anchor="middle">RUN · OBSERVE · REVISE</text>
+    </svg>
+  </div>
+
+  <!-- ============ 01 FEATURED ============ -->
+  <section class="doc" id="featured">
+    <h2 class="sec"><span class="idx">01</span> Featured <span class="trail"></span></h2>
+    <p class="sechint">Three doors, so nobody has to choose from six.</p>
+    <div class="feat" id="feat"></div>
+  </section>
+
+  <!-- ============ 02 CATALOGUE ============ -->
+  <section class="doc" id="catalogue">
+    <h2 class="sec"><span class="idx">02</span> All instruments <span class="trail"></span></h2>
+    <p class="sechint">
+      Filter by what you would be <em>doing</em>, not only by what the simulation is about.
+      That axis — Observe, Diagnose, Design, Measure, Infer — is usually the one that decides
+      whether an instrument is worth your next half hour.
+    </p>
+
+    <div class="filters" role="search" aria-label="Filter the catalogue">
+      <div class="frow" id="filterRows"></div>
+      <div class="frow">
+        <div class="fsearch">
+          <label class="flabel" for="q">Search</label>
+          <input type="search" id="q" placeholder="title, question, domain, method…"
+                 autocomplete="off" aria-describedby="resultCount">
+        </div>
+      </div>
+      <div class="fbar-foot">
+        <span id="resultCount" role="status" aria-live="polite">—</span>
+        <span class="spacer"></span>
+        <button class="linkbtn" id="clearBtn" type="button">Clear all filters</button>
+      </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden>No instrument matches those filters</div>
+  </section>
+
+  <!-- ============ 03 HOW TO READ ONE ============ -->
+  <section class="doc" id="how">
+    <h2 class="sec"><span class="idx">03</span> How to read a model <span class="trail"></span></h2>
+    <p class="sechint">Four habits that make any of these worth more than five minutes of watching dots move.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="n">01</div>
+        <h4>Run it once and don't touch anything</h4>
+        <p>Every instrument opens on a sensible default and starts immediately. Let it play through
+        before you reach for a control — you need a baseline to have an opinion about.</p>
+      </div>
+      <div class="step">
+        <div class="n">02</div>
+        <h4>Change one thing</h4>
+        <p>Move a single parameter, reset, run again. Changing three at once produces a different
+        world but no information about which change caused what.</p>
+      </div>
+      <div class="step">
+        <div class="n">03</div>
+        <h4>Watch the mechanism, not the outcome</h4>
+        <p>Say out loud what you expect, then look at <em>how</em> the model got where it got.
+        The value is concentrated almost entirely in the gap between the prediction and the route.</p>
+      </div>
+      <div class="step">
+        <div class="n">04</div>
+        <h4>Read the limitations</h4>
+        <p>Every instrument has a methods page stating its assumptions, its calibration and what it
+        deliberately does not model. That is where the honest limits are, and it is short.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 SCIENTIFIC STANDARD ============ -->
+  <section class="doc" id="standard">
+    <h2 class="sec"><span class="idx">04</span> Scientific standard <span class="trail"></span></h2>
+    <p class="sechint">
+      Not every entry here has the same evidentiary standing, and pretending otherwise would be the
+      quickest way to make the whole catalogue untrustworthy. Each instrument carries a badge.
+    </p>
+    <div class="cols">
+      <div>
+        <h3>Sources</h3>
+        <p class="dim">Where a simulation is built on documented work — Calhoun's density study, the
+        1991–93 Biosphere 2 closure, the long-term <em>E. coli</em> evolution experiment, the
+        public-goods literature — the methods page names it and says where the model departs from
+        the record.</p>
+        <h3 style="margin-top:22px">Assumptions</h3>
+        <p class="dim">Numbers are labelled by provenance: documented, estimated, invented, emergent.
+        Two of the instruments carry a full assumption register; all of them state what they simplify.</p>
+      </div>
+      <div>
+        <h3>Validation</h3>
+        <p class="dim">Calibration is reported as a table of model output against published values,
+        including where the model misses. Conservation laws are checked numerically where they apply —
+        Biosphere's carbon ledger closes to within 0.03 per cent over a simulated year.</p>
+        <h3 style="margin-top:22px">Reproducibility</h3>
+        <p class="dim">Seeded runs replay exactly. Where an instrument reports a sensitivity ranking,
+        decoy parameters are wired into the screen and read by nothing, so the noise floor is measured
+        rather than assumed.</p>
+      </div>
+    </div>
+
+    <div class="pull">
+      <p>A result that survives a decoy check is worth more than a result that merely agrees with you.</p>
+      <div class="who">Operating principle</div>
+    </div>
+
+    <h3 style="font-family:var(--rf-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+               color:var(--rf-teal);margin:30px 0 0;font-weight:600">The five levels</h3>
+    <div class="evkey" id="evkey"></div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="frow2">
+      <div>Candice Cantrelle · 2026</div>
+      <div>
+        <a href="#catalogue">Methods index</a> ·
+        <a href="mailto:hello@candicecantrelle.com">Email</a> ·
+        <a href="https://www.linkedin.com/in/candice-cantrelle">LinkedIn</a> ·
+        <a href="https://x.com/Unicorn0_0Cakes">X</a>
+      </div>
+      <div>No install · No account · No server</div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+/* =====================================================================
+   The catalogue data lives in assets/catalogue.js. This file only
+   renders it, filters it, and draws the preview plates.
+   ================================================================== */
+
+/* ---------------------- preview plates ---------------------------- */
+const PLATE = {
+  bg: "var(--rf-canvas)", grid: "var(--rf-line-soft)", rule: "var(--rf-line)",
+  ink: "var(--rf-canvas-ink)", dim: "var(--rf-muted)",
+  o: "var(--rf-orange)", t: "var(--rf-teal)", g: "var(--rf-gold)",
+  x: "var(--rf-oxide)", v: "var(--rf-violet)", ok: "var(--rf-ok)"
+};
+function gridlines() {
+  let g = "";
+  for (let x = 20; x < 320; x += 20) g += `<line x1="${x}" y1="7" x2="${x}" y2="173" stroke="${PLATE.grid}" stroke-width=".5"/>`;
+  for (let y = 20; y < 180; y += 20) g += `<line x1="7" y1="${y}" x2="313" y2="${y}" stroke="${PLATE.grid}" stroke-width=".5"/>`;
+  return g;
+}
+function frame(inner, corner) {
+  return `<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect width="320" height="180" fill="${PLATE.bg}"/>
+    <g opacity=".5">${gridlines()}</g>
+    ${inner}
+    <rect x="6.5" y="6.5" width="307" height="167" fill="none" stroke="${PLATE.rule}" stroke-width="1"/>
+    <text x="12" y="171" fill="${PLATE.dim}" font-size="6.5" font-family="monospace" letter-spacing="1.4">${corner}</text>
+  </svg>`;
+}
+function rng(seed) { return () => (seed = (seed * 9301 + 49297) % 233280) / 233280; }
+
+function previewSVG(key) {
+  if (key === "universe25") {
+    const r = rng(7); const cols = [PLATE.ok, PLATE.g, PLATE.x, PLATE.t, PLATE.v];
+    let dots = "";
+    for (let i = 0; i < 96; i++) {
+      const x = 14 + r() * 292, y = 14 + r() * 152;
+      dots += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1.5 + r() * 1.7).toFixed(1)}" fill="${cols[Math.floor(r() * cols.length)]}" opacity=".9"/>`;
+    }
+    return frame(`
+      <rect x="30" y="96" width="72" height="36" fill="${PLATE.ok}" opacity=".16" stroke="${PLATE.ok}" stroke-width=".8"/>
+      <rect x="150" y="28" width="54" height="28" fill="${PLATE.ok}" opacity=".16" stroke="${PLATE.ok}" stroke-width=".8"/>
+      <ellipse cx="250" cy="120" rx="46" ry="29" fill="${PLATE.t}" opacity=".18" stroke="${PLATE.t}" stroke-width=".8"/>
+      <path d="M8 68 q80 -22 156 6 t148 -2" stroke="${PLATE.t}" stroke-width="9" fill="none" opacity=".22"/>
+      ${dots}`, "PLATE I — ENCLOSURE, PLAN VIEW");
+  }
+  if (key === "commons") {
+    const r = rng(11); const fac = [PLATE.o, PLATE.v, PLATE.t]; const coop = [PLATE.ok, PLATE.g, PLATE.x];
+    const cx = 160, cy = 90; let nodes = "";
+    [[70, 52], [252, 58], [158, 148]].forEach((c, f) => {
+      for (let i = 0; i < 8; i++) {
+        const x = c[0] + r() * 46 - 23, y = c[1] + r() * 38 - 19;
+        nodes += `<line x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${(cx + (x - cx) * .36).toFixed(1)}" y2="${(cy + (y - cy) * .36).toFixed(1)}" stroke="${fac[f]}" stroke-width="${(.5 + r() * 1.2).toFixed(1)}" opacity=".45"/>`;
+        nodes += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(3.4 + r() * 3).toFixed(1)}" fill="${fac[f]}" opacity=".16"/>`;
+        nodes += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(2.2 + r() * 2.4).toFixed(1)}" fill="${coop[Math.floor(r() * 3)]}"/>`;
+      }
+    });
+    return frame(`${nodes}
+      <circle cx="${cx}" cy="${cy}" r="31" fill="${PLATE.bg}" stroke="${PLATE.ink}" stroke-width="1.4"/>
+      <clipPath id="cmclip"><circle cx="${cx}" cy="${cy}" r="29"/></clipPath>
+      <rect x="${cx - 32}" y="${cy - 3}" width="64" height="32" fill="${PLATE.t}" opacity=".55" clip-path="url(#cmclip)"/>
+      <text x="${cx}" y="${cy + 4}" fill="${PLATE.ink}" font-size="13" font-weight="700" text-anchor="middle" font-family="monospace">72%</text>`,
+      "FIG. 2 — COMMON STOCK vs. THREE FACTIONS");
+  }
+  if (key === "biosphere") {
+    const r = rng(23); let trees = "", crops = "", beads = "";
+    for (let i = 0; i < 11; i++) {
+      const x = 14 + i * 7.6, h = 26 + r() * 44;
+      trees += `<rect x="${(x - .6).toFixed(1)}" y="${(124 - h * .42).toFixed(1)}" width="1.2" height="${(h * .42).toFixed(1)}" fill="${PLATE.ok}" opacity=".85"/>`;
+      trees += `<ellipse cx="${x.toFixed(1)}" cy="${(124 - h * .62).toFixed(1)}" rx="${(h * .16).toFixed(1)}" ry="${(h * .28).toFixed(1)}" fill="${PLATE.ok}" opacity=".6"/>`;
+    }
+    for (let i = 0; i < 15; i++) {
+      const x = 208 + i * 4.2, h = 5 + r() * 15;
+      crops += `<rect x="${x.toFixed(1)}" y="${(124 - h).toFixed(1)}" width="2.4" height="${h.toFixed(1)}" fill="${PLATE.ok}" opacity=".7"/>`;
+    }
+    for (let i = 0; i < 34; i++)
+      beads += `<circle cx="${(12 + r() * 296).toFixed(1)}" cy="${(30 + r() * 88).toFixed(1)}" r="${(.7 + r()).toFixed(1)}" fill="${PLATE.t}" opacity="${(.25 + r() * .4).toFixed(2)}"/>`;
+    let o2 = "M12 46", co2 = "M12 64";
+    for (let i = 1; i <= 16; i++) {
+      o2 += ` L${(12 + i * 18.5).toFixed(0)} ${(46 + i * 1.5 + Math.sin(i * 1.7) * 1.3).toFixed(1)}`;
+      co2 += ` L${(12 + i * 18.5).toFixed(0)} ${(64 - Math.max(0, i - 11) * 2.1 + Math.sin(i * 2.1) * .8).toFixed(1)}`;
+    }
+    const bay = (x1, x2, top, peak) => `<path d="M${x1} 124 L${x1} ${top} L${(x1 + x2) / 2} ${peak} L${x2} ${top} L${x2} 124" fill="${PLATE.t}" fill-opacity=".07" stroke="${PLATE.rule}" stroke-width=".9"/>`;
+    return frame(`
+      <rect x="7" y="124" width="306" height="49" fill="${PLATE.rule}" opacity=".18"/>
+      ${bay(12, 100, 42, 22)}${bay(100, 158, 68, 56)}${bay(158, 206, 74, 62)}${bay(206, 288, 60, 46)}
+      <rect x="100" y="106" width="58" height="18" fill="${PLATE.t}" opacity=".45"/>
+      <rect x="158" y="114" width="48" height="10" fill="${PLATE.g}" opacity=".4"/>
+      ${trees}${crops}${beads}
+      <path d="${o2}" stroke="${PLATE.t}" stroke-width="1.8" fill="none"/>
+      <path d="${co2}" stroke="${PLATE.o}" stroke-width="1.6" fill="none" stroke-dasharray="4 3"/>
+      <text x="12" y="20" fill="${PLATE.t}" font-size="7.5" font-family="monospace">O₂ 20.9 → 16.6%</text>
+      <text x="238" y="20" fill="${PLATE.o}" font-size="7.5" font-family="monospace">CO₂ FLAT</text>`,
+      "SECTION A–A — SEALED ENCLOSURE");
+  }
+  if (key === "flask") {
+    const r = rng(41); const cols = [PLATE.t, PLATE.g, PLATE.o, PLATE.x, PLATE.ok, PLATE.v];
+    const N = 64, x0 = 12, x1 = 308, top = 20, bot = 118;
+    const X = i => x0 + i * (x1 - x0) / (N - 1), Y = f => bot - f * (bot - top);
+    const clades = [
+      { t0: .02, k: 26, cap: 1.00, c: 0 }, { t0: .14, k: 22, cap: .88, c: 1 },
+      { t0: .30, k: 20, cap: .71, c: 2 }, { t0: .46, k: 24, cap: .52, c: 3 },
+      { t0: .63, k: 26, cap: .36, c: 4 }, { t0: .79, k: 30, cap: .20, c: 5 }
+    ];
+    const f = (cl, t) => cl.cap / (1 + Math.exp(-cl.k * (t - cl.t0 - .10)));
+    let bands = "";
+    clades.forEach((cl, j) => {
+      let up = "", down = "";
+      for (let i = 0; i < N; i++) { const o = f(cl, i / (N - 1)); up += `${i ? "L" : "M"}${X(i).toFixed(1)} ${Y((1 - o) / 2 + o).toFixed(1)} `; }
+      for (let i = N - 1; i >= 0; i--) { const o = f(cl, i / (N - 1)); down += `L${X(i).toFixed(1)} ${Y((1 - o) / 2).toFixed(1)} `; }
+      bands += `<path d="${up}${down}Z" fill="${cols[cl.c]}" opacity="${(.85 - j * .05).toFixed(2)}"/>`;
+    });
+    let flasks = "";
+    for (let i = 0; i < 12; i++) {
+      const cx = 21 + i * 25.2, dense = i === 8;
+      const col = dense ? PLATE.v : cols[i % cols.length];
+      const d = `M${cx - 3} 128 L${cx - 3} 136 L${cx - 8} 154 Q${cx - 9} 158 ${cx - 5} 158 L${cx + 5} 158 Q${cx + 9} 158 ${cx + 8} 154 L${cx + 3} 136 L${cx + 3} 128 Z`;
+      flasks += `<path d="${d}" fill="${col}" opacity="${(dense ? .95 : .28 + r() * .24).toFixed(2)}"/>`;
+      flasks += `<path d="${d}" fill="none" stroke="${PLATE.rule}" stroke-width=".8"/>`;
+    }
+    return frame(`${bands}${flasks}
+      <text x="12" y="16" fill="${PLATE.dim}" font-size="7" font-family="monospace">GEN 0</text>
+      <text x="308" y="16" fill="${PLATE.dim}" font-size="7" font-family="monospace" text-anchor="end">50,000</text>
+      <text x="226" y="169" fill="${PLATE.v}" font-size="7" font-family="monospace">Cit+</text>`,
+      "MULLER PLOT — ARA−3 LINEAGE");
+  }
+  if (key === "fallingcharge") {
+    /* A charge ladder: horizontal rungs at integer multiples, measured
+       droplets scattered against them with uncertainty bars, and the two
+       plates of the chamber top and bottom. */
+    const r = rng(29);
+    let inner = "";
+    /* plates */
+    inner += `<rect x="14" y="16" width="292" height="5" fill="${PLATE.g}" opacity=".85"/>`;
+    inner += `<rect x="14" y="159" width="292" height="5" fill="${PLATE.g}" opacity=".85"/>`;
+    inner += `<text x="20" y="31" fill="${PLATE.dim}" font-size="7" font-family="monospace">+</text>`;
+    inner += `<text x="20" y="156" fill="${PLATE.dim}" font-size="7" font-family="monospace">\u2212</text>`;
+    /* the lattice rungs */
+    for (let k = 1; k <= 6; k++) {
+      const y = 150 - k * 21;
+      inner += `<line x1="34" y1="${y}" x2="306" y2="${y}" stroke="${PLATE.rule}" stroke-width=".7" stroke-dasharray="3 3"/>`;
+      inner += `<text x="18" y="${y + 2.5}" fill="${PLATE.dim}" font-size="6" font-family="monospace">${k}e</text>`;
+    }
+    /* measured charges, scattered about the rungs with error bars */
+    for (let i = 0; i < 22; i++) {
+      const n = 1 + Math.floor(r() * 6);
+      const x = 44 + i * 11.6;
+      const y = 150 - n * 21 + (r() - 0.5) * 8;
+      const u = 3 + r() * 5;
+      inner += `<line x1="${x.toFixed(1)}" y1="${(y - u).toFixed(1)}" x2="${x.toFixed(1)}" y2="${(y + u).toFixed(1)}" stroke="${PLATE.t}" stroke-width=".8" opacity=".8"/>`;
+      inner += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.9" fill="${PLATE.o}"/>`;
+    }
+    return frame(inner, "CHARGE / ELEMENTARY UNITS");
+  }
+
+  if (key === "insidetheatom") {
+    /* The bench in plan: beam from the left onto a foil at the centre of
+       a graduated arc, sampled trajectories fanning out, and the few that
+       turn back. The impact parameter is sampled the way the instrument
+       samples it, so the fan has the right shape. */
+    const r = rng(79);
+    const cx = 176, cy = 96, R = 76;
+    let inner = "";
+    /* graduated arc */
+    inner += `<path d="M${cx - R} ${cy} A${R} ${R} 0 0 1 ${cx + R} ${cy}" fill="none" stroke="${PLATE.rule}" stroke-width=".8"/>`;
+    inner += `<path d="M${cx - R} ${cy} A${R} ${R} 0 0 0 ${cx + R} ${cy}" fill="none" stroke="${PLATE.rule}" stroke-width=".8" opacity=".45"/>`;
+    for (let d = 0; d <= 180; d += 15) {
+      const a = d * Math.PI / 180, L = (d % 45 === 0) ? 6 : 3;
+      inner += `<line x1="${(cx + (R - L) * Math.cos(a)).toFixed(1)}" y1="${(cy - (R - L) * Math.sin(a)).toFixed(1)}" x2="${(cx + R * Math.cos(a)).toFixed(1)}" y2="${(cy - R * Math.sin(a)).toFixed(1)}" stroke="${PLATE.dim}" stroke-width=".7"/>`;
+    }
+    /* source, shield and slit */
+    inner += `<rect x="${cx - R - 44}" y="${cy - 17}" width="20" height="34" fill="${PLATE.rule}" opacity=".3" stroke="${PLATE.rule}" stroke-width=".7"/>`;
+    inner += `<path d="M${cx - R - 40} ${cy - 4} L${cx - R - 25} ${cy - 1.4} L${cx - R - 25} ${cy + 1.4} L${cx - R - 40} ${cy + 4} Z" fill="${PLATE.g}"/>`;
+    inner += `<rect x="${cx - R - 14}" y="${cy - 15}" width="4" height="12.5" fill="${PLATE.rule}" opacity=".55"/>`;
+    inner += `<rect x="${cx - R - 14}" y="${cy + 2.5}" width="4" height="12.5" fill="${PLATE.rule}" opacity=".55"/>`;
+    /* incident beam */
+    inner += `<path d="M${cx - R - 24} ${cy - 1.6} L${cx} ${cy - 3} L${cx} ${cy + 3} L${cx - R - 24} ${cy + 1.6} Z" fill="${PLATE.g}" opacity=".35"/>`;
+    /* sampled trajectories, cot(phi/2) = 2p/b with p uniform in area */
+    const bOverP = 0.0075;
+    for (let i = 0; i < 54; i++) {
+      const p = Math.sqrt(r());
+      const phi = 2 * Math.atan(bOverP / (2 * p));
+      const sgn = r() < 0.5 ? 1 : -1;
+      const a = sgn * phi;
+      const big = phi > Math.PI / 2;
+      inner += `<line x1="${cx}" y1="${cy}" x2="${(cx + R * Math.cos(a)).toFixed(1)}" y2="${(cy - R * Math.sin(a)).toFixed(1)}" stroke="${big ? PLATE.o : PLATE.g}" stroke-width="${big ? 1.2 : .7}" opacity="${big ? .95 : .3}"/>`;
+    }
+    /* the two that came back */
+    [128, 147].forEach((d, i) => {
+      const a = d * Math.PI / 180;
+      inner += `<line x1="${cx}" y1="${cy}" x2="${(cx + R * Math.cos(a)).toFixed(1)}" y2="${(cy - R * Math.sin(a)).toFixed(1)}" stroke="${PLATE.x}" stroke-width="1.4"/>`;
+      inner += `<circle cx="${(cx + R * Math.cos(a)).toFixed(1)}" cy="${(cy - R * Math.sin(a)).toFixed(1)}" r="2.6" fill="${PLATE.x}"/>`;
+    });
+    /* the foil */
+    inner += `<line x1="${cx}" y1="${cy - 26}" x2="${cx}" y2="${cy + 26}" stroke="${PLATE.t}" stroke-width="2.6"/>`;
+    /* detector at 45 degrees, with its aperture */
+    const da = 45 * Math.PI / 180;
+    inner += `<path d="M${cx} ${cy} L${(cx + (R + 5) * Math.cos(da - .17)).toFixed(1)} ${(cy - (R + 5) * Math.sin(da - .17)).toFixed(1)} A${R + 5} ${R + 5} 0 0 0 ${(cx + (R + 5) * Math.cos(da + .17)).toFixed(1)} ${(cy - (R + 5) * Math.sin(da + .17)).toFixed(1)} Z" fill="${PLATE.o}" opacity=".16"/>`;
+    inner += `<rect x="${(cx + R * Math.cos(da) - 4).toFixed(1)}" y="${(cy - R * Math.sin(da) - 4).toFixed(1)}" width="8" height="8" fill="${PLATE.bg}" stroke="${PLATE.o}" stroke-width="1.4" transform="rotate(-45 ${(cx + R * Math.cos(da)).toFixed(1)} ${(cy - R * Math.sin(da)).toFixed(1)})"/>`;
+    /* the cosec^4 law, as an inset curve on the right */
+    let curve = "";
+    for (let i = 0; i <= 40; i++) {
+      const deg = 6 + (i / 40) * 168, s = Math.sin(deg * Math.PI / 360);
+      const yv = Math.log10(1 / (s * s * s * s));
+      curve += `${i ? "L" : "M"}${(262 + (i / 40) * 46).toFixed(1)} ${(150 - yv * 12.5).toFixed(1)} `;
+    }
+    inner += `<rect x="258" y="28" width="54" height="126" fill="${PLATE.bg}" opacity=".72"/>`;
+    inner += `<path d="${curve}" fill="none" stroke="${PLATE.o}" stroke-width="1.5"/>`;
+    inner += `<text x="262" y="40" fill="${PLATE.dim}" font-size="6" font-family="monospace">cosec⁴ φ/2</text>`;
+    inner += `<text x="${cx - R - 42}" y="${cy - 22}" fill="${PLATE.dim}" font-size="6" font-family="monospace">α</text>`;
+    inner += `<text x="${cx + 4}" y="${cy + 38}" fill="${PLATE.t}" font-size="6" font-family="monospace">Au 210nm</text>`;
+    return frame(inner, "PLAN — FOIL AT CENTRE OF GRADUATED CIRCLE");
+  }
+
+  if (key === "magneticocean") {
+    /* Section across a ridge. Top: the record a towed magnetometer
+       actually produces — one continuous trace, computed here from the
+       same two-dimensional prism sum the instrument uses, so the plate
+       cannot show a shape the model would not. Bottom: the sea, the
+       rise, the ship and its fish. The buried polarity blocks are NOT
+       drawn: the whole point is that they are what has to be inferred. */
+    const axis = 168, alt = 2.7, base = 3.2;   /* km above layer top / base */
+    const bands = [];                          /* half-widths in plate units */
+    let acc = 0;
+    [15.6, 4.2, 1.6, 14.0, 3.6, 2.0, 9.2, 5.4, 2.2, 6.6].forEach((w, i) => {
+      bands.push({ x0: acc, x1: acc + w * 0.52, s: i % 2 === 0 ? 1 : -1 });
+      acc += w * 0.52;
+    });
+    const edge = (xi) => Math.atan(xi / base) - Math.atan(xi / alt);
+    const field = (px) => {
+      const x = (px - axis) / 1.9;             /* plate units to km */
+      let v = 0;
+      bands.forEach(b => {
+        [1, -1].forEach(side => {
+          v += b.s * (edge(side * b.x1 - x) - edge(side * b.x0 - x));
+        });
+      });
+      return v;
+    };
+    let peak = 0;
+    for (let px = 10; px <= 310; px += 2) peak = Math.max(peak, Math.abs(field(px)));
+    let trace = "";
+    for (let px = 10; px <= 310; px += 2) {
+      const y = 62 - field(px) / peak * 30;
+      trace += `${px === 10 ? "M" : "L"}${px} ${y.toFixed(1)} `;
+    }
+
+    let inner = "";
+    /* the record, on its own baseline */
+    inner += `<line x1="10" y1="62" x2="310" y2="62" stroke="${PLATE.rule}" stroke-width=".7" stroke-dasharray="3 3"/>`;
+    inner += `<path d="${trace}" fill="none" stroke="${PLATE.o}" stroke-width="1.7"/>`;
+    inner += `<text x="12" y="24" fill="${PLATE.dim}" font-size="6.5" font-family="monospace">TOTAL-FIELD ANOMALY, nT</text>`;
+    /* sea surface, water column, seafloor rising to the axis */
+    inner += `<line x1="10" y1="100" x2="310" y2="100" stroke="${PLATE.t}" stroke-width="1.2" opacity=".8"/>`;
+    let floor = "M10 152";
+    for (let px = 10; px <= 310; px += 4) {
+      const d = Math.abs(px - axis) / 1.9;
+      const y = 128 + Math.min(24, 3.2 * Math.sqrt(d));
+      floor += ` L${px} ${y.toFixed(1)}`;
+    }
+    inner += `<path d="${floor} L310 173 L10 173 Z" fill="${PLATE.rule}" opacity=".20"/>`;
+    inner += `<path d="${floor.replace("M10 152", "M10 " + (128 + Math.min(24, 3.2 * Math.sqrt(Math.abs(10 - axis) / 1.9))).toFixed(1))}" fill="none" stroke="${PLATE.rule}" stroke-width="1"/>`;
+    /* ship on the surface, fish on its cable */
+    inner += `<path d="M${axis - 46} 96 L${axis - 38} 96 L${axis - 40} 100 L${axis - 44} 100 Z" fill="${PLATE.o}"/>`;
+    inner += `<line x1="${axis - 44}" y1="100" x2="${axis - 62}" y2="108" stroke="${PLATE.g}" stroke-width=".8"/>`;
+    inner += `<circle cx="${axis - 62}" cy="108" r="2.2" fill="${PLATE.g}"/>`;
+    inner += `<text x="${axis - 60}" y="118" fill="${PLATE.dim}" font-size="6" font-family="monospace">MAGNETOMETER</text>`;
+    /* the axis, marked but unlabelled as to what lies under it */
+    inner += `<line x1="${axis}" y1="100" x2="${axis}" y2="173" stroke="${PLATE.x}" stroke-width=".9" stroke-dasharray="4 3"/>`;
+    inner += `<text x="${axis + 4}" y="168" fill="${PLATE.x}" font-size="6" font-family="monospace">RIDGE AXIS</text>`;
+    inner += `<text x="12" y="112" fill="${PLATE.dim}" font-size="6" font-family="monospace">2.7 km OF WATER</text>`;
+    return frame(inner, "SECTION — WHAT THE SHIP RECORDS, NOT WHAT IS BURIED");
+  }
+
+  if (key === "cce") {
+    const r = rng(23); let bars = "";
+    for (let i = 0; i < 9; i++) {
+      const x = 18 + r() * 284;
+      bars += `<line x1="${x.toFixed(1)}" y1="20" x2="${x.toFixed(1)}" y2="150" stroke="${PLATE.dim}" stroke-width="1" opacity="${(.18 + r() * .25).toFixed(2)}"/>`;
+    }
+    let paths = "";
+    [[PLATE.o, 118, .9], [PLATE.t, 80, 1.15], [PLATE.v, 98, 1.0]].forEach(([c, base, k]) => {
+      let d = "", s = base; const r2 = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+      for (let i = 0; i <= 64; i++) {
+        const y = base - (i / 64) * 38 * k + (r2() - .5) * 7;
+        d += (i ? "L" : "M") + (14 + i * 4.55).toFixed(1) + " " + Math.max(22, Math.min(148, y)).toFixed(1) + " ";
+      }
+      paths += `<path d="${d}" fill="none" stroke="${c}" stroke-width="1.9" opacity=".95"/>`;
+    });
+    let bands = "";
+    for (let i = 0; i < 10; i++) {
+      const h = 4 + Math.round(11 * Math.exp(-Math.pow((i - 4.5) / 2.6, 2)));
+      bands += `<rect x="${(16 + i * 29).toFixed(0)}" y="${166 - h}" width="21" height="${h}" fill="${PLATE.o}" opacity="${(.22 + i * .045).toFixed(2)}"/>`;
+    }
+    return frame(`${bars}${paths}${bands}
+      <text x="12" y="16" fill="${PLATE.dim}" font-size="7" font-family="monospace">YEAR 0</text>
+      <text x="308" y="16" fill="${PLATE.dim}" font-size="7" font-family="monospace" text-anchor="end">500</text>`,
+      "THREE ARMS · MATCHED SHOCK HISTORY");
+  }
+  if (key === "sentinel") {
+    const rows = [
+      [.92, PLATE.o, "MEMORY DECAY"], [.78, PLATE.o, "ADVERSARY ADAPT"],
+      [.61, PLATE.o, "BODY CORRELATION"], [.44, PLATE.t, "AUDIT BUDGET"],
+      [.31, PLATE.t, "ROTATION RATE"], [.12, PLATE.dim, "DECOY α"],
+      [.09, PLATE.dim, "DECOY β"], [.06, PLATE.dim, "DECOY γ"]
+    ];
+    let bars = "";
+    rows.forEach(([v, c, label], i) => {
+      const y = 22 + i * 17;
+      bars += `<rect x="120" y="${y}" width="${(v * 174).toFixed(0)}" height="10" fill="${c}" opacity=".9"/>`;
+      bars += `<text x="114" y="${y + 8.4}" fill="${PLATE.dim}" font-size="6.4" font-family="monospace" text-anchor="end" letter-spacing=".6">${label}</text>`;
+    });
+    return frame(`
+      <line x1="120" y1="16" x2="120" y2="162" stroke="${PLATE.ink}" stroke-width="1"/>
+      <line x1="120" y1="120" x2="308" y2="120" stroke="${PLATE.x}" stroke-width=".9" stroke-dasharray="3 3"/>
+      ${bars}
+      <text x="306" y="118" fill="${PLATE.x}" font-size="6.4" font-family="monospace" text-anchor="end">NOISE FLOOR</text>`,
+      "GLOBAL SENSITIVITY — DECOY-VALIDATED");
+  }
+  return frame(`<circle cx="160" cy="90" r="34" fill="none" stroke="${PLATE.o}" stroke-width="2" opacity=".8"/>
+    <circle cx="160" cy="90" r="6" fill="${PLATE.o}"/>`, "PLATE — UNTITLED");
+}
+
+/* ------------------------- filter state --------------------------- */
+const FACETS = [
+  { key: "domain",     label: "Domain" },
+  { key: "mode",       label: "What you do" },
+  { key: "duration",   label: "Duration" },
+  { key: "complexity", label: "Difficulty" },
+  { key: "model",      label: "Model type" },
+  { key: "state",      label: "Status" }
+];
+const active = {};                       // facet -> Set of selected values
+FACETS.forEach(f => active[f.key] = new Set());
+let query = "";
+
+/* A taxonomy value nothing uses would be a filter that always empties the
+   grid. Those stay visible — the vocabulary is the point — but disabled,
+   so the shape of the collection is legible without being a trap. */
+function countFor(facetKey, value) {
+  return CATALOGUE.filter(s => [].concat(s[facetKey]).includes(value)).length;
+}
+
+function buildFilters() {
+  document.getElementById("filterRows").innerHTML = FACETS.map(f => `
+    <div class="fgroup" role="group" aria-label="${f.label}">
+      <span class="flabel">${f.label}</span>
+      <div class="fopts">
+        ${TAXONOMY[f.key].map(v => {
+          const n = countFor(f.key, v);
+          return `<button class="fopt" type="button" role="switch" aria-pressed="false"
+                  data-facet="${f.key}" data-value="${v}" ${n ? "" : "disabled"}
+                  title="${n} instrument${n === 1 ? "" : "s"}">${v}<span class="cnt">${n}</span></button>`;
+        }).join("")}
+      </div>
+    </div>`).join("");
+
+  document.querySelectorAll(".fopt").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const { facet, value } = btn.dataset;
+      const set = active[facet];
+      set.has(value) ? set.delete(value) : set.add(value);
+      btn.setAttribute("aria-pressed", String(set.has(value)));
+      render();
+    });
+  });
+}
+
+function matches(s) {
+  for (const f of FACETS) {
+    const set = active[f.key];
+    if (!set.size) continue;
+    const val = s[f.key];
+    const vals = Array.isArray(val) ? val : [val];
+    if (!vals.some(v => set.has(v))) return false;
+  }
+  if (query) {
+    const hay = [s.title, s.question, s.role, s.domain, s.duration, s.complexity, s.state,
+                 ...(s.mode || []), ...(s.model || []), ...(s.chips || []), s.blurb]
+                .join(" ").toLowerCase();
+    if (!hay.includes(query)) return false;
+  }
+  return true;
+}
+
+/* ---------------------------- render ------------------------------ */
+function cardHTML(s, i) {
+  const thumb = s.thumb ? `<img src="${s.thumb}" alt="">` : previewSVG(s.preview);
+  const dev = s.state === "Development";
+  const descId = `desc-${s.id}`;
+  return `
+    <article class="card ${dev ? "is-dev" : ""}">
+      <div class="thumb">
+        ${thumb}
+        ${s.flags && s.flags.length ? `<div class="flags">${Orbital.flagChips(s.flags)}</div>` : ""}
+      </div>
+      <div class="hd">
+        <span class="no">${String(i + 1).padStart(2, "0")}</span>
+        <span>${s.domain}</span><span aria-hidden="true">·</span><span>${s.state}</span>
+      </div>
+      <div class="body">
+        <h3 id="t-${s.id}">${s.title}</h3>
+        <dl class="qa" id="${descId}">
+          <dt>The question</dt>
+          <dd>${s.question}</dd>
+          <dt>Your role</dt>
+          <dd>${s.role}</dd>
+        </dl>
+        <div class="specline">
+          ${s.duration} · ${s.complexity} · ${s.model.join(" + ")}
+          <br>v${s.version} · Updated ${s.updated}
+        </div>
+        <div class="badges">
+          ${Orbital.evidenceBadge(s.evidence)}
+          ${Orbital.basisBadge(s.basis)}
+          ${Orbital.stateBadge(s.state)}
+        </div>
+        <div class="actions">
+          ${dev
+            ? `<span class="rf-btn" aria-disabled="true" style="opacity:.5;cursor:not-allowed">In development</span>`
+            : `<a class="rf-btn primary rf-cardlink" href="${s.href}"
+                  aria-labelledby="t-${s.id}" aria-describedby="${descId}">Run instrument</a>`}
+          <a class="rf-btn" href="${s.methods}"
+             aria-label="Read methods for ${s.title}">Methods</a>
+        </div>
+      </div>
+    </article>`;
+}
+
+function render() {
+  const shown = CATALOGUE.filter(matches);
+  const grid = document.getElementById("grid");
+  grid.innerHTML = shown.map(cardHTML).join("");
+  document.getElementById("empty").hidden = shown.length > 0;
+
+  const n = shown.length, total = CATALOGUE.length;
+  document.getElementById("resultCount").textContent =
+    n === total ? `Showing all ${total} instruments` : `Showing ${n} of ${total} instruments`;
+}
+
+function renderFeatured() {
+  document.getElementById("feat").innerHTML = FEATURED.map(f => {
+    const s = byId(f.id);
+    if (!s) return "";
+    return `
+      <div class="fcard">
+        <div class="kind">${f.kind}</div>
+        <h3 id="f-${s.id}">${s.title}</h3>
+        <p class="why">${f.why}</p>
+        <div class="meta">${s.duration} · ${s.complexity} · ${s.mode[0]}</div>
+        <a class="rf-btn primary go" href="${s.href}" aria-labelledby="f-${s.id}">Run instrument</a>
+      </div>`;
+  }).join("");
+}
+
+function renderEvidenceKey() {
+  const notes = {
+    "Historical reconstruction":      "Rebuilds a documented experiment and reports where it departs from the record.",
+    "Established mathematical model": "Implements published equations whose behaviour is already well characterised.",
+    "Exploratory agent-based model":  "Dramatises mechanisms from the literature; the numbers illustrate, they do not measure.",
+    "Calibrated research model":      "Tuned headlessly against published benchmarks, with the comparison table shown.",
+    "Uncalibrated prototype":         "Runs and is internally consistent, but no parameter is fitted to anything real."
+  };
+  const cls = { "Historical reconstruction": "ev-historical", "Established mathematical model": "ev-established",
+                "Exploratory agent-based model": "ev-exploratory", "Calibrated research model": "ev-calibrated",
+                "Uncalibrated prototype": "ev-prototype" };
+  document.getElementById("evkey").innerHTML = EVIDENCE_LEVELS.map(l =>
+    `<div><span class="rf-badge ${cls[l]}">${l}</span><br>${notes[l]}</div>`).join("");
+}
+
+/* --------------------------- wiring ------------------------------- */
+document.getElementById("q").addEventListener("input", e => {
+  query = e.target.value.trim().toLowerCase();
+  render();
+});
+
+document.getElementById("clearBtn").addEventListener("click", () => {
+  FACETS.forEach(f => active[f.key].clear());
+  query = "";
+  document.getElementById("q").value = "";
+  document.querySelectorAll(".fopt").forEach(b => b.setAttribute("aria-pressed", "false"));
+  render();
+});
+
+/* "Choose one for me" — a real random pick among what is playable now,
+   because the point is to remove the decision, not to add another one. */
+document.getElementById("pickBtn").addEventListener("click", () => {
+  const pool = CATALOGUE.filter(s => s.state !== "Development");
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  location.href = pick.href;
+});
+
+document.getElementById("stampCount").textContent =
+  String(CATALOGUE.length).padStart(2, "0") + " entries";
+
+buildFilters();
+renderFeatured();
+renderEvidenceKey();
+render();
+</script>
+</body>
+</html>

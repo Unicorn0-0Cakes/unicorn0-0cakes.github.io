@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" data-world="ai-ml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SVHN Digit Recognition — Candice Cantrelle</title>
+<meta name="description" content="Four architectures compared on Street View House Numbers — not only on accuracy, but on what each one cost to train.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/ai-ml/svhn-digit-recognition/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="SVHN Digit Recognition — Candice Cantrelle">
+<meta property="og:description" content="Four architectures compared on Street View House Numbers — not only on accuracy, but on what each one cost to train.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/ai-ml/svhn-digit-recognition/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/shell.css">
+<link rel="stylesheet" href="../../assets/css/cards.css">
+<link rel="stylesheet" href="../../assets/css/worlds.css">
+<script src="../../assets/js/shell.js"></script>
+
+<style>
+.case { display:grid; grid-template-columns: minmax(0,1fr) 300px; gap: var(--s-8); align-items:start; }
+@media (max-width: 980px) { .case { grid-template-columns: 1fr; gap: var(--s-6); } }
+.case__aside { position: sticky; top: 84px; display: grid; gap: var(--s-5); }
+@media (max-width: 980px) { .case__aside { position: static; } }
+.facts { border:1px solid var(--rf-line); border-radius:var(--w-radius);
+         background:var(--rf-panel); padding:var(--s-5); margin:0; }
+.facts dt { font-family:var(--rf-mono); font-size:var(--t-nano); letter-spacing:var(--rf-track-s);
+            text-transform:uppercase; color:var(--rf-muted); font-weight:600; }
+.facts dd { margin:3px 0 var(--s-4); font-size:var(--t-small); color:var(--rf-ink); }
+.facts dd:last-child { margin-bottom:0; }
+.linklist { list-style:none; padding:0; margin:0; display:grid; gap:var(--s-2); }
+.linklist li { margin:0; }
+.linklist a { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track-s);
+              text-transform:uppercase; font-weight:600; }
+.q { font-family:var(--rf-display); font-size:clamp(19px,2.2vw,26px); font-weight:500;
+     line-height:1.32; letter-spacing:-.02em; color:var(--rf-ink); margin:0 0 var(--s-5);
+     padding-left:var(--s-5); border-left:3px solid var(--w-accent); max-width:34ch; }
+.caveat { border:1px solid var(--rf-watch); border-left-width:3px; border-radius:var(--rf-radius);
+          padding:var(--s-5); background:var(--rf-panel); }
+.caveat h3 { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+             text-transform:uppercase; color:var(--rf-watch); margin:0 0 var(--s-3); font-weight:600; }
+.caveat p { font-size:var(--t-small); color:var(--rf-ink-dim); }
+h2.case-h { font-family:var(--rf-display); font-size:var(--t-h2); margin:var(--s-8) 0 var(--s-4);
+            padding-bottom:var(--s-3); border-bottom:1px solid var(--rf-line); }
+h2.case-h:first-child { margin-top:0; }
+h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+               color:var(--w-accent); margin-right:var(--s-3); }
+</style>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+<div class="wrap"><ol class="crumbs"><li><a href="../../">Portfolio</a></li><li><a href="../../ai-ml/">AI + ML</a></li><li><span aria-current="page">SVHN Digit Recognition</span></li></ol></div>
+  <header class="plate">
+    <div class="wrap plate__grid">
+      <div>
+        <p class="plate__kicker">Case study · AI + ML</p>
+        <h1>SVHN Digit Recognition</h1>
+        <p class="plate__lede">Two dense networks and two convolutional ones on the same problem, compared on accuracy and on the thing accuracy tables usually leave out: what it took to get there.</p>
+      </div>
+      <p class="stamp"><b>Showcase</b><br>TensorFlow/Keras · CNN<br>February 2025</p>
+    </div>
+    <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
+  </header>
+
+
+  <section class="doc">
+    <div class="wrap case">
+      <div>
+        <p class="q">Where does added depth stop paying for itself?</p>
+
+        <h2 class="case-h"><span class="n">01</span>What it is</h2>
+        <p>
+          Digit classification on Street View House Numbers — photographs of house numbers
+          cropped from Google Street View, which is a harder problem than it sounds because the
+          crops contain neighbouring digits, motion blur, odd lighting and every typeface a sign
+          painter ever chose. Four architectures were built and compared on the same data: two
+          fully-connected networks and two convolutional ones.
+        </p>
+
+        <h2 class="case-h"><span class="n">02</span>Why</h2>
+        <p>
+          The stated goal was accuracy. The actual finding was about cost. It is easy to write a
+          comparison table in which the deepest model wins, and much more useful to record which
+          models you could actually train, tune and iterate on with the hardware you had.
+        </p>
+
+        <h2 class="case-h"><span class="n">03</span>My role</h2>
+        <p>
+          Dataset preparation and the train / validation / test split, all four architectures,
+          the training runs, the comparison, and the write-up.
+        </p>
+
+        <h2 class="case-h"><span class="n">04</span>The four models</h2>
+        <dl class="layers">
+          <div class="layer"><dt>ANN 1</dt><dd>
+            A baseline dense network. Adam at 0.001, categorical cross-entropy. Adequate on simple
+            classification, clearly out of its depth on images — no spatial structure to exploit,
+            so every pixel is an independent feature.</dd></div>
+          <div class="layer"><dt>ANN 2</dt><dd>
+            Deeper, with dropout and batch normalisation added. Training stabilised and
+            overfitting reduced, but the added parameters bought longer training rather than
+            better generalisation. Neither dense model was the right tool.</dd></div>
+          <div class="layer"><dt>CNN 3</dt><dd>
+            Convolutional layers with max pooling and Leaky ReLU. Immediate improvement — spatial
+            features are exactly what this problem has. Validation accuracy tracked training
+            accuracy closely, indicating minimal overfitting. <strong>The model I would
+            keep.</strong></dd></div>
+          <div class="layer"><dt>CNN 4</dt><dd>
+            Deeper and wider. Training required repeated restarts because of memory limits, which
+            made hyperparameter search impractical rather than merely slow. Abandoned — not for
+            scoring badly, but for being untunable on the hardware available.</dd></div>
+        </dl>
+
+        <h2 class="case-h"><span class="n">05</span>Outcome</h2>
+        <div class="no-metrics">
+          <strong>On the numbers</strong>
+          <p style="margin:0">
+            The notebook's own analysis reports the best convolutional model at roughly
+            <strong>97% accuracy</strong>. That figure is quoted from the write-up, not
+            re-verified: the notebook was committed with its cell outputs cleared, so no stored
+            evaluation output survives to check it against. It is recorded here as an
+            author-reported figure and should be read as one.
+          </p>
+        </div>
+        <p style="margin-top:var(--s-5)">
+          The comparison itself does not depend on that number. The ordering was unambiguous —
+          convolutional beat dense by a wide margin, and the deeper CNN was rejected on cost
+          rather than on score. CNN 3 gave the best ratio of accuracy to training time, and the
+          improvements it still wanted were cheap ones: batch normalisation for stability,
+          dropout against overfitting, augmentation for robustness.
+        </p>
+
+        <h2 class="case-h"><span class="n">06</span>Limitations</h2>
+        <ul>
+          <li>No stored metrics. Outputs were cleared before commit, so accuracy, loss curves and
+              per-class performance would all have to be regenerated to be citable.</li>
+          <li>The four models were not matched on parameter count or training budget, so the
+              comparison is between four designs rather than a controlled ablation.</li>
+          <li>CNN 4's ceiling is unknown. It was abandoned before it was tuned, so nothing can be
+              said about whether the extra depth would eventually have paid off with more
+              compute.</li>
+          <li>No comparison against a published SVHN baseline, so &ldquo;97%&rdquo; has no external
+              reference point attached to it here.</li>
+        </ul>
+
+        <h2 class="case-h"><span class="n">07</span>What I would do next</h2>
+        <p>
+          Re-run CNN 3 with outputs preserved, add a confusion matrix, and compare against a
+          published SVHN benchmark so the figure has something to sit beside. Then test whether
+          augmentation moves it at all — on a dataset this noisy, it plausibly will not, and a
+          null result there would be worth having.
+        </p>
+      </div>
+
+      <aside class="case__aside">
+<dl class="facts"><dt>Status</dt><dd>Showcase</dd><dt>Date</dt><dd>February 2025</dd><dt>Task</dt><dd>10-class digit classification</dd><dt>Dataset</dt><dd>Street View House Numbers</dd><dt>Architectures</dt><dd>2 dense, 2 convolutional</dd><dt>Framework</dt><dd>TensorFlow / Keras</dd><dt>Techniques</dt><dd>Dropout, batch norm, Leaky ReLU</dd><dt>Optimiser</dt><dd>Adam, lr 0.001 / 0.0005</dd><dt>Reported result</dt><dd>~97% (author-reported, unverified)</dd></dl><div class="facts"><dt style="font-family:var(--rf-mono);font-size:var(--t-nano);letter-spacing:var(--rf-track-s);text-transform:uppercase;color:var(--rf-muted);font-weight:600;margin-bottom:12px">Links</dt><ul class="linklist"><li><a href="https://github.com/Unicorn0-0Cakes/machine-learning/blob/main/CCantrelle2025_High_Code_SVHN_Digit_Recognition.ipynb" rel="noopener">Notebook &rarr;</a></li><li><a href="https://github.com/Unicorn0-0Cakes/machine-learning" rel="noopener">Repository &rarr;</a></li></ul></div>
+      </aside>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="../../data/projects.js"></script>
+<script src="../../assets/js/cards.js"></script>
+</body>
+</html>

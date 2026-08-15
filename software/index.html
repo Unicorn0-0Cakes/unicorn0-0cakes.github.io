@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" data-world="software">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software & Tools — Candice Cantrelle</title>
+<meta name="description" content="Applications and utilities built end to end: a computer-vision pipeline that turns a photograph of a key into a printable model, and a speedcubing timer that runs entirely offline.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/software/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Software & Tools — Candice Cantrelle">
+<meta property="og:description" content="Applications and utilities built end to end: a computer-vision pipeline that turns a photograph of a key into a printable model, and a speedcubing timer that runs entirely offline.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/software/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/cards.css">
+<link rel="stylesheet" href="../assets/css/worlds.css">
+<script src="../assets/js/shell.js"></script>
+
+<style>
+.surfaces { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:var(--s-4); }
+.surface { border:1px solid var(--rf-line); border-radius:6px; padding:var(--s-5); background:var(--rf-panel); }
+.surface h3 { font-size:15px; margin:0 0 var(--s-2); }
+.surface p { font-size:var(--t-small); color:var(--rf-ink-dim); margin:0; }
+.surface .n { font-family:var(--rf-mono); font-size:var(--t-nano); letter-spacing:var(--rf-track-s);
+              color:var(--w-accent); font-weight:600; display:block; margin-bottom:var(--s-3); }
+</style>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">Software</span></li></ol></div>
+  <header class="plate">
+    <div class="wrap plate__grid">
+      <div>
+        <p class="plate__kicker">Wing 03 · The product shelf</p>
+        <h1>Software & Tools</h1>
+        <p class="plate__lede">Things built to be picked up and used. Fewer projects here than elsewhere, because getting something to the point where a stranger can run it is most of the work.</p>
+      </div>
+      <p class="stamp"><b>2</b> projects<br>1 showcase · 1 prototype<br>Python · JavaScript<br>2025–26</p>
+    </div>
+    <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
+  </header>
+
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">01</span> The shelf <span class="trail"></span></h2>
+      <p class="sec-hint">
+        A tool is finished when someone who did not build it can use it without asking a question.
+        That is a much later point than &ldquo;the code works&rdquo;, and it is where most of these hours went.
+      </p>
+      <div class="grid grid--2" id="sw"></div>
+    </div>
+  </section>
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">02</span> What shipping actually meant <span class="trail"></span></h2>
+      <p class="sec-hint">
+        Key &rarr; STL is one processing core behind four delivery surfaces. Each surface was a
+        different problem, and none of them was the computer vision.
+      </p>
+      <div class="surfaces">
+        <div class="surface"><span class="n">01</span><h3>Processing core</h3>
+          <p>OpenCV profile extraction and mesh generation. The part that is actually about keys.</p></div>
+        <div class="surface"><span class="n">02</span><h3>HTTP API</h3>
+          <p>A FastAPI service wrapping the core, with licence validation and file handling.</p></div>
+        <div class="surface"><span class="n">03</span><h3>Browser client</h3>
+          <p>Upload, progress, download. Where the guidance on how to photograph a key lives.</p></div>
+        <div class="surface"><span class="n">04</span><h3>Desktop application</h3>
+          <p>A standalone build for people who will not upload a photograph of their key to a server.</p></div>
+      </div>
+      <p style="margin-top:var(--s-5)">
+        <a href="../software/key-to-stl/">Read the full case study &rarr;</a>
+      </p>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="../data/projects.js"></script>
+<script src="../assets/js/cards.js"></script>
+<script>
+CC.renderInto("#sw", CC.curated(CC.byCategory("software")));
+</script>
+</body>
+</html>

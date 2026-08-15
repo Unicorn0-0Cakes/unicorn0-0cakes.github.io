@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111318">
+  <meta name="description" content="A speedcubing timer that runs entirely in the page: inspection countdown, solve history and session statistics, with no account and no network.">
+  <title>Cube Timer — Candice Cantrelle</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0d0f13;
+      --panel: #151820;
+      --panel-2: #1b1f29;
+      --text: #f4f5f7;
+      --muted: #9ca3af;
+      --border: #2a2f3a;
+      --accent: #7dd3fc;
+      --ready: #86efac;
+      --danger: #fca5a5;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #171b24 0, var(--bg) 48%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+    button { font: inherit; }
+    .app {
+      width: min(900px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+    .topbar {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    h1 { font-size: 1.05rem; margin: 0; font-weight: 650; letter-spacing: .03em; }
+    .hint { margin: 0; color: var(--muted); font-size: .88rem; }
+    .timer-panel {
+      min-height: 360px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: rgba(21,24,32,.86);
+      display: grid;
+      place-items: center;
+      padding: 34px 20px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      transition: border-color .15s ease, background .15s ease;
+    }
+    .timer-panel.ready {
+      border-color: var(--ready);
+      background: rgba(20, 45, 32, .72);
+    }
+    .status {
+      color: var(--muted);
+      font-size: .95rem;
+      margin-bottom: 12px;
+      min-height: 1.2em;
+    }
+    .timer {
+      font-variant-numeric: tabular-nums;
+      font-size: clamp(4.5rem, 14vw, 8.5rem);
+      letter-spacing: -.06em;
+      line-height: .95;
+      font-weight: 680;
+    }
+    .timer.ready { color: var(--ready); }
+    .subhint { margin-top: 18px; color: var(--muted); font-size: .86rem; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 12px;
+    }
+    .stat, .history-card {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 18px;
+    }
+    .stat { padding: 15px 16px; }
+    .stat-label { color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; }
+    .stat-value { margin-top: 6px; font-size: 1.45rem; font-variant-numeric: tabular-nums; }
+    .history-card { padding: 16px; }
+    .history-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .history-head h2 { margin: 0; font-size: 1rem; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 8px 11px;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: #4b5563; }
+    .btn.danger { color: var(--danger); }
+    .history {
+      display: grid;
+      gap: 2px;
+      max-height: 340px;
+      overflow: auto;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 55px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 6px;
+      border-top: 1px solid var(--border);
+      font-variant-numeric: tabular-nums;
+    }
+    .row:first-child { border-top: 0; }
+    .num, .stamp { color: var(--muted); font-size: .86rem; }
+    .time { font-size: 1.05rem; }
+    .empty { color: var(--muted); padding: 12px 6px; }
+    .footer-note { color: var(--muted); font-size: .78rem; text-align: center; }
+    @media (max-width: 650px) {
+      body { padding: 14px; }
+      .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .timer-panel { min-height: 300px; }
+      .row { grid-template-columns: 45px 1fr; }
+      .stamp { display: none; }
+    }
+
+    /* Return-to-portfolio strip. Every page below the top level carries
+       one; this app keeps its own palette, so the strip adopts it. */
+    .cc-return {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+      padding: 10px 18px; border-bottom: 1px solid var(--border);
+      background: rgba(13,15,19,.92);
+      font: 600 10px/1.6 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      letter-spacing: .16em; text-transform: uppercase;
+    }
+    .cc-return a { color: var(--accent); text-decoration: none; }
+    .cc-return a:hover, .cc-return a:focus-visible { text-decoration: underline; }
+    .cc-return a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .cc-return .cc-mark { color: var(--muted); }
+    .skip-link cc-skip { position:absolute; left:12px; top:8px; transform:translateY(-200%);
+      background:var(--accent); color:#0d0f13; font:600 10px/1 ui-monospace,Menlo,monospace;
+      letter-spacing:.16em; text-transform:uppercase; padding:8px 14px; border-radius:4px;
+      z-index:50; transition:transform .14s ease; text-decoration:none; }
+    .skip-link cc-skip:focus-visible { transform:translateY(0); }
+    .cc-return .cc-mark b { color: var(--text); font-weight: 700; letter-spacing: .28em; }
+  </style>
+</head>
+<body>
+<a class="skip-link cc-skip" href="#main">Skip to content</a>
+<nav class="cc-return" aria-label="Return to portfolio">
+  <span class="cc-mark"><b>CC</b> / Portfolio &mdash; Software</span>
+  <span><a href="../../software/">&larr; Back to Software</a> &nbsp;&middot;&nbsp; <a href="../../">Portfolio home</a></span>
+</nav>
+<main id="main">
+
+  <main class="app">
+    <header class="topbar">
+      <h1>Cube Timer</h1>
+      <p class="hint">Offline • Spacebar or touch</p>
+    </header>
+
+    <section id="timerPanel" class="timer-panel" aria-label="Cube timer control">
+      <div>
+        <div id="status" class="status" aria-live="polite">Hold SPACE to arm</div>
+        <div id="timer" class="timer">0.00</div>
+        <div class="subhint">Hold until READY • release to start • press SPACE to stop</div>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="Session statistics">
+      <div class="stat"><div class="stat-label">Solves</div><div id="count" class="stat-value">0</div></div>
+      <div class="stat"><div class="stat-label">Best</div><div id="best" class="stat-value">—</div></div>
+      <div class="stat"><div class="stat-label">Ao5</div><div id="ao5" class="stat-value">—</div></div>
+      <div class="stat"><div class="stat-label">Ao12</div><div id="ao12" class="stat-value">—</div></div>
+    </section>
+
+    <section class="history-card">
+      <div class="history-head">
+        <h2>Solve history</h2>
+        <div class="actions">
+          <button id="undoBtn" class="btn" type="button">Delete last</button>
+          <button id="exportBtn" class="btn" type="button">Export</button>
+          <button id="resetBtn" class="btn danger" type="button">Reset session</button>
+        </div>
+      </div>
+      <div id="history" class="history"></div>
+    </section>
+
+    <div class="footer-note">Times are saved in this browser on this Mac.</div>
+  </main>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = "cube-timer-solves-v1";
+      const ARM_MS = 350;
+
+      const timerPanel = document.getElementById("timerPanel");
+      const timerEl = document.getElementById("timer");
+      const statusEl = document.getElementById("status");
+      const countEl = document.getElementById("count");
+      const bestEl = document.getElementById("best");
+      const ao5El = document.getElementById("ao5");
+      const ao12El = document.getElementById("ao12");
+      const historyEl = document.getElementById("history");
+      const undoBtn = document.getElementById("undoBtn");
+      const exportBtn = document.getElementById("exportBtn");
+      const resetBtn = document.getElementById("resetBtn");
+
+      let solves = loadSolves();
+      let state = "idle";
+      let holdStarted = 0;
+      let startedAt = 0;
+      let raf = null;
+      let armTimer = null;
+
+      function loadSolves() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const parsed = raw ? JSON.parse(raw) : [];
+          return Array.isArray(parsed) ? parsed.filter(s => Number.isFinite(s.ms)) : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function saveSolves() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(solves)); } catch {}
+      }
+
+      function format(ms) {
+        const seconds = ms / 1000;
+        if (seconds < 60) return seconds.toFixed(2);
+        const min = Math.floor(seconds / 60);
+        const sec = (seconds % 60).toFixed(2).padStart(5, "0");
+        return `${min}:${sec}`;
+      }
+
+      function wcaAverage(n) {
+        if (solves.length < n) return null;
+        const values = solves.slice(-n).map(s => s.ms).sort((a, b) => a - b);
+        values.shift();
+        values.pop();
+        return values.reduce((sum, value) => sum + value, 0) / values.length;
+      }
+
+      function render() {
+        countEl.textContent = solves.length;
+        bestEl.textContent = solves.length ? format(Math.min(...solves.map(s => s.ms))) : "—";
+        const ao5 = wcaAverage(5);
+        const ao12 = wcaAverage(12);
+        ao5El.textContent = ao5 == null ? "—" : format(ao5);
+        ao12El.textContent = ao12 == null ? "—" : format(ao12);
+
+        if (!solves.length) {
+          historyEl.innerHTML = '<div class="empty">No solves yet. Your first one will land here.</div>';
+          return;
+        }
+
+        historyEl.innerHTML = solves
+          .map((solve, index) => {
+            const stamp = new Date(solve.at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+            return `<div class="row">
+              <span class="num">#${index + 1}</span>
+              <span class="time">${format(solve.ms)}</span>
+              <span class="stamp">${stamp}</span>
+            </div>`;
+          })
+          .reverse()
+          .join("");
+      }
+
+      function setReady(isReady) {
+        timerPanel.classList.toggle("ready", isReady);
+        timerEl.classList.toggle("ready", isReady);
+      }
+
+      function beginHold() {
+        if (state === "running" || state === "holding" || state === "ready") return;
+        state = "holding";
+        holdStarted = performance.now();
+        statusEl.textContent = "Keep holding…";
+        setReady(false);
+
+        clearTimeout(armTimer);
+        armTimer = setTimeout(() => {
+          if (state === "holding" && performance.now() - holdStarted >= ARM_MS) {
+            state = "ready";
+            statusEl.textContent = "READY";
+            setReady(true);
+          }
+        }, ARM_MS);
+      }
+
+      function releaseHold() {
+        clearTimeout(armTimer);
+        if (state === "ready") {
+          startTimer();
+        } else if (state === "holding") {
+          state = "idle";
+          statusEl.textContent = "Hold a little longer";
+          setReady(false);
+        }
+      }
+
+      function startTimer() {
+        state = "running";
+        setReady(false);
+        timerEl.textContent = "0.00";
+        statusEl.textContent = "Solving…";
+        startedAt = performance.now();
+
+        const tick = () => {
+          if (state !== "running") return;
+          timerEl.textContent = format(performance.now() - startedAt);
+          raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+      }
+
+      function stopTimer() {
+        if (state !== "running") return;
+        const ms = performance.now() - startedAt;
+        cancelAnimationFrame(raf);
+        solves.push({ ms, at: Date.now() });
+        saveSolves();
+        state = "idle";
+        timerEl.textContent = format(ms);
+        statusEl.textContent = "Stopped • hold SPACE for next solve";
+        render();
+      }
+
+      document.addEventListener("keydown", event => {
+        if (event.code !== "Space" || event.repeat) return;
+        event.preventDefault();
+        if (state === "running") stopTimer();
+        else beginHold();
+      });
+
+      document.addEventListener("keyup", event => {
+        if (event.code !== "Space") return;
+        event.preventDefault();
+        releaseHold();
+      });
+
+      timerPanel.addEventListener("pointerdown", event => {
+        event.preventDefault();
+        if (state === "running") stopTimer();
+        else beginHold();
+      });
+
+      timerPanel.addEventListener("pointerup", event => {
+        event.preventDefault();
+        releaseHold();
+      });
+
+      timerPanel.addEventListener("pointercancel", () => {
+        clearTimeout(armTimer);
+        if (state === "holding" || state === "ready") {
+          state = "idle";
+          setReady(false);
+          statusEl.textContent = "Hold SPACE to arm";
+        }
+      });
+
+      undoBtn.addEventListener("click", () => {
+        if (!solves.length) return;
+        solves.pop();
+        saveSolves();
+        timerEl.textContent = solves.length ? format(solves[solves.length - 1].ms) : "0.00";
+        statusEl.textContent = "Last solve deleted";
+        render();
+      });
+
+      resetBtn.addEventListener("click", () => {
+        if (!solves.length || !confirm("Reset the entire solve session?")) return;
+        solves = [];
+        saveSolves();
+        timerEl.textContent = "0.00";
+        statusEl.textContent = "Hold SPACE to arm";
+        render();
+      });
+
+      exportBtn.addEventListener("click", () => {
+        const header = "solve,time_seconds,timestamp\n";
+        const rows = solves.map((s, i) => `${i + 1},${(s.ms / 1000).toFixed(3)},${new Date(s.at).toISOString()}`).join("\n");
+        const blob = new Blob([header + rows], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "cube-timer-solves.csv";
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 500);
+      });
+
+      render();
+    })();
+  </script>
+</main>
+</body>
+</html>

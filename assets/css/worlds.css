@@ -1,0 +1,304 @@
+/* =====================================================================
+   CC / PORTFOLIO — CATEGORY WORLDS
+   ---------------------------------------------------------------------
+   Set `data-world` on <html>. Each world re-points the --w-* variables
+   and adds a small number of section-specific rules. No world defines
+   its own colours, fonts or spacing from scratch — everything resolves
+   back to the same token layer, which is why seven distinct-looking
+   wings still read as one building.
+
+   What a world is allowed to change:
+     accent colour · plate treatment · card geometry · label typeface
+     the texture behind the page · the rhythm of its section heads
+
+   What a world may never change:
+     the masthead · the navigation · the footer · the status vocabulary
+     the metadata positions on a card · the focus ring · the page width
+   ===================================================================== */
+
+/* ═══════════════════════════════════════════════════════════════════
+   SIMULATIONS — "the instrument archive"
+   Catalogue logic, technical labels, dark scopes set into the page.
+   The closest world to the atlas it links out to.
+   ═══════════════════════════════════════════════════════════════ */
+html[data-world="simulations"] {
+  --w-accent:   var(--rf-orange);
+  --w-accent-2: var(--rf-teal);
+  --w-card-top: 3px;
+}
+[data-world="simulations"] .plate::after {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 1px;
+  background: repeating-linear-gradient(90deg, var(--rf-line) 0 8px, transparent 8px 16px);
+}
+/* Alternating accent on the catalogue grid, as in the atlas. */
+[data-world="simulations"] .grid > .card:nth-child(3n+2) { border-top-color: var(--rf-teal); }
+[data-world="simulations"] .grid > .card:nth-child(3n+2) .card__cat { color: var(--rf-teal); }
+[data-world="simulations"] .grid > .card:nth-child(3n+3) { border-top-color: var(--rf-violet); }
+[data-world="simulations"] .grid > .card:nth-child(3n+3) .card__cat { color: var(--rf-violet); }
+
+/* Evidence key — the trust vocabulary, spelled out rather than assumed */
+.evidence-key {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: var(--s-3) var(--s-5);
+  padding: var(--s-5);
+  background: var(--rf-panel2);
+  border: 1px solid var(--rf-line);
+  border-left: 3px solid var(--w-accent);
+  border-radius: var(--rf-radius);
+  font-size: var(--t-small);
+}
+.evidence-key dt {
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase;
+  font-weight: 600; color: var(--rf-ink);
+}
+.evidence-key dd { margin: 2px 0 0; color: var(--rf-ink-dim); font-size: var(--t-small); line-height: 1.45; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   AI + ML — "the results table"
+   Cooler, more quantitative. Metrics get their own furniture, and the
+   absence of a metric is displayed as deliberately as its presence.
+   ═══════════════════════════════════════════════════════════════ */
+html[data-world="ai-ml"] {
+  --w-accent:   var(--rf-indigo);
+  --w-accent-2: var(--rf-teal);
+  --w-card-top: 2px;
+}
+[data-world="ai-ml"] .plate-area--diagram {
+  background-image:
+    linear-gradient(var(--rf-hairline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rf-hairline) 1px, transparent 1px);
+  background-size: 14px 14px;
+}
+.metrics {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(126px, 1fr));
+  gap: 1px; background: var(--rf-line); border: 1px solid var(--rf-line);
+  border-radius: var(--rf-radius); overflow: hidden; margin: 0 0 var(--s-4);
+}
+.metric { background: var(--rf-panel); padding: var(--s-3) var(--s-4); }
+.metric dt {
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase; color: var(--rf-muted);
+}
+.metric dd {
+  margin: 3px 0 0; font-family: var(--rf-display);
+  font-size: 21px; font-weight: 600; letter-spacing: -.02em; color: var(--w-accent);
+}
+.metric-note {
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: .06em; color: var(--rf-muted); margin: 0;
+  text-transform: none; line-height: 1.6;
+}
+/* The absence notice. Used where a project has no verified numbers. */
+.no-metrics {
+  border: 1px dashed var(--rf-line);
+  border-radius: var(--rf-radius);
+  padding: var(--s-4);
+  font-size: var(--t-small);
+  color: var(--rf-ink-dim);
+  background: transparent;
+}
+.no-metrics strong {
+  display: block; font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase;
+  color: var(--rf-muted); margin-bottom: var(--s-2); font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SOFTWARE — "the product shelf"
+   Slightly warmer geometry, slightly more finish. The only world where
+   corners soften, because these are things you are meant to pick up.
+   ═══════════════════════════════════════════════════════════════ */
+html[data-world="software"] {
+  --w-accent:   var(--rf-teal);
+  --w-accent-2: var(--rf-orange);
+  --w-radius:   6px;
+  --w-card-top: 2px;
+}
+[data-world="software"] .card { border-radius: 6px; }
+[data-world="software"] .plate-area { border-radius: 5px 5px 0 0; }
+[data-world="software"] .btn { border-radius: 5px; }
+
+/* Layer diagram — used on the Key → STL case study */
+.layers { display: grid; gap: 1px; background: var(--rf-line); border: 1px solid var(--rf-line); border-radius: 6px; overflow: hidden; }
+.layer { background: var(--rf-panel); padding: var(--s-4) var(--s-5); display: grid; grid-template-columns: 120px 1fr; gap: var(--s-5); align-items: baseline; }
+@media (max-width: 620px) { .layer { grid-template-columns: 1fr; gap: var(--s-2); } }
+.layer dt {
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase;
+  color: var(--w-accent); font-weight: 600;
+}
+.layer dd { margin: 0; font-size: var(--t-small); color: var(--rf-ink-dim); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESEARCH — "the notebook"
+   Serif running text, generous measure, numbered sections. The only
+   world that reads like a document rather than an interface.
+   ═══════════════════════════════════════════════════════════════ */
+html[data-world="research"] {
+  --w-accent:   var(--rf-violet);
+  --w-accent-2: var(--rf-indigo);
+  --w-card-top: 2px;
+  --measure:    64ch;
+}
+[data-world="research"] .prose p,
+[data-world="research"] .prose li { font-family: var(--rf-serif); font-size: 16.5px; line-height: 1.68; }
+[data-world="research"] .plate h1 { font-family: var(--rf-serif); font-weight: 600; letter-spacing: -.01em; }
+[data-world="research"] .plate__lede { font-family: var(--rf-serif); font-style: italic; }
+
+/* Implemented vs proposed — the distinction the section exists to make */
+.ledger { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-5); }
+@media (max-width: 780px) { .ledger { grid-template-columns: 1fr; } }
+.ledger__col {
+  border: 1px solid var(--rf-line);
+  border-top: 3px solid var(--rf-ok);
+  border-radius: var(--rf-radius);
+  background: var(--rf-panel);
+  padding: var(--s-5);
+}
+.ledger__col--open { border-top-color: var(--rf-watch); }
+.ledger__col h3 {
+  font-family: var(--rf-mono); font-size: var(--t-micro);
+  letter-spacing: var(--rf-track); text-transform: uppercase;
+  color: var(--rf-ok); margin: 0 0 var(--s-3); font-weight: 600;
+}
+.ledger__col--open h3 { color: var(--rf-watch); }
+.ledger__col ul { list-style: none; padding: 0; margin: 0; }
+.ledger__col li {
+  font-size: var(--t-small); line-height: 1.5; color: var(--rf-ink-dim);
+  padding-left: 20px; position: relative; margin-bottom: var(--s-3);
+}
+.ledger__col li::before {
+  content: "✓"; position: absolute; left: 0; top: -1px;
+  color: var(--rf-ok); font-size: 12px;
+}
+.ledger__col--open li::before { content: "○"; color: var(--rf-watch); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   GAMES — "the anthology"
+   More energy: bigger art, heavier display type, a darker plate that
+   lets wildly different game aesthetics sit side by side without
+   fighting. Sophisticated, not childish.
+   ═══════════════════════════════════════════════════════════════ */
+html[data-world="games"] {
+  --w-accent:   var(--rf-oxide);
+  --w-accent-2: var(--rf-amber);
+  --w-card-top: 0px;
+  --w-radius:   var(--rf-radius);
+}
+[data-world="games"] .plate h1 { letter-spacing: -.03em; font-weight: 700; }
+[data-world="games"] .card { border-top-width: 0; }
+[data-world="games"] .card::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; z-index: 2;
+  background: linear-gradient(90deg, var(--rf-oxide), var(--rf-amber));
+}
+[data-world="games"] .plate-area { background: var(--rf-scope); border-bottom-color: var(--rf-scope-line); }
+[data-world="games"] .card__title { font-size: 21px; letter-spacing: -.025em; }
+
+/* The game placard — the full metadata schema, ready for the first
+   real entry. */
+.placard {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: var(--s-5); margin: 0;
+  padding: var(--s-5); border: 1px solid var(--rf-line);
+  border-radius: var(--rf-radius); background: var(--rf-panel);
+}
+.placard dt {
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase;
+  color: var(--rf-muted); font-weight: 600;
+}
+.placard dd { margin: 4px 0 0; font-size: var(--t-small); color: var(--rf-ink); }
+.placard dd.empty { color: var(--rf-muted); font-style: italic; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   DESIGN — "the plate section"
+   Image-forward and editorial. Chrome recedes; the pictures get the
+   room. The only world where a card can be mostly picture.
+   ═══════════════════════════════════════════════════════════════ */
+html[data-world="design"] {
+  --w-accent:   var(--rf-gold);
+  --w-accent-2: var(--rf-oxide);
+  --w-card-top: 0px;
+  --w-card-edge: var(--rf-line-soft);
+}
+[data-world="design"] .card { border-top-width: 0; box-shadow: none; background: transparent; border-color: transparent; }
+[data-world="design"] .card:hover { box-shadow: none; transform: translateY(-2px); }
+[data-world="design"] .card__body { padding: var(--s-4) 0 0; }
+[data-world="design"] .plate-area {
+  border: 1px solid var(--rf-line-soft); border-radius: var(--rf-radius);
+  aspect-ratio: 4 / 3;
+}
+[data-world="design"] .card__top { border-bottom: 1px solid var(--rf-line-soft); padding-bottom: var(--s-2); }
+[data-world="design"] .card__stamp { border-top-color: transparent; padding-top: 0; }
+
+/* Contact-sheet gallery */
+.sheet { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: var(--s-3); }
+.sheet figure { margin: 0; }
+.sheet img { border: 1px solid var(--rf-line-soft); border-radius: var(--rf-radius); aspect-ratio: 4/3; object-fit: cover; width: 100%; }
+.sheet figcaption {
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase;
+  color: var(--rf-muted); margin-top: 6px;
+}
+
+/* Before / after. A slider would be a toy; two labelled plates are
+   honest and work without JavaScript. */
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); }
+@media (max-width: 620px) { .compare { grid-template-columns: 1fr; } }
+.compare figure { margin: 0; position: relative; }
+.compare img { border: 1px solid var(--rf-line-soft); border-radius: var(--rf-radius); width: 100%; }
+.compare figcaption {
+  position: absolute; left: var(--s-3); top: var(--s-3);
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase; font-weight: 600;
+  background: var(--rf-bg); color: var(--rf-ink);
+  border: 1px solid var(--rf-line); border-radius: 999px;
+  padding: 3px 9px 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   WORKSHOP — "the index card drawer"
+   Deliberately compact. Rows, not cards, so nothing here can pretend
+   to be a major piece by occupying the space of one.
+   ═══════════════════════════════════════════════════════════════ */
+html[data-world="workshop"] {
+  --w-accent:   var(--rf-moss);
+  --w-accent-2: var(--rf-gold);
+}
+[data-world="workshop"] .grid { grid-template-columns: 1fr; gap: 0; }
+[data-world="workshop"] .card {
+  flex-direction: row; align-items: stretch;
+  border-radius: 0; border-top-width: 1px; border-bottom: 0;
+  box-shadow: none; background: transparent;
+  border-left: 3px solid transparent;
+}
+[data-world="workshop"] .grid > .card:last-child { border-bottom: 1px solid var(--rf-line); }
+[data-world="workshop"] .card:hover {
+  transform: none; box-shadow: none;
+  background: var(--rf-panel); border-left-color: var(--w-accent);
+}
+[data-world="workshop"] .plate-area { display: none; }
+[data-world="workshop"] .card__body { padding: var(--s-4) var(--s-4); }
+[data-world="workshop"] .card__title { font-size: 17px; }
+[data-world="workshop"] .card__blurb { margin-bottom: var(--s-3); }
+[data-world="workshop"] .chips { margin-bottom: var(--s-3); }
+[data-world="workshop"] .card__stamp { border-top: 0; padding-top: 0; }
+
+@media (min-width: 780px) {
+  /* An index-card row: identity on the left, content on the right, and
+     no stretched empty cells — rows are sized by their content. */
+  [data-world="workshop"] .card__body {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    align-content: start;
+    gap: var(--s-2) var(--s-6);
+    padding: var(--s-5) var(--s-4);
+  }
+  [data-world="workshop"] .card__top   { grid-column: 1; grid-row: 1; margin: 0;
+                                         flex-direction: column; align-items: flex-start; gap: 6px; }
+  [data-world="workshop"] .card__title { grid-column: 1; grid-row: 2; margin: 0; align-self: start; }
+  [data-world="workshop"] .card__blurb { grid-column: 2; grid-row: 1 / span 2; margin: 0; flex: none; }
+  [data-world="workshop"] .chips       { grid-column: 2; grid-row: 3; margin: var(--s-2) 0 0; }
+  [data-world="workshop"] .card__stamp { grid-column: 2; grid-row: 4; margin: 0; padding-top: var(--s-2); }
+}

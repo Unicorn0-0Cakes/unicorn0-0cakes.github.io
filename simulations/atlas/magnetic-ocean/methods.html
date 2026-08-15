@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methods — The Magnetic Ocean</title>
+<meta name="description" content="Methods and limitations for The Magnetic Ocean: the Vine–Matthews–Morley hypothesis, the two-dimensional prism forward model, units and conversions, the polarity chronology and its sources, the noise model, validation status and version history.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/orbital.css">
+<link rel="stylesheet" href="../assets/methods.css">
+<script src="../assets/orbital.js" data-title="The Magnetic Ocean" data-tag="Methods"></script>
+<script src="../assets/catalogue.js"></script>
+</head>
+<body>
+<a class="rf-skip" href="#s1">Skip to methods</a>
+<div class="wrap">
+  <header class="mhead">
+    <span class="rf-regmark rm-tl"></span>
+    <span class="rf-regmark rm-tr"></span>
+    <div class="kicker">Methods &amp; limitations</div>
+    <h1>The Magnetic Ocean</h1>
+    <p class="q">Can a noisy magnetic trace reveal the hidden motion and age of an ocean floor?</p>
+    <div class="badges" id="badges"></div>
+    <div class="actions">
+      <a class="rf-btn primary" href="magnetic-ocean.html">Run instrument</a>
+      <a class="rf-btn" href="tests/model-tests.html">Run the model tests</a>
+      <a class="rf-btn" href="../index.html#catalogue">All instruments</a>
+    </div>
+    <dl class="spec" id="spec"></dl>
+    <nav class="toc" aria-label="Sections">
+      <a href="#s1">01 Source</a><a href="#s2">02 Rules &amp; equations</a>
+      <a href="#s3">03 Parameters</a><a href="#s4">04 What is simplified</a>
+      <a href="#s5">05 What this cannot establish</a><a href="#s6">06 Validation</a>
+      <a href="#s7">07 Version history</a>
+    </nav>
+  </header>
+
+  <!-- ================================================== 01 -->
+  <section id="s1"><h2><span class="idx">01</span> The source <span class="trail"></span></h2>
+
+    <h3>The research question</h3>
+    <p>
+      Can a noisy magnetic trace collected above the ocean floor reveal the hidden motion, polarity history
+      and age of oceanic crust? The instrument puts that question in its inverse form: the operator observes
+      effects — one scalar field measurement every kilometre or so, from a sensor towed two or three
+      kilometres above rock it cannot see — and has to reconstruct the system that produced them.
+    </p>
+
+    <h3>Historical background</h3>
+    <p>
+      Through the 1950s, magnetic surveys at sea returned patterns of anomaly over the ocean floor that had no
+      counterpart on land. In 1963 Frederick Vine and Drummond Matthews published a short letter in
+      <i>Nature</i> proposing that those anomalies are a record of a reversing geomagnetic field, written into
+      crust as it forms at a ridge and then carried away from it, so that the pattern is repeated on both
+      flanks [1].
+    </p>
+    <p>
+      Lawrence Morley, of the Geological Survey of Canada, reached the same interpretation independently. His
+      letter setting it out was rejected; the argument appeared in 1964 in a Royal Society of Canada volume
+      with A. Larochelle [2]. The hypothesis is properly called Vine–Matthews–Morley, and this page uses that
+      name. The USGS account of the episode also notes that field reversals had already been demonstrated in
+      continental rocks before the marine interpretation was proposed, and that the potassium–argon reversal
+      chronology assembled by Cox, Doell and Dalrymple was what allowed the marine pattern to be dated [4].
+    </p>
+    <p>
+      In 1968 Heirtzler, Dickson, Herron, Pitman and Le Pichon took the argument the other way round: assuming
+      the interpretation, they used the anomaly pattern itself to build a polarity timescale reaching back
+      about 80 million years [3].
+    </p>
+    <p class="tagp">
+      <b>This instrument is not a reconstruction of any of that work.</b> No survey in it corresponds to a
+      real cruise, no preset is named after a real ridge, every world it builds is generic and synthetic, and
+      every noise figure is invented. What it reproduces is the <i>shape of the inference</i> — measure,
+      compare, commit, then check — not the data.
+    </p>
+
+    <h3>References</h3>
+    <ol class="refs">
+      <li>[1] Vine, F.J. &amp; Matthews, D.H. (1963). Magnetic anomalies over oceanic ridges.
+        <i>Nature</i> <b>199</b>, 947–949. doi:10.1038/199947a0</li>
+      <li>[2] Morley, L.W. &amp; Larochelle, A. (1964). Palaeomagnetism as a means of dating geological events.
+        In <i>Geochronology in Canada</i>, Royal Society of Canada Special Publication 8, 39–51.</li>
+      <li>[3] Heirtzler, J.R., Dickson, G.O., Herron, E.M., Pitman, W.C. III &amp; Le Pichon, X. (1968).
+        Marine magnetic anomalies, geomagnetic field reversals, and motions of the ocean floor and continents.
+        <i>J. Geophys. Res.</i> <b>73</b>, 2119–2136. doi:10.1029/JB073i006p02119</li>
+      <li>[4] U.S. Geological Survey, <i>This Dynamic Earth: The Story of Plate Tectonics</i> — "Magnetic
+        stripes and isotopic clocks".
+        <a href="https://pubs.usgs.gov/gip/dynamic/stripes.html">pubs.usgs.gov/gip/dynamic/stripes.html</a></li>
+      <li>[5] Talwani, M. &amp; Heirtzler, J.R. (1964). Computation of magnetic anomalies caused by two
+        dimensional structures of arbitrary shape. <i>Computers in the Mineral Industries, Part 1</i>,
+        Stanford Univ. Publ. Geol. Sci. <b>9</b>, 464–480.</li>
+      <li>[6] Kravchinsky, V.A., Hnatyshin, D., Lysak, B. &amp; Alemie, W. (2019). Computation of magnetic
+        anomalies caused by two-dimensional structures of arbitrary shape: derivation and Matlab
+        implementation. <i>Geophys. Res. Lett.</i> <b>46</b>, 7345–7351. doi:10.1029/2019GL082767</li>
+      <li>[7] Schouten, H. &amp; McCamy, K. (1972). Filtering marine magnetic anomalies.
+        <i>J. Geophys. Res.</i> <b>77</b>, 7089–7099. doi:10.1029/JB077i035p07089</li>
+      <li>[8] Ocean Drilling Program, Leg 207 Initial Reports, Ch. 2, Table T7 — magnetic polarity timescale.
+        <a href="https://www-odp.tamu.edu/publications/207_IR/chap_02/c2_t7.htm">www-odp.tamu.edu</a>.
+        A compilation after Shackleton et al. (1990), Hilgen (1991), Shackleton et al. (1995) and
+        Cande &amp; Kent (1995), doi:10.1029/94JB03098.</li>
+      <li>[9] Parsons, B. &amp; Sclater, J.G. (1977). An analysis of the variation of ocean floor bathymetry
+        and heat flow with age. <i>J. Geophys. Res.</i> <b>82</b>, 803–827.</li>
+    </ol>
+  </section>
+
+  <!-- ================================================== 02 -->
+  <section id="s2"><h2><span class="idx">02</span> Rules and equations <span class="trail"></span></h2>
+
+    <h3>What the magnetometer observes, and what stays hidden</h3>
+    <p>
+      The instrument returns one quantity: the <b>total-field magnetic anomaly</b> in nanotesla, at a recorded
+      position along the trackline, once per sample interval. That is all. Everything else — the ridge axis,
+      the two half-spreading rates, whether the flanks match, the polarity sequence in the rock, the crustal
+      age, the generating model itself — is hidden until the operator commits an interpretation, and is
+      hidden in the exported data file as well.
+    </p>
+
+    <h3>Units and conversions</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Quantity</th><th>Unit</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Horizontal distance</td><td>km</td><td>ridge-normal unless stated as along-track</td></tr>
+        <tr><td>Depth, sensor altitude</td><td>km</td><td>positive downward</td></tr>
+        <tr><td>Age</td><td>Ma</td><td>millions of years before present</td></tr>
+        <tr><td>Half-spreading rate</td><td>cm/yr</td><td><b>one</b> plate</td></tr>
+        <tr><td>Full spreading rate</td><td>cm/yr</td><td>the <b>sum</b> of the two half rates</td></tr>
+        <tr><td>Magnetic anomaly</td><td>nT</td><td>total field, main field already removed</td></tr>
+        <tr><td>Magnetisation</td><td>A/m</td><td></td></tr>
+        <tr><td>Angles</td><td>degrees</td><td>radians internally</td></tr>
+        <tr><td>Survey budget</td><td>ship-hours</td><td>trackline ÷ speed</td></tr>
+      </tbody>
+    </table></div>
+    <p>The conversion everything hangs off is a unit identity, not a physical result:</p>
+    <pre>distance (km) = 10 × half rate (cm/yr) × age (Ma)</pre>
+    <p>
+      because 1 cm/yr is 10 km per million years. A polarity interval of duration <i>D</i> Ma therefore
+      occupies a band
+    </p>
+    <pre>interval width (km) = 10 × half rate (cm/yr) × D (Ma)</pre>
+    <p>
+      on <b>one</b> side of the axis. Across the ridge the same interval spans that width on each flank —
+      twice as much in total when the flanks are equal. A half rate and a full rate are never interchanged
+      anywhere in the code; the variables are named <code>halfRateLeftCmYr</code>,
+      <code>halfRateRightCmYr</code> and <code>fullRateCmYr</code> so that the mistake would be visible.
+      Age at the active axis is exactly zero and increases away from it.
+    </p>
+
+    <h3>Survey geometry</h3>
+    <p>
+      With <i>α</i> the angle between the trackline and the ridge axis, the ridge-normal displacement after
+      an along-track distance <i>s</i> is
+    </p>
+    <pre>x = s · sin α</pre>
+    <p>
+      so a perpendicular crossing is <i>α</i> = 90°, and an oblique track stretches every apparent band width
+      along the track by 1/sin <i>α</i>. A rate read straight off an oblique trace without correcting for
+      that is too high by exactly that factor. Below 30° the instrument warns; below 15° it refuses to run
+      the line, because the ridge-normal coverage has collapsed and the survey carries almost no information
+      about the rate. Zero-information geometry is never silently allowed.
+    </p>
+
+    <h3>Polarity chronology</h3>
+    <p>
+      Two sources, always distinguished on screen and in the export.
+    </p>
+    <p>
+      <b>Published.</b> Normal-polarity intervals for the last 5.23 Ma, transcribed from a single published
+      table [8]. Every boundary carries the attribution the table gives it, kept in the <code>src</code> field
+      of each record in <code>data/polarity-timescale.js</code>; no age in that file is anonymous. The field
+      is normal at age zero — the Brunhes — as the source has it. Crust older than 5.23 Ma is left
+      <b>unmagnetised</b> rather than extrapolated, because the instrument has no source for it.
+    </p>
+    <p>
+      <b>Synthetic.</b> A seeded sequence of irregular intervals, labelled synthetic wherever it appears. No
+      boundary in it corresponds to a real reversal, and the two are never mixed without saying which is
+      which.
+    </p>
+    <p class="tagp">
+      The published table is a compilation from the mid-1990s. Later work — Ogg (2020) in <i>Geologic Time
+      Scale 2020</i> being the obvious case — revises several boundaries by tens of thousands of years; the
+      Matuyama–Brunhes boundary is quoted there at 0.773 Ma against 0.780 Ma here. Those differences are far
+      below what a single noisy transect in this instrument can resolve, but they are real, and the table
+      carries no uncertainties of its own.
+    </p>
+
+    <h3>The forward magnetic model</h3>
+    <p>
+      This is the part that has to be right, because it is what separates a magnetic profile from a coloured
+      stripe diagram. The magnetised layer is treated as a set of two-dimensional rectangular prisms,
+      infinite along strike, uniformly magnetised, sharing one top and one bottom depth. That is the
+      classical marine-magnetics forward problem of Talwani and Heirtzler [5], re-derived from first
+      principles — with the errors in the 1964 derivation identified and corrected — by Kravchinsky and
+      colleagues [6]. Their equations (4)–(6) are the ones implemented.
+    </p>
+    <p>
+      Let <i>x</i> and <i>z</i> be the position of a source element <b>relative to the sensor</b>, <i>z</i>
+      positive downward, and <i>J</i><sub>x</sub>, <i>J</i><sub>z</sub> the components of magnetisation in
+      A/m. For a body infinite in the strike direction the potential of an element is
+    </p>
+    <pre>dΩ = (J<sub>x</sub>x + J<sub>z</sub>z) / [2π(x² + z²)] dx dz</pre>
+    <p>and the vertical and horizontal field components follow by differentiation:</p>
+    <pre>dV = [2J<sub>x</sub>xz − J<sub>z</sub>(x² − z²)] / [2π(x² + z²)²] dx dz
+dH = [2J<sub>z</sub>xz + J<sub>x</sub>(x² − z²)] / [2π(x² + z²)²] dx dz</pre>
+    <p>
+      Integrating over a rectangle <i>x</i> ∈ [<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>],
+      <i>z</i> ∈ [<i>z</i><sub>1</sub>, <i>z</i><sub>2</sub>] is elementary, since
+    </p>
+    <pre>∬ (x² − z²)/(x² + z²)² dx dz = arctan(x/z)
+∬      xz /(x² + z²)² dx dz = −½ ln(x² + z²)</pre>
+    <p>
+      Writing <i>A</i> = arctan(<i>x</i>/<i>z</i>), <i>R</i> = ½ ln(<i>x</i>² + <i>z</i>²) and
+      <i>D</i>[·] for the double difference
+      <i>F</i>(<i>x</i><sub>2</sub>,<i>z</i><sub>2</sub>) − <i>F</i>(<i>x</i><sub>1</sub>,<i>z</i><sub>2</sub>)
+      − <i>F</i>(<i>x</i><sub>2</sub>,<i>z</i><sub>1</sub>) + <i>F</i>(<i>x</i><sub>1</sub>,<i>z</i><sub>1</sub>):
+    </p>
+    <pre>V = (1/2π) · D[ −J<sub>x</sub>R − J<sub>z</sub>A ]
+H = (1/2π) · D[ −J<sub>z</sub>R + J<sub>x</sub>A ]</pre>
+    <p>
+      The sensor is always above the layer, so <i>z</i> ≥ <i>z</i><sub>1</sub> &gt; 0 throughout and
+      arctan(<i>x</i>/<i>z</i>) never crosses a branch cut. There are no special cases and no singularities
+      inside the domain of use.
+    </p>
+
+    <h3>Total field, and the effective inclination</h3>
+    <p>
+      A marine magnetometer measures the scalar total field. For an anomaly small against the main field the
+      standard reduction is to project the anomalous vector onto the main-field direction [6, eq. 13]. This
+      instrument works in the reduced two-dimensional geometry conventional in marine magnetics, in which the
+      strike azimuth and the declination are folded into a single <b>effective inclination</b>
+      <i>I</i><sub>eff</sub> shared by the magnetisation and the field [7]. Setting
+      <i>J</i><sub>x</sub> = <i>J</i> cos <i>I</i><sub>eff</sub>,
+      <i>J</i><sub>z</sub> = <i>J</i> sin <i>I</i><sub>eff</sub> and projecting on the same direction
+      collapses the whole thing to one line, per unit magnetisation:
+    </p>
+    <pre>T = −sin(2 I<sub>eff</sub>) · D[R] + cos(2 I<sub>eff</sub>) · D[A]</pre>
+    <p>
+      At <i>I</i><sub>eff</sub> = 90° — the magnetic-pole case — this reduces to <i>T</i> = −<i>D</i>[<i>A</i>],
+      the anomaly is symmetric about each block, and a symmetric world produces a symmetric profile. Below
+      90° the anomalies skew, which is real and is why the control exists. Converting a latitude, a
+      declination and a strike azimuth <i>into</i> <i>I</i><sub>eff</sub> is <b>not</b> implemented: the
+      operator sets it directly, and anomalous skewness is not modelled at all.
+    </p>
+    <p>
+      With magnetisation in A/m and lengths in km, the constant that turns the expression above into
+      nanotesla is μ₀ × 10⁹ / 2π = 200; the length unit cancels because the two-dimensional expression is
+      scale-free in <i>x</i> and <i>z</i>.
+    </p>
+    <p class="tagp">
+      <b>Why the trace is smooth when the crust is not.</b> The blocks have sharp edges; the field they
+      produce does not. Raising the sensor reduces the amplitude and suppresses the high-frequency detail —
+      upward continuation is a low-pass filter whose corner is set by the sensor's height above the source.
+      Neighbouring blocks of opposite polarity partly cancel. The result is a continuous trace whose peaks do
+      not sit over block centres and whose zero crossings do not land on the polarity boundaries. Both of
+      those are asserted as tests, not as claims.
+    </p>
+
+    <h3>The noise model</h3>
+    <p>
+      Every stochastic effect comes from one seeded generator (mulberry32, Box–Muller for Gaussians), drawn
+      in a fixed order — navigation, then noise, then dropout, sample by sample — so that the same seed and
+      the same settings return byte-identical arrays.
+    </p>
+    <ul>
+      <li><b>Instrument noise.</b> Gaussian, independent between samples, 1σ set in nT.</li>
+      <li><b>Regional trend.</b> A constant offset plus a linear ramp in nT per 100 km plus a small
+        curvature, all along-track. It cannot be separated from the crustal signal except by fitting it,
+        which every candidate model is allowed to do.</li>
+      <li><b>Navigation uncertainty.</b> The reading is taken where the ship actually was and logged where
+        the ship thought it was.</li>
+      <li><b>Dropout.</b> Lost readings are marked missing. They are dropped from every fit and are
+        <b>blank</b> in the export. They are never set to zero and never interpolated across.</li>
+      <li><b>Finite survey.</b> Length, spacing, altitude, speed and obliquity are all the operator's, and
+        all cost or constrain something.</li>
+    </ul>
+
+    <h3>Inference and model comparison</h3>
+    <p>
+      Each candidate model has a structural part, which builds a crust and computes the profile the forward
+      model says it would produce, and a set of linear nuisance parameters — an amplitude, and a per-line
+      offset, ramp and curvature — fitted by ordinary least squares. Those nuisance terms are fitted for
+      <b>every</b> candidate. Fitting them for one and not the others would decide the comparison in advance.
+    </p>
+    <p>
+      The automatic search does not use one grid. A chronology with two dozen boundaries acts as a long
+      ruler: a rate error of one part in fifty displaces the outermost boundary of a 100 km profile by four
+      kilometres, more than the width of the short subchrons out there, and the residual jumps from the noise
+      floor to the full variance of the data. The misfit surface is a needle. So the search works outward
+      from the axis, in the order a person works: find the axial anomaly by sweeping each flank's rate
+      against a window holding about 1.7 Ma of crust; keep the best few positions; open the window to about
+      seventy per cent of the profile and refine axis and both rates <i>together</i>, because they are
+      strongly coupled; open it to the whole profile and refine again; then rescore every survivor on the
+      same data. Candidates within a stage are always scored on the same samples, or on a residual ratio
+      normalised against a nuisance-only fit on those samples when the window is candidate-dependent.
+    </p>
+    <p>The four candidates are compared on:</p>
+    <ul>
+      <li>root-mean-square residual, in nT, against the operator's own stated instrument noise;</li>
+      <li>correlation between observed and predicted;</li>
+      <li>lag-1 autocorrelation of the residual — the statistic that says a model is wrong in a
+        <i>structured</i> way rather than merely imprecise;</li>
+      <li>parameter count, and ΔAICc, which charges each model for its parameters;</li>
+      <li>performance on a <b>held-out transect</b>, when more than one line has been run: the models are
+        fitted on the earlier lines and scored on the last, with only the regional nuisance terms refitted
+        there, so what is being tested is whether the <i>structure</i> transfers.</li>
+    </ul>
+    <p>
+      When the difference in held-out error between the two leading models is inside the sampling noise on
+      that difference, the instrument reports <b>"unable to distinguish"</b> and says another transect would
+      help. It does not rank them anyway. ΔAICc is described on screen as a comparison aid and never as a
+      probability that a model is true, and the word "proved" does not appear.
+    </p>
+  </section>
+
+  <!-- ================================================== 03 -->
+  <section id="s3"><h2><span class="idx">03</span> Parameters <span class="trail"></span></h2>
+    <p>
+      Every parameter is marked <b>sourced</b> (taken from a citable publication), <b>pedagogic</b> (chosen so
+      the instrument teaches what it is meant to teach, and carrying no claim about the real ocean) or
+      <b>generated</b> (drawn from the seed).
+    </p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Parameter</th><th>Value / range</th><th>Units</th><th>Where it came from</th></tr></thead>
+      <tbody>
+        <tr><td>Polarity boundaries, 0–5.23 Ma</td><td>12 normal intervals</td><td>Ma</td>
+            <td><b>Sourced</b> — ODP Leg 207 Table T7 [8], per-interval attributions kept in the data file</td></tr>
+        <tr><td>Distance–age constant</td><td>10</td><td>km per (cm/yr) per Ma</td>
+            <td><b>Sourced</b> — a unit identity, not a fitted number</td></tr>
+        <tr><td>Anomaly scale constant</td><td>200</td><td>nT per (A/m)</td>
+            <td><b>Sourced</b> — μ₀ × 10⁹ / 2π, from the potential-theory expression [6]</td></tr>
+        <tr><td>Magnetised layer thickness</td><td>0.5</td><td>km</td>
+            <td><b>Pedagogic</b> — the conventional layer-2A value used in published forward models; held
+            fixed across every preset so that changing the noise changes the signal-to-noise ratio and not
+            the physics</td></tr>
+        <tr><td>Crustal magnetisation</td><td>6.0</td><td>A/m</td>
+            <td><b>Pedagogic</b> — within the range published forward models use for layer 2A; it sets the
+            anomaly amplitude and nothing else</td></tr>
+        <tr><td>Bathymetry</td><td>2500 + 350·√t</td><td>m, t in Ma</td>
+            <td><b>Sourced</b> — Parsons &amp; Sclater [9], for crust younger than ~70 Ma.
+            <b>Displayed only</b>; see §04</td></tr>
+        <tr><td>Effective inclination</td><td>20–90, default 90</td><td>degrees</td>
+            <td><b>Pedagogic</b> — set directly by the operator; not derived from a latitude</td></tr>
+        <tr><td>Sensor altitude</td><td>0.5–5.0, default 2.7</td><td>km</td>
+            <td><b>Pedagogic</b> — a surface tow over ~2.7 km of water</td></tr>
+        <tr><td>Half-spreading rates</td><td>0.5–8.0</td><td>cm/yr</td>
+            <td><b>Pedagogic</b> in presets; <b>generated</b> from the seed in blind and comparison modes</td></tr>
+        <tr><td>Ridge-axis position</td><td>−60 to +60</td><td>km</td>
+            <td><b>Pedagogic</b> / <b>generated</b> — the chart origin is arbitrary and the axis is not at zero</td></tr>
+        <tr><td>Instrument noise 1σ</td><td>0–120</td><td>nT</td><td><b>Pedagogic</b> — invented</td></tr>
+        <tr><td>Regional trend</td><td>0–400</td><td>nT / 100 km</td><td><b>Pedagogic</b> — invented</td></tr>
+        <tr><td>Navigation uncertainty 1σ</td><td>0–3.0</td><td>km</td><td><b>Pedagogic</b> — invented</td></tr>
+        <tr><td>Dropout rate</td><td>0–0.30</td><td>fraction</td><td><b>Pedagogic</b> — invented</td></tr>
+        <tr><td>Survey budget</td><td>40–80 by mode</td><td>ship-hours</td><td><b>Pedagogic</b> — a constraint, not a costing</td></tr>
+        <tr><td>Null-world correlation length</td><td>6–18</td><td>km</td><td><b>Generated</b> from the seed</td></tr>
+      </tbody>
+    </table></div>
+    <p class="tagp">
+      No preset is named after a real ridge, and none claims to reproduce a measured survey. A historical
+      preset would require its geometry, its rates and its noise figures to be sourced first; none is.
+    </p>
+  </section>
+
+  <!-- ================================================== 04 -->
+  <section id="s4"><h2><span class="idx">04</span> What is simplified <span class="trail"></span></h2>
+    <p>
+      The forward model is a <b>simplified pedagogical implementation of a published physical model</b>. The
+      potential-theory expressions are the real ones and are implemented exactly; the world they are applied
+      to is deliberately thin. Not modelled, at all:
+    </p>
+    <ul>
+      <li>variable crustal thickness — one layer, one thickness, everywhere;</li>
+      <li>variable magnetisation intensity — one value for every block, with no decay of remanence with age
+        and no chemical remanence acquired later;</li>
+      <li>alteration of oceanic crust;</li>
+      <li>sediment cover;</li>
+      <li><b>bathymetric effects on the magnetics</b> — the seafloor relief is drawn from the depth–age
+        relation [9] but the top of the source layer is held at a constant depth below the sensor. The
+        section the operator sees and the section the forward model uses are not the same section, and that
+        inconsistency is deliberate, so that sensor altitude remains a single controllable variable;</li>
+      <li>latitude and true field inclination, magnetic declination, and non-vertical magnetisation, except
+        through the single effective-inclination parameter described in §02;</li>
+      <li>anomalous skewness;</li>
+      <li>transform faults, ridge jumps and propagating rifts;</li>
+      <li>changes in spreading rate through time — each flank has one constant rate for its whole history;</li>
+      <li>three-dimensional source geometry — everything is infinite along strike;</li>
+      <li>ship magnetic contamination and heading error;</li>
+      <li>diurnal field variation and external magnetic disturbance, including storms;</li>
+      <li>uncertainty in the reversal chronology itself — boundary ages are treated as exact;</li>
+      <li>real survey calibration: base-station correction, heading calibration, crossover adjustment,
+        levelling between lines, and the removal of the main field, which here is simply assumed to have been
+        done perfectly.</li>
+    </ul>
+    <p>
+      The instrument also simplifies the survey. Ship-hours are a budget, not a cost model. The animation
+      runs a line about fifteen hundred times faster than a ship would. Sample spacing is free, when in
+      practice it is tied to speed and logging rate.
+    </p>
+  </section>
+
+  <!-- ================================================== 05 -->
+  <section id="s5"><h2><span class="idx">05</span> What this cannot establish <span class="trail"></span></h2>
+    <ul>
+      <li>That the real seafloor spreads, or that the real geomagnetic field reverses. A fit here shows that
+        synthetic observations are consistent with a synthetic world of a particular kind. It is evidence
+        about the model, not about the Earth.</li>
+      <li>Any spreading rate, axis position or reversal age as a <i>measurement</i>. Nothing in this
+        instrument was fitted to real data.</li>
+      <li>That one noisy transect can settle the question. It generally cannot, and the instrument is built
+        to say so — including by making worlds in which the honest answer is "unable to distinguish".</li>
+      <li>That a low residual means a correct model. A model with enough free parameters can follow almost
+        any wiggle; that is exactly what the correlated-magnetisation candidate is there to demonstrate.</li>
+      <li>That a fit statistic is equivalent to truth, or that ΔAICc is a probability.</li>
+      <li>That correlation between an observed and a predicted profile is proof of anything.</li>
+      <li>That every ridge is symmetric. Real spreading is often close to symmetric and rarely exactly so.</li>
+      <li>That geomagnetic reversals are <i>caused</i> by plate motion. They are not, and nothing here
+        implies it: the two are independent processes, and the pattern in the rock exists only because they
+        happen at the same time.</li>
+      <li>That the magnetic stripes are visible from a ship. They are not. The observed profile is a
+        continuous scalar record, not an image of the stripes, and the instrument never calls it one.</li>
+      <li>That the model reproduces every feature of real marine magnetic data. It reproduces very few.</li>
+      <li>That a working interface establishes scientific validity.</li>
+    </ul>
+  </section>
+
+  <!-- ================================================== 06 -->
+  <section id="s6"><h2><span class="idx">06</span> Validation status <span class="trail"></span></h2>
+
+    <h3>Evidence classification</h3>
+    <p>
+      The catalogue badge is <b>Uncalibrated prototype</b>: internally consistent, with nothing fitted to
+      data. That is the correct level. The forward model is a faithful implementation of published
+      potential-theory expressions [5, 6] and is checked against independent properties of those
+      expressions, but no parameter in the instrument has been calibrated against a measured marine magnetic
+      profile, and no output has been compared with one. Raising the badge would require exactly that
+      comparison, shown here as a table.
+    </p>
+
+    <h3>What is tested</h3>
+    <p>
+      Two suites run from one source, headless with <code>node tests/model-tests.js</code> and in the browser
+      at <a href="tests/model-tests.html">tests/model-tests.html</a>, plus a headless render-and-drive test at
+      <code>node tests/smoke.js</code>. At the last run: <b>87 model assertions passed, 0 failed</b>;
+      <b>17 smoke assertions passed, 0 failed</b>.
+    </p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Group</th><th>What it checks</th></tr></thead>
+      <tbody>
+        <tr><td>Reproducibility</td><td>Same seed and settings give byte-identical observations; different seeds
+          give different noise; a different transect index gives a different realisation; with navigation fixed
+          the crustal signal is independent of the observation seed.</td></tr>
+        <tr><td>Age, distance, polarity</td><td>Age at the axis is exactly zero and increases monotonically;
+          1 cm/yr for 1 Ma is 10 km on one side; the full rate is the sum of the two half rates; the field is
+          normal at age 0 and reversed at 1.5 Ma; beyond the chronology the polarity is <i>unknown</i>, not
+          assumed; a synthetic chronology is flagged synthetic.</td></tr>
+        <tr><td>Crustal geometry</td><td>Equal rates give symmetric ages and polarity placement; unequal rates
+          give different band widths per flank; raising the rate widens the same interval in proportion; the
+          Brunhes half-width at 2 cm/yr is 15.6 km; crust older than the chronology is left unmagnetised.</td></tr>
+        <tr><td>Survey geometry</td><td>A perpendicular track preserves ridge-normal width; a 30° track covers
+          50 km of ridge-normal ground in 100 km of line and stretches apparent widths by exactly 2; the same
+          anomaly feature sits 1/sin α further along an oblique track; a near-parallel track is refused.</td></tr>
+        <tr><td>Forward model</td><td>Amplitude falls monotonically with sensor altitude; normalised roughness
+          (RMS second difference over RMS trace) falls with altitude, i.e. high-frequency detail is suppressed;
+          a symmetric world at 90° effective inclination gives a symmetric profile and a skewed one below 90°;
+          the trace is continuous where the crust is binary; zero crossings do not land on polarity boundaries;
+          uniform magnetisation gives under 1 nT; amplitudes are of marine-survey size; every value is finite;
+          the tabulated kernel used for candidate scanning agrees with the exact closed form to better than
+          0.5 nT.</td></tr>
+        <tr><td>Observation effects</td><td>Zero noise contains no random perturbation; zero jitter puts the
+          ship where it says it is; lost readings are marked and never zeroed; the dropout rate comes out near
+          the value requested; the regional trend adds the requested gradient.</td></tr>
+        <tr><td>Inversion</td><td>A clean symmetric case recovers the true half rate to within 2% and the axis
+          to within 1 km, leaving little residual structure; on the null world the two leading models are
+          reported as indistinguishable rather than ranked; on a spreading world the reversal models beat a
+          constant-polarity field; the flexible model is charged for its parameters; held-out masks partition
+          the data without overlap.</td></tr>
+        <tr><td>Session and export</td><td>Rebuilding a world from the same spec restores the identical crust;
+          a random world is a deterministic function of its seed; the export carries seed, settings, units,
+          positions, observations, missing markers and model version; it does <i>not</i> leak the hidden world
+          before commitment and does after; missing readings are blank, never zero.</td></tr>
+        <tr><td>Report</td><td>Separate axis, left-rate, right-rate and full-rate errors; the true generating
+          model is named; boundary alignment is scored; confidence calibration is classified rather than
+          scored; the report is not reduced to a single number.</td></tr>
+        <tr><td>Catalogue</td><td>The record exists, every taxonomy value is in the controlled vocabulary, the
+          evidence level is one of the five, href and methods point inside this folder, the version matches the
+          model version, and the copy does not describe the trace as a stripe map.</td></tr>
+        <tr><td>Smoke</td><td>Every file loads; every mode launches and renders every panel; a line runs to
+          completion and lands in the ledger; the workbench produces a prediction and a residual; the
+          automatic fit and the four-model comparison both terminate; committing produces a full report; the
+          reveal draws; every preset builds, runs and renders; restart on the same seed rebuilds the identical
+          hidden world; and no element id is requested that the page does not define.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Reproducibility and random seeds</h3>
+    <p>
+      The seed is shown, editable, and written into the export. <b>Restart same seed</b> rebuilds the
+      identical hidden world and the identical noise realisation; <b>New seed</b> draws a new world. The
+      generator is mulberry32 with a FNV-1a stream mixer, so <code>(seed, "noise", 2)</code> is a
+      reproducible distinct stream and the result is identical in every browser and in node. Every generated
+      array is checked for non-finite values and throws rather than quietly drawing an empty chart.
+    </p>
+
+    <h3>Known gaps in validation</h3>
+    <ul>
+      <li>No comparison against a measured marine magnetic profile. This is the gap that keeps the badge
+        where it is.</li>
+      <li>The automatic search is reliable on the cases in the test suite (13 of 14 synthetic worlds
+        recovered to within 3 km and 10% at signal-to-noise above about 2), but it is a search, not a proof
+        of identifiability. The one failure was at 60 nT noise on a ~150 nT signal, where failing is the
+        correct outcome; the instrument reports the poor fit rather than a confident answer.</li>
+      <li>The browser rendering has been exercised through a headless DOM and canvas stub, not through a real
+        browser at the time of writing.</li>
+    </ul>
+  </section>
+
+  <!-- ================================================== 07 -->
+  <section id="s7"><h2><span class="idx">07</span> Version history <span class="trail"></span></h2>
+    <div class="vhist">
+      <div class="v">
+        <b>0.1.0</b> — August 2026. First release. Two-dimensional prism forward model after Talwani &amp;
+        Heirtzler as re-derived by Kravchinsky et al., reduced to the effective-inclination form. Published
+        polarity chronology for 0–5.23 Ma with per-boundary attribution, plus seeded synthetic chronologies.
+        Four modes, eight presets, three generating models. Progressive outward-working inversion, four-model
+        comparison with held-out scoring, commitment before reveal, inference report. 87 model assertions and
+        17 smoke assertions.
+      </div>
+      <div class="vno">
+        Not yet done: verification in a real browser at desktop and mobile widths; a README and user manual;
+        any comparison against measured data; a source-verified historical preset.
+      </div>
+    </div>
+  </section>
+
+  <footer class="mfoot">
+    <div><a href="../index.html">← All instruments</a></div>
+    <div><a href="magnetic-ocean.html">Run The Magnetic Ocean →</a></div>
+    <div>Candice Cantrelle · 2026</div>
+  </footer>
+</div>
+
+<script>
+/* Badges and the spec block come from assets/catalogue.js so this page can
+   never disagree with the card that links to it. */
+(function () {
+  var s = byId("magnetic-ocean");
+  if (!s) return;
+  document.getElementById("badges").innerHTML =
+    Orbital.evidenceBadge(s.evidence) + Orbital.basisBadge(s.basis) +
+    Orbital.stateBadge(s.state) + Orbital.flagChips(s.flags);
+  document.getElementById("spec").innerHTML = [
+    ["Domain", s.domain],
+    ["What you do", s.mode.join(", ")],
+    ["Duration", s.duration],
+    ["Difficulty", s.complexity],
+    ["Model type", s.model.join(" + ")],
+    ["Version", "v" + s.version + " · " + s.updated]
+  ].concat(s.basis ? [["Built on", s.basis.detail, "wide"]] : []).map(function (r) {
+    return "<div class=\"" + (r[2] || "") + "\"><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>";
+  }).join("");
+})();
+</script>
+</body>
+</html>

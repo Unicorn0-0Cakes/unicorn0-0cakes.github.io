@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found — Candice Cantrelle</title>
+<meta name="description" content="That page does not exist here.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/404">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Page not found — Candice Cantrelle">
+<meta property="og:description" content="That page does not exist here.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/404">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<!-- ---------------------------------------------------------------------
+     A 404 is served under whatever path the visitor asked for, so this is
+     the one page on the site with no fixed depth — relative paths cannot
+     work here. Because the site is a user site mounted at the domain root,
+     root-absolute paths are correct from any depth and need no scripting.
+     --------------------------------------------------------------------- -->
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/shell.css">
+<link rel="stylesheet" href="/assets/css/cards.css">
+<link rel="stylesheet" href="/assets/css/worlds.css">
+<script src="/assets/js/shell.js"></script>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+  <section class="doc" style="padding-top:96px">
+    <div class="wrap wrap--narrow">
+      <p class="label label--accent">Error 404</p>
+      <h1 style="font-size:var(--t-display);margin:16px 0 20px">That page is not here.</h1>
+      <p class="lede">
+        It may have moved when this site was rebuilt in 2026. The previous version of the site is
+        preserved at <a href="/archive/">/archive/</a>, and
+        everything current is one of the seven wings below.
+      </p>
+      <nav class="doors" id="doors" aria-label="Disciplines" style="margin-top:40px"></nav>
+      <p style="margin-top:32px"><a class="back-link" href="/">Back to the portfolio</a></p>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="/data/projects.js"></script>
+<script src="/assets/js/cards.js"></script>
+<script>
+if (window.CC && CC.doors) CC.doors("#doors");
+</script>
+</body>
+</html>

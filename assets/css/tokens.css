@@ -1,0 +1,204 @@
+/* =====================================================================
+   CC / PORTFOLIO — TOKENS
+   ---------------------------------------------------------------------
+   The token layer is inherited from ORBITAL, the design system built for
+   the Simulations atlas. That was deliberate: Simulations is the largest
+   body of work here, its visual language was already resolved, and
+   building the portfolio on top of it means the atlas is not a wing
+   grafted onto the building — it is the wing the building was drawn
+   around.
+
+   Two complete worlds, not a palette and its inverse.
+
+     DAY   "Field Manual"  warm press paper, oxide inks, hairline rules.
+                           A 1974 technical publication, printed on a
+                           good day, on a good press.
+     NIGHT "Phosphor"      a warm-black console at 03:00. Amber CRT,
+                           faint scanlines, everything slightly emitting.
+
+   HOW CATEGORY WORLDS WORK
+     A world does not introduce new colour. It re-points three variables
+     — --w-accent, --w-accent-2, --w-texture — and optionally adjusts
+     --w-card-geometry. Everything downstream (rules, badges, focus
+     rings, card borders, links) reads those. That is the whole reason
+     seven visually distinct sections still read as one site.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   1. DAY — "Field Manual"
+   ------------------------------------------------------------------ */
+:root,
+html[data-theme="day"] {
+  --rf-bg:        #EFE7D8;
+  --rf-bg2:       #E4D9C4;
+  --rf-panel:     #F8F3E7;
+  --rf-panel2:    #EDE4D2;
+  --rf-panel3:    #E3D8C2;
+  --rf-line:      #C0AE90;
+  --rf-line-soft: #DACDB4;
+
+  --rf-ink:       #241C14;
+  --rf-ink-dim:   #5B4B39;   /* darkened from Orbital's #63523F for AA on --rf-panel */
+  --rf-muted:     #6A5C3F;   /* AA at body size on panel, bg and panel2 */
+
+  --rf-orange:    #A84215;   /* the "worm" red, darkened until it clears AA as
+                                small text on panel (5.5:1), bg (5.0) and panel2 (4.8) */
+  --rf-amber:     #795807;
+  --rf-teal:      #1F5C64;
+  --rf-gold:      #7B5814;
+  --rf-oxide:     #9E2B25;
+  --rf-slate:     #4A4238;
+  --rf-violet:    #5C3E7C;
+  --rf-indigo:    #2C4A7C;
+  --rf-moss:      #3D6838;
+
+  --rf-ok:        #36693A;
+  --rf-watch:     #795807;
+  --rf-action:    #A84215;
+  --rf-danger:    #9E2B25;
+  --rf-info:      #2C5F8A;
+
+  --rf-on-accent: #FFF6E6;
+
+  --rf-shadow:    0 1px 0 rgba(36,28,20,.06), 0 6px 18px rgba(74,66,56,.10);
+  --rf-shadow-lg: 0 18px 46px rgba(74,66,56,.20);
+  --rf-glow:      none;
+  --rf-glow-soft: none;
+  --rf-text-glow: none;
+
+  --rf-radius:    3px;
+  --rf-radius-lg: 5px;
+  --rf-canvas:    #E7DCC7;
+  --rf-canvas-ink:#3A3026;
+  --rf-scope:     #0B0906;
+  --rf-scope-line:#352C1F;
+
+  --rf-texture:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(36,28,20,.016) 3px 4px);
+  --rf-wash:
+    radial-gradient(1100px 620px at 12% -12%, rgba(168,66,21,.09), transparent 62%),
+    radial-gradient(900px 560px at 104% 2%, rgba(31,92,100,.09), transparent 58%);
+
+  --rf-selection: rgba(168,66,21,.20);
+  --rf-hairline:  rgba(36,28,20,.10);
+}
+
+/* ---------------------------------------------------------------------
+   2. NIGHT — "Phosphor"
+   ------------------------------------------------------------------ */
+html[data-theme="night"] {
+  --rf-bg:        #0A0907;
+  --rf-bg2:       #050403;
+  --rf-panel:     #15110C;
+  --rf-panel2:    #1E1811;
+  --rf-panel3:    #292117;
+  --rf-line:      #43382A;
+  --rf-line-soft: #2C241A;
+
+  --rf-ink:       #F4E6C8;
+  --rf-ink-dim:   #C2AE89;
+  --rf-muted:     #9C8B6B;   /* lifted from #8B7B5E for AA on --rf-panel */
+
+  --rf-orange:    #FF8A3D;
+  --rf-amber:     #FFC24A;
+  --rf-teal:      #4FD6C4;
+  --rf-gold:      #E8B33A;
+  --rf-oxide:     #FF5A47;
+  --rf-slate:     #9A8B72;
+  --rf-violet:    #B98CE8;
+  --rf-indigo:    #7FA8E8;
+  --rf-moss:      #8FD07A;
+
+  --rf-ok:        #5FD98A;
+  --rf-watch:     #E8B33A;
+  --rf-action:    #FF8A3D;
+  --rf-danger:    #FF5A47;
+  --rf-info:      #63B4FF;
+
+  --rf-on-accent: #14100A;
+
+  --rf-shadow:    0 1px 0 rgba(0,0,0,.6), 0 8px 26px rgba(0,0,0,.6);
+  --rf-shadow-lg: 0 22px 60px rgba(0,0,0,.75);
+  --rf-glow:      0 0 0 1px rgba(255,138,61,.22), 0 0 18px rgba(255,138,61,.20);
+  --rf-glow-soft: 0 0 22px rgba(255,194,74,.10);
+  --rf-text-glow: 0 0 12px rgba(255,194,74,.30);
+
+  --rf-radius:    2px;
+  --rf-radius-lg: 3px;
+  --rf-canvas:    #07070A;
+  --rf-canvas-ink:#F4E6C8;
+  --rf-scope:     #060505;
+  --rf-scope-line:#43382A;
+
+  --rf-texture:
+    repeating-linear-gradient(0deg, rgba(255,194,74,.030) 0 1px, transparent 1px 3px);
+  --rf-wash:
+    radial-gradient(1000px 580px at 10% -14%, rgba(255,138,61,.12), transparent 60%),
+    radial-gradient(880px 540px at 102% 0%, rgba(79,214,196,.08), transparent 58%),
+    radial-gradient(1400px 900px at 50% 120%, rgba(255,194,74,.04), transparent 70%);
+
+  --rf-selection: rgba(255,138,61,.26);
+  --rf-hairline:  rgba(244,230,200,.10);
+}
+
+/* ---------------------------------------------------------------------
+   3. TYPE, MEASURE, RHYTHM  — theme-independent
+   ------------------------------------------------------------------ */
+:root {
+  --rf-display: "Space Grotesk", "Eurostile", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --rf-sans:    "Space Grotesk", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --rf-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --rf-serif:   "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+
+  --rf-track:   .22em;   /* institutional letterspacing */
+  --rf-track-w: .34em;   /* wordmark */
+  --rf-track-s: .14em;   /* small caps / stamps */
+
+  /* Type scale — fluid, capped. Only these seven sizes exist. */
+  --t-wordmark: clamp(19px, 2.1vw, 23px);
+  --t-display:  clamp(31px, 5.2vw, 58px);
+  --t-h1:       clamp(27px, 3.9vw, 42px);
+  --t-h2:       clamp(21px, 2.5vw, 27px);
+  --t-h3:       clamp(17px, 1.7vw, 19px);
+  --t-body:     15.5px;
+  --t-small:    13.5px;
+  --t-micro:    11px;
+  --t-nano:     9.5px;
+
+  /* Spacing — an 8px base with named steps. Nothing off-scale. */
+  --s-1: 4px;   --s-2: 8px;   --s-3: 12px;  --s-4: 16px;
+  --s-5: 24px;  --s-6: 32px;  --s-7: 48px;  --s-8: 64px;
+  --s-9: 96px;  --s-10: 128px;
+
+  /* Page width. --page is the default column; --page-wide for grids that
+     genuinely need the extra room; --measure caps running text. */
+  --page:      1180px;
+  --page-wide: 1360px;
+  --page-pad:  28px;
+  --measure:   68ch;
+
+  /* Motion. Every transition in the system uses one of these three. */
+  --m-quick: 140ms cubic-bezier(.2,.6,.35,1);
+  --m-base:  200ms cubic-bezier(.2,.6,.35,1);
+  --m-slow:  380ms cubic-bezier(.22,.7,.28,1);
+
+  /* WORLD DEFAULTS — the home/neutral world. Category stylesheets
+     override only these. */
+  --w-accent:    var(--rf-orange);
+  --w-accent-2:  var(--rf-teal);
+  --w-accent-on: var(--rf-on-accent);
+  --w-rule:      1px solid var(--rf-line);
+  --w-card-bg:   var(--rf-panel);
+  --w-card-edge: var(--rf-line);
+  --w-card-top:  3px;
+  --w-radius:    var(--rf-radius);
+  --w-texture:   none;
+  --w-label-font: var(--rf-mono);
+}
+
+@media (max-width: 640px) { :root { --page-pad: 20px; } }
+
+/* Honour the OS where the visitor has not chosen for themselves. */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) { color-scheme: dark; }
+}

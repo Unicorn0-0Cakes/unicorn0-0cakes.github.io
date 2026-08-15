@@ -1,0 +1,80 @@
+{
+  "environment": {
+    "model_version": "0.1.0-milestone0",
+    "python": "3.10.12",
+    "platform": "Linux-6.8.0-124-generic-aarch64-with-glibc2.35",
+    "machine": "aarch64",
+    "cpu_count": 3
+  },
+  "benchmarks": [
+    {
+      "population": 10000,
+      "years": 100,
+      "society": "A",
+      "logging_level": "standard",
+      "wall_seconds": 0.92,
+      "seconds_per_year": 0.0092,
+      "agent_years": 1000000,
+      "agent_years_per_second": 1083698,
+      "peak_rss_mb": 88.3,
+      "output_bytes": 8797763,
+      "final_population": 9797,
+      "projection_from_this_scale": {
+        "per_run_seconds": 0.92,
+        "per_run_output_mb": 8.8,
+        "runs": 3000,
+        "single_core_hours": 0.8,
+        "wall_hours_8_cores": 0.1,
+        "wall_hours_32_cores": 0.0,
+        "wall_hours_96_cores": 0.0,
+        "storage_gb_standard_logging": 26.4
+      }
+    },
+    {
+      "population": 100000,
+      "years": 100,
+      "society": "A",
+      "logging_level": "standard",
+      "wall_seconds": 5.91,
+      "seconds_per_year": 0.0591,
+      "agent_years": 10000000,
+      "agent_years_per_second": 1692120,
+      "peak_rss_mb": 176.4,
+      "output_bytes": 15422624,
+      "final_population": 97995,
+      "projection_from_this_scale": {
+        "per_run_seconds": 5.91,
+        "per_run_output_mb": 15.42,
+        "runs": 3000,
+        "single_core_hours": 4.9,
+        "wall_hours_8_cores": 0.6,
+        "wall_hours_32_cores": 0.2,
+        "wall_hours_96_cores": 0.1,
+        "storage_gb_standard_logging": 46.3
+      }
+    },
+    {
+      "population": 100000,
+      "years": 500,
+      "society": "A",
+      "logging_level": "standard",
+      "wall_seconds": 29.07,
+      "seconds_per_year": 0.0581,
+      "agent_years": 50000000,
+      "agent_years_per_second": 1719708,
+      "peak_rss_mb": 553.7,
+      "output_bytes": 75031148,
+      "final_population": 97457,
+      "projection_from_this_scale": {
+        "per_run_seconds": 29.07,
+        "per_run_output_mb": 75.03,
+        "runs": 3000,
+        "single_core_hours": 24.2,
+        "wall_hours_8_cores": 3.0,
+        "wall_hours_32_cores": 0.8,
+        "wall_hours_96_cores": 0.3,
+        "storage_gb_standard_logging": 225.1
+      }
+    }
+  ]
+}

@@ -1,0 +1,312 @@
+/* =====================================================================
+   CC / PORTFOLIO — CARDS
+   ---------------------------------------------------------------------
+   One geometry, several treatments.
+
+   Every card, in every wing, shares: the same corner radius, the same
+   3px accent edge on top, the same interior padding rhythm, metadata in
+   the same two places (status top-right, technical stamp bottom-left),
+   the same hover lift, the same title size. What changes between wings
+   is the VISUAL PLATE — the thing above the title — and the accent
+   colour, both of which come from the world stylesheet.
+
+   That is why a diagram card, a key-art card and a product-UI card read
+   as siblings without any of them being forced into the same picture
+   frame.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   GRID
+   ------------------------------------------------------------------ */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--s-5);
+}
+.grid--2 { grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); }
+.grid--3 { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.grid--wide { grid-template-columns: repeat(auto-fill, minmax(520px, 1fr)); }
+
+@media (max-width: 560px) {
+  .grid, .grid--2, .grid--3, .grid--wide { grid-template-columns: 1fr; gap: var(--s-4); }
+}
+
+/* On tablet, a two-up that does not become a lonely single column too
+   early — small screens get their own intent, not a collapsed desktop. */
+@media (min-width: 561px) and (max-width: 900px) {
+  .grid--wide { grid-template-columns: 1fr; }
+}
+
+/* ---------------------------------------------------------------------
+   BASE CARD
+   ------------------------------------------------------------------ */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--w-card-bg);
+  border: 1px solid var(--w-card-edge);
+  border-top: var(--w-card-top) solid var(--w-accent);
+  border-radius: var(--w-radius);
+  box-shadow: var(--rf-shadow);
+  overflow: hidden;
+  transition: transform var(--m-base), box-shadow var(--m-base), border-color var(--m-base);
+  min-width: 0;
+}
+.card:hover, .card:focus-within {
+  transform: translateY(-3px);
+  box-shadow: var(--rf-shadow-lg);
+}
+html[data-theme="night"] .card:hover { border-color: color-mix(in srgb, var(--w-accent) 45%, var(--w-card-edge)); }
+
+/* Whole-card link: the title anchor stretches over the card, so the
+   click target is the card but the accessible name is the title. */
+.card__body { padding: var(--s-5) var(--s-5) var(--s-4); display: flex; flex-direction: column; flex: 1; }
+.card__title { font-size: var(--t-h3); margin: 0 0 var(--s-3); }
+.card__title a { color: var(--rf-ink); }
+.card__title a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.card__title a:hover { color: var(--w-accent); text-decoration: none; }
+.card:hover .card__title a { color: var(--w-accent); }
+
+.card__blurb {
+  font-size: var(--t-small);
+  line-height: 1.56;
+  color: var(--rf-ink-dim);
+  margin: 0 0 var(--s-4);
+  max-width: none;
+  flex: 1;
+}
+
+/* Metadata — always in the same two places. */
+.card__top {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--s-3); margin-bottom: var(--s-3);
+}
+.card__cat {
+  font-family: var(--w-label-font);
+  font-size: var(--t-nano);
+  letter-spacing: var(--rf-track);
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--w-accent);
+}
+.card__stamp {
+  font-family: var(--rf-mono);
+  font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s);
+  text-transform: uppercase;
+  color: var(--rf-muted);
+  margin: 0;
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--rf-line-soft);
+  display: flex; flex-wrap: wrap; gap: var(--s-1) var(--s-3);
+}
+
+/* ---------------------------------------------------------------------
+   STATUS — the honesty control. Identical in every wing on purpose.
+   ------------------------------------------------------------------ */
+.status {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--rf-mono);
+  font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s);
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 3px 8px 2px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.status::before {
+  content: ""; width: 5px; height: 5px; border-radius: 50%;
+  background: currentColor; flex-shrink: 0;
+}
+.status--showcase  { color: var(--rf-ok); }
+.status--prototype { color: var(--rf-watch); }
+.status--research  { color: var(--rf-info); }
+.status--workshop  { color: var(--rf-muted); }
+.status--pending   { color: var(--rf-muted); border-style: dashed; }
+.status--pending::before { background: none; border: 1px solid currentColor; }
+
+/* ---------------------------------------------------------------------
+   THE PLATE — the visual area above the title.
+   Each treatment fills it differently; the frame is always the same.
+   ------------------------------------------------------------------ */
+.plate-area {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--rf-canvas);
+  border-bottom: 1px solid var(--rf-line);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+.plate-area > img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform var(--m-slow);
+}
+.card:hover .plate-area > img { transform: scale(1.028); }
+.plate-area > svg { width: 100%; height: 100%; display: block; }
+
+/* Treatment: DIAGRAM — line art on a canvas, for simulations & research */
+.plate-area--diagram {
+  background: var(--rf-canvas);
+  background-image:
+    linear-gradient(var(--rf-hairline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rf-hairline) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.plate-area--diagram svg { padding: var(--s-4); }
+
+/* Treatment: SCOPE — a dark instrument screen, always dark in both worlds */
+.plate-area--scope { background: var(--rf-scope); border-bottom-color: var(--rf-scope-line); }
+
+/* Treatment: UI — a product screenshot, inset with a chrome bar */
+.plate-area--ui { background: var(--rf-panel3); padding: var(--s-4) var(--s-4) 0; align-items: end; }
+.plate-area--ui > img,
+.plate-area--ui > .ui-shot {
+  border: 1px solid var(--rf-line);
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
+  box-shadow: 0 -2px 18px rgba(0,0,0,.10);
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* Treatment: ART — key art, edge to edge, full bleed */
+.plate-area--art { aspect-ratio: 3 / 2; }
+
+/* Treatment: IMAGE — editorial photography, taller crop */
+.plate-area--image { aspect-ratio: 4 / 3; }
+
+/* Treatment: NONE — text-only card. The accent edge does the work. */
+.card--flat .plate-area { display: none; }
+
+/* Plate caption — a hairline strip for figure numbers / scale marks */
+.plate-cap {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  display: flex; justify-content: space-between; gap: var(--s-3);
+  padding: 5px 9px;
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase;
+  color: var(--rf-canvas-ink);
+  background: color-mix(in srgb, var(--rf-canvas) 82%, transparent);
+  border-top: 1px solid var(--rf-hairline);
+  backdrop-filter: blur(4px);
+}
+.plate-area--scope .plate-cap,
+.plate-area--art .plate-cap,
+.plate-area--image .plate-cap {
+  color: #F4E6C8;
+  background: linear-gradient(to top, rgba(6,5,5,.78), rgba(6,5,5,0));
+  border-top: 0;
+  padding-top: var(--s-5);
+}
+
+/* ---------------------------------------------------------------------
+   CHIPS — short factual tags. Never claims, only descriptions.
+   ------------------------------------------------------------------ */
+.chips { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 0 var(--s-4); padding: 0; list-style: none; }
+.chips li { margin: 0; }
+.chip {
+  display: inline-block;
+  font-family: var(--rf-mono);
+  font-size: var(--t-nano);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 3px 8px 2px;
+  background: var(--rf-panel2);
+  border: 1px solid var(--rf-line-soft);
+  border-radius: 999px;
+  color: var(--rf-ink-dim);
+}
+
+/* ---------------------------------------------------------------------
+   DOORS — the discipline navigator on the homepage.
+   Not cards. Deliberately quieter and more architectural.
+   ------------------------------------------------------------------ */
+.doors {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--rf-line);
+  border-radius: var(--rf-radius);
+  overflow: hidden;
+  background: var(--rf-panel);
+}
+.door {
+  position: relative;
+  display: flex; flex-direction: column; gap: var(--s-2);
+  padding: var(--s-5) var(--s-5) var(--s-6);
+  border-right: 1px solid var(--rf-line-soft);
+  border-bottom: 1px solid var(--rf-line-soft);
+  color: var(--rf-ink);
+  text-decoration: none;
+  transition: background var(--m-quick);
+  min-height: 148px;
+}
+.door::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px;
+  background: var(--door-accent, var(--w-accent));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform var(--m-base);
+}
+.door:hover, .door:focus-visible { background: var(--rf-panel2); text-decoration: none; }
+.door:hover::before, .door:focus-visible::before { transform: scaleX(1); }
+.door__n {
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); color: var(--door-accent, var(--w-accent));
+  font-weight: 600;
+}
+.door__name {
+  font-family: var(--rf-display); font-size: 18px; font-weight: 600;
+  letter-spacing: -.015em; line-height: 1.15;
+}
+.door__desc { font-size: var(--t-small); color: var(--rf-ink-dim); line-height: 1.5; flex: 1; }
+.door__count {
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase; color: var(--rf-muted);
+}
+.door[aria-disabled="true"] { opacity: .55; pointer-events: none; }
+
+/* Only 4, 2 or 1 columns — three columns would leave an orphan in the
+   last row, and a half-empty row reads as an unfinished section. */
+@media (max-width: 1000px) { .doors { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) {
+  .doors { grid-template-columns: 1fr; }
+  .door { min-height: 0; padding: var(--s-4) var(--s-5); }
+  .door--note { grid-column: span 1; min-height: 0; }
+}
+
+/* The eighth cell. Not a door — a closing note that makes the grid
+   resolve, and says what the seven add up to. */
+.door--note {
+  grid-column: span 2;   /* six doors + a two-wide note = eight cells, no orphan */
+  display: flex; flex-direction: column; justify-content: flex-end; gap: var(--s-2);
+  padding: var(--s-5); background: var(--rf-panel2);
+  border-right: 1px solid var(--rf-line-soft); border-bottom: 1px solid var(--rf-line-soft);
+  min-height: 148px;
+}
+.door--note p {
+  font-size: var(--t-small); color: var(--rf-ink-dim); margin: 0; max-width: none; line-height: 1.5;
+}
+.door--note .door__count { color: var(--rf-muted); }
+
+/* One measured number, promoted onto the card face. Present only where
+   a figure was actually recorded — its absence is information too. */
+.card__metric {
+  display: flex; align-items: baseline; gap: var(--s-2);
+  margin: 0 0 var(--s-4); padding: var(--s-2) 0;
+  border-top: 1px solid var(--rf-line-soft);
+  border-bottom: 1px solid var(--rf-line-soft);
+}
+.card__metric-v {
+  font-family: var(--rf-display); font-size: 22px; font-weight: 600;
+  letter-spacing: -.025em; color: var(--w-accent); line-height: 1;
+}
+.card__metric-k {
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase; color: var(--rf-muted);
+}

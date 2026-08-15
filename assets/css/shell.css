@@ -1,0 +1,286 @@
+/* =====================================================================
+   CC / PORTFOLIO — SHELL
+   The architectural constant. Masthead, navigation, page header,
+   footer, return-to-portfolio. These are identical in every wing.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   MASTHEAD
+   ------------------------------------------------------------------ */
+.mast {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  background: color-mix(in srgb, var(--rf-bg) 92%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--rf-line);
+}
+@supports not (backdrop-filter: blur(2px)) { .mast { background: var(--rf-bg); } }
+
+.mast__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  min-height: 58px;
+  padding-top: var(--s-2);
+  padding-bottom: var(--s-2);
+}
+
+/* Wordmark — the return-to-portfolio control, present on every page. */
+.wordmark {
+  font-family: var(--rf-display);
+  font-size: var(--t-wordmark);
+  font-weight: 700;
+  letter-spacing: var(--rf-track-w);
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--rf-ink);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.wordmark:hover { color: var(--rf-ink); text-decoration: none; }
+.wordmark em { font-style: normal; color: var(--w-accent); }
+html[data-theme="night"] .wordmark em { text-shadow: var(--rf-text-glow); }
+.wordmark .slash { color: var(--rf-muted); font-weight: 400; margin: 0 .12em; }
+.wordmark .sub {
+  font-family: var(--rf-mono);
+  font-size: var(--t-nano);
+  font-weight: 500;
+  letter-spacing: var(--rf-track);
+  color: var(--rf-muted);
+}
+@media (max-width: 900px) { .wordmark .sub, .wordmark .slash { display: none; } }
+
+/* ---------------------------------------------------------------------
+   NAVIGATION
+   ------------------------------------------------------------------ */
+.nav { margin-left: auto; }
+.nav__list {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: none;
+}
+.nav__list li { margin: 0; }
+.nav__link {
+  display: block;
+  font-family: var(--rf-mono);
+  font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s);
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--rf-ink-dim);
+  padding: 7px 9px 6px;
+  border-radius: var(--rf-radius);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color var(--m-quick), border-color var(--m-quick), background var(--m-quick);
+}
+.nav__link:hover { color: var(--rf-ink); background: var(--rf-panel2); text-decoration: none; }
+.nav__link[aria-current="page"] {
+  color: var(--w-accent);
+  border-bottom-color: var(--w-accent);
+  font-weight: 600;
+}
+.nav__sep { width: 1px; height: 18px; background: var(--rf-line); margin: 0 var(--s-2); }
+
+/* Theme toggle */
+.theme-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 28px;
+  background: transparent;
+  border: 1px solid var(--rf-line);
+  border-radius: var(--rf-radius);
+  color: var(--rf-ink-dim);
+  cursor: pointer;
+  transition: color var(--m-quick), border-color var(--m-quick);
+}
+.theme-btn:hover { color: var(--w-accent); border-color: var(--w-accent); }
+.theme-btn svg { width: 14px; height: 14px; }
+.theme-btn .i-night { display: none; }
+html[data-theme="night"] .theme-btn .i-day { display: none; }
+html[data-theme="night"] .theme-btn .i-night { display: block; }
+
+/* Mobile disclosure */
+.nav-toggle { display: none; }
+
+@media (max-width: 1080px) {
+  .nav-toggle {
+    display: inline-flex; align-items: center; gap: var(--s-2);
+    margin-left: auto;
+    font-family: var(--rf-mono); font-size: var(--t-nano);
+    letter-spacing: var(--rf-track-s); text-transform: uppercase; font-weight: 600;
+    background: transparent; color: var(--rf-ink);
+    border: 1px solid var(--rf-line); border-radius: var(--rf-radius);
+    padding: 8px 12px 7px; cursor: pointer;
+  }
+  .nav-toggle:hover { border-color: var(--w-accent); color: var(--w-accent); }
+  .nav-toggle .bars { display: block; width: 13px; height: 9px; position: relative; }
+  .nav-toggle .bars::before, .nav-toggle .bars::after,
+  .nav-toggle .bars span {
+    content: ""; position: absolute; left: 0; right: 0; height: 1.5px;
+    background: currentColor; transition: transform var(--m-quick), opacity var(--m-quick);
+  }
+  .nav-toggle .bars::before { top: 0; }
+  .nav-toggle .bars span { top: 3.75px; }
+  .nav-toggle .bars::after { bottom: 0; }
+  .nav-toggle[aria-expanded="true"] .bars::before { transform: translateY(3.75px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] .bars span { opacity: 0; }
+  .nav-toggle[aria-expanded="true"] .bars::after { transform: translateY(-3.75px) rotate(-45deg); }
+
+  .nav {
+    position: absolute; left: 0; right: 0; top: 100%;
+    background: var(--rf-panel);
+    border-bottom: 1px solid var(--rf-line);
+    box-shadow: var(--rf-shadow-lg);
+    margin-left: 0;
+    display: none;
+  }
+  .nav[data-open="true"] { display: block; }
+  .nav__list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: var(--s-3) var(--page-pad) var(--s-4);
+    max-width: var(--page);
+    margin: 0 auto;
+  }
+  .nav__link {
+    font-size: var(--t-micro);
+    padding: 11px 0;
+    border-bottom: 1px solid var(--rf-line-soft);
+    border-radius: 0;
+  }
+  .nav__link:hover { background: transparent; }
+  .nav__link[aria-current="page"] { border-bottom-color: var(--w-accent); }
+  .nav__sep { display: none; }
+  .nav li:last-child { margin-top: var(--s-3); }
+}
+
+/* ---------------------------------------------------------------------
+   PAGE HEADER — the plate every wing opens with
+   ------------------------------------------------------------------ */
+.plate { padding: var(--s-8) 0 var(--s-6); position: relative; }
+.plate__rule { border: 0; border-top: 3px double var(--rf-ink); opacity: .5; margin: 0; }
+.plate__kicker {
+  font-family: var(--w-label-font);
+  font-size: var(--t-nano);
+  letter-spacing: var(--rf-track);
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--w-accent);
+  margin: 0 0 var(--s-3);
+  display: flex; align-items: center; gap: var(--s-3);
+}
+.plate__kicker::after {
+  content: ""; flex: 1; max-width: 120px;
+  border-bottom: 1px solid var(--w-accent); opacity: .45;
+}
+.plate h1 { font-size: var(--t-display); margin: 0 0 var(--s-4); }
+.plate__lede { font-size: clamp(16px, 1.55vw, 18.5px); line-height: 1.55; color: var(--rf-ink-dim); max-width: 62ch; margin: 0; }
+
+/* The stamp block — mono metadata, right-aligned, museum placard */
+.plate__grid { display: grid; grid-template-columns: 1fr auto; gap: var(--s-7); align-items: end; }
+@media (max-width: 860px) { .plate__grid { grid-template-columns: 1fr; gap: var(--s-5); } }
+.stamp {
+  font-family: var(--rf-mono);
+  font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s);
+  text-transform: uppercase;
+  color: var(--rf-muted);
+  line-height: 1.95;
+  text-align: right;
+  white-space: nowrap;
+  margin: 0;
+}
+@media (max-width: 860px) { .stamp { text-align: left; } }
+.stamp b { color: var(--w-accent); font-weight: 600; }
+
+/* ---------------------------------------------------------------------
+   RETURN NAVIGATION — consistent, on every page below the top level
+   ------------------------------------------------------------------ */
+.crumbs {
+  display: flex; align-items: center; gap: var(--s-2);
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase;
+  color: var(--rf-muted);
+  padding: var(--s-5) 0 0;
+  margin: 0;
+  list-style: none;
+  flex-wrap: wrap;
+}
+.crumbs li { margin: 0; display: flex; align-items: center; gap: var(--s-2); }
+.crumbs li + li::before { content: "/"; color: var(--rf-line); }
+.crumbs a { color: var(--rf-ink-dim); text-decoration: none; }
+.crumbs a:hover { color: var(--w-accent); }
+.crumbs [aria-current] { color: var(--rf-ink); }
+
+.back-link {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  font-family: var(--rf-mono); font-size: var(--t-micro);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase; font-weight: 600;
+  color: var(--rf-ink-dim);
+}
+.back-link:hover { color: var(--w-accent); text-decoration: none; }
+.back-link::before { content: "←"; }
+
+/* ---------------------------------------------------------------------
+   FOOTER
+   ------------------------------------------------------------------ */
+.foot {
+  margin-top: auto;
+  padding: var(--s-8) 0 var(--s-6);
+  border-top: 3px double var(--rf-ink);
+  border-top-color: color-mix(in srgb, var(--rf-ink) 50%, transparent);
+}
+.foot__grid {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, minmax(0, 1fr));
+  gap: var(--s-6);
+}
+@media (max-width: 900px) { .foot__grid { grid-template-columns: 1fr 1fr; gap: var(--s-5); } }
+@media (max-width: 520px) { .foot__grid { grid-template-columns: 1fr; } }
+
+.foot__brand .wordmark { font-size: 17px; }
+.foot__brand p {
+  font-size: var(--t-small);
+  color: var(--rf-ink-dim);
+  margin: var(--s-3) 0 0;
+  max-width: 34ch;
+}
+.foot h2 {
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track); text-transform: uppercase; font-weight: 600;
+  color: var(--rf-muted); margin: 0 0 var(--s-3);
+}
+.foot ul { list-style: none; margin: 0; padding: 0; }
+.foot li { margin-bottom: var(--s-2); }
+.foot li a {
+  font-size: var(--t-small);
+  color: var(--rf-ink-dim);
+  text-decoration: none;
+}
+.foot li a:hover { color: var(--w-accent); }
+
+.foot__bottom {
+  display: flex; justify-content: space-between; gap: var(--s-4); flex-wrap: wrap;
+  margin-top: var(--s-7);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--rf-line-soft);
+  font-family: var(--rf-mono); font-size: var(--t-nano);
+  letter-spacing: var(--rf-track-s); text-transform: uppercase;
+  color: var(--rf-muted);
+}
+
+/* ---------------------------------------------------------------------
+   REGISTRAR'S MARKS — the corner ticks that appear on plates and
+   scopes throughout the atlas. Purely typographic furniture.
+   ------------------------------------------------------------------ */
+.rm { position: absolute; width: 9px; height: 9px; pointer-events: none; opacity: .5; }
+.rm::before, .rm::after { content: ""; position: absolute; background: var(--rf-line); }
+.rm::before { left: 0; top: 4px; width: 9px; height: 1px; }
+.rm::after  { top: 0; left: 4px; width: 1px; height: 9px; }

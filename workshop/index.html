@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" data-world="workshop">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workshop — Candice Cantrelle</title>
+<meta name="description" content="Small tools, sketches and experiments. Shown without case studies, because they do not need one.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/workshop/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Workshop — Candice Cantrelle">
+<meta property="og:description" content="Small tools, sketches and experiments. Shown without case studies, because they do not need one.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/workshop/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/cards.css">
+<link rel="stylesheet" href="../assets/css/worlds.css">
+<script src="../assets/js/shell.js"></script>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">Workshop</span></li></ol></div>
+  <header class="plate">
+    <div class="wrap plate__grid">
+      <div>
+        <p class="plate__kicker">Wing 07 · The drawer</p>
+        <h1>The Workshop</h1>
+        <p class="plate__lede">Small things. A day, a weekend, an afternoon spent finding out whether an idea was any good. They are here because interesting small work should not have to pretend to be large work to be shown.</p>
+      </div>
+      <p class="stamp"><b>3</b> entries<br>Workshop status<br>Nothing here is a case study</p>
+    </div>
+    <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
+  </header>
+
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">01</span> Entries <span class="trail"></span></h2>
+      <p class="sec-hint">
+        Everything in this drawer is labelled <em>Workshop</em>, which means: worth showing,
+        not offered as a major piece. None of it has been polished for display, and several
+        entries are unfinished in ways the description says out loud.
+      </p>
+      <div class="grid" id="ws"></div>
+    </div>
+  </section>
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">02</span> What is not in here <span class="trail"></span></h2>
+      <p class="sec-hint" style="max-width:70ch">
+        A workshop stops being useful the moment it becomes a junk drawer. Public repositories
+        that are forks, mirrors, planning documents or course exercises are not listed on this
+        site at all — they are recorded in the project registry as <code>hidden</code>, so the
+        decision is written down rather than forgotten. Being public on GitHub and belonging on
+        a portfolio are two different things.
+      </p>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="../data/projects.js"></script>
+<script src="../assets/js/cards.js"></script>
+<script>
+CC.renderInto("#ws", CC.curated(CC.byCategory("workshop")));
+</script>
+</body>
+</html>

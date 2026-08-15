@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methods — The Cognitive Civilization Experiment</title>
+<meta name="description" content="Methods and limitations for The Cognitive Civilization Experiment: source, rules, parameters, simplifications, what it cannot establish, validation status and version history.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/orbital.css">
+<link rel="stylesheet" href="../assets/methods.css">
+<script src="../assets/orbital.js" data-title="The Cognitive Civilization Experiment" data-tag="Methods"></script>
+<script src="../assets/catalogue.js"></script>
+</head>
+<body>
+
+<a class="rf-skip" href="#s1">Skip to methods</a>
+
+<div class="wrap">
+
+  <header class="mhead">
+    <span class="rf-regmark rm-tl"></span>
+    <span class="rf-regmark rm-tr"></span>
+    <div class="kicker">Methods &amp; limitations</div>
+    <h1>The Cognitive Civilization Experiment</h1>
+    <p class="q">Does the rule a society uses to allocate work, housing and office change how long its people live?</p>
+    <div class="badges" id="badges"></div>
+    <div class="actions">
+      <a class="rf-btn primary" href="cce.html">Run instrument</a>
+      <a class="rf-btn" href="../index.html#catalogue">All instruments</a>
+    </div>
+    <dl class="spec" id="spec"></dl>
+    <nav class="toc" aria-label="Sections">
+      <a href="#s1">01 Source</a><a href="#s2">02 Rules &amp; equations</a>
+      <a href="#s3">03 Parameters</a><a href="#s4">04 What is simplified</a>
+      <a href="#s5">05 What this cannot establish</a><a href="#s6">06 Validation</a>
+      <a href="#s7">07 Version history</a>
+    </nav>
+    <hr style="margin-top:20px">
+  </header>
+
+  <section id="s1">
+    <h2><span class="idx">01</span> The source <span class="trail"></span></h2>
+
+    <p>The Cognitive Civilization Experiment is not a reconstruction of anything. It is an
+    <strong>agent-based research instrument</strong> comparing three systems for allocating work,
+    housing, assistance, representation and social responsibility in a fictional, fully simulated
+    society of 100,000 citizens over 500 years.</p>
+
+    <div class="panel warn">
+      <div class="ptitle">Scientific disclaimer</div>
+      <p>This is a simulation. No human subjects, no real-world enforcement, no policy implementation.
+      <strong>No parameter is calibrated to empirical data.</strong> Results are reproducible findings
+      <em>conditional on the model's assumptions and parameter ranges</em> — never indisputable, and
+      never claims about real people.</p>
+    </div>
+
+    <h3>The three societies</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Arm</th><th>Allocation of work, housing, office</th><th>Assistance</th><th class="num">Accessibility</th></tr></thead>
+      <tbody>
+        <tr><td><strong>A</strong> — IQ-allocated</td><td>By official relative IQ score</td><td>By assessed need</td><td class="num">Low (0.35)</td></tr>
+        <tr><td><strong>B</strong> — Universal cognitive support</td><td>By preference, qualification, experience, capacity</td><td>By assessed need</td><td class="num">High (0.90), costed at 11 % of output</td></tr>
+        <tr><td><strong>C</strong> — Multidimensional competency</td><td>By weighted fit across 11 competency dimensions plus expertise and experience</td><td>By assessed need</td><td class="num">Medium (0.65)</td></tr>
+      </tbody>
+    </table></div>
+    <p>Government, population cap, fertility policy, measurement rules, mortality model, safeguarding
+    regime and the external event history are <strong>identical</strong> across arms. Runs sharing a
+    seed share an identical baseline population and an identical shock history, so differences are
+    attributable to the allocation rule and to nothing else.</p>
+
+    <div class="panel note">
+      <div class="ptitle">What the page actually is</div>
+      <p><code>cce.html</code> is a <strong>results explorer</strong>, not a live simulation. It embeds
+      real output from completed runs at build time, with no second implementation of the model. The
+      engine is Python and runs offline; regenerate the page from stored output with
+      <code>python3 analysis/export_web_data.py --pilot batches/rehearsal-30</code>.</p>
+    </div>
+
+  </section>
+  <section id="s2">
+    <h2><span class="idx">02</span> Rules and equations <span class="trail"></span></h2>
+
+    <p>The full specification is the ODD protocol in <code>docs/ODD_PROTOCOL.md</code>. The models that
+    matter for reading the results:</p>
+
+    <h3>Cognition — two measurements, not one number</h3>
+    <p>The model is built so that no single number is allowed to explain a person. There is a latent
+    capability across eleven dimensions, and separately an <em>observed</em> test score produced by an
+    observation model with error, illness and stress. Society A allocates on the observed score; the
+    gap between latent and observed is where much of A's behaviour comes from.
+    <span class="tagp emergent">emergent</span></p>
+
+    <h3>The causal spine</h3>
+    <div class="eq">latent capability (11 dims, partly hidden)  ─┐
+environment (accessibility, support, luck) ─┴─▶ observed test score
+                                              ─▶ health literacy ──▶ mortality hazard
+                                              ─▶ adaptive functioning
+                                              ─▶ occupational fit
+                                                     └─▶ official class · support need · performance
+                                                            └─▶ outcomes: lifespan, independence</div>
+    <p>Health literacy is the <strong>only</strong> route to mortality, and the hazard it produces is
+    attenuable to near zero. Support is allocated on need, never on score, in every arm.</p>
+
+    <h3>Other registered models</h3>
+    <ul>
+      <li><strong>Health and mortality</strong> — pathways, hazards, a Sullivan life table.</li>
+      <li><strong>Population</strong> — cap, permits, waiting, inheritance.</li>
+      <li><strong>Governance</strong> — presidency, assembly, accountability.</li>
+      <li><strong>Safeguarding</strong> — welfare checks, detection, duration cap.</li>
+      <li><strong>Support</strong> — adaptive functioning, needs, support levels, housing.</li>
+    </ul>
+    <p class="dim">Each has its own document under <code>docs/</code>. Sentinel exists because two
+    outputs of the governance and safeguarding models turned out to be structurally severed from the
+    treatment — see <a href="../sentinel/methods.html">Sentinel's methods</a>.</p>
+
+  </section>
+  <section id="s3">
+    <h2><span class="idx">03</span> Parameters <span class="trail"></span></h2>
+
+    <p><strong>92 registered parameters</strong>, parameter set <code>2d6343f41b392d36</code>, generated
+    from code into <code>docs/PARAMETER_REGISTER.md</code> rather than maintained by hand. Every stored
+    column is defined in <code>docs/DATA_DICTIONARY.md</code>, and completeness is enforced by
+    <code>analysis/check_data_dictionary.py</code>.</p>
+
+    <h3>Experimental design</h3>
+    <ul>
+      <li><strong>Matched-seed triads.</strong> One seed produces A, B and C runs sharing a baseline
+      population and shock history.</li>
+      <li><strong>Preregistered effect sizes.</strong> Smallest effect sizes of interest are declared in
+      <code>docs/HYPOTHESES.md</code> alongside H1–H10, each with a mechanism, a measure and a falsifier.</li>
+      <li><strong>Determinism contract.</strong> Separate random streams, replay, and provenance —
+      <code>docs/REPRODUCIBILITY.md</code>.</li>
+    </ul>
+
+    <h3>Measured performance</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Scale</th><th class="num">Wall time</th><th class="num">Peak RSS</th><th class="num">Output</th></tr></thead>
+      <tbody>
+        <tr><td>10,000 × 100 y</td><td class="num">0.92 s</td><td class="num">88 MB</td><td class="num">8.8 MB</td></tr>
+        <tr><td>100,000 × 100 y</td><td class="num">5.91 s</td><td class="num">176 MB</td><td class="num">15.4 MB</td></tr>
+        <tr><td>100,000 × 500 y</td><td class="num">29.1 s</td><td class="num">554 MB</td><td class="num">75.0 MB</td></tr>
+      </tbody>
+    </table></div>
+    <p class="dim">Measured on a 3-core ARM container, single-threaded. A full campaign of 3,000 runs
+    (1.5 × 10¹¹ agent-years) is estimated at 24 core-hours and 25–45 GB with columnar compression.</p>
+
+  </section>
+  <section id="s4">
+    <h2><span class="idx">04</span> What is simplified <span class="trail"></span></h2>
+
+    <p>Every open decision and the default chosen for it is recorded in
+    <code>docs/ASSUMPTION_REGISTER.md</code>. The structural simplifications that most affect how the
+    results should be read:</p>
+    <ul>
+      <li><strong>One society per run, with no outside.</strong> No trade, no migration between arms,
+      no external labour market.</li>
+      <li><strong>Allocation is the only treatment.</strong> Everything else is held identical, which
+      is what makes the contrast clean and also what makes it narrow.</li>
+      <li><strong>Assistance is allocated on assessed need in all three arms.</strong> The arms differ
+      in how work, housing and office are allocated, not in whether help is available.</li>
+      <li><strong>Eleven competency dimensions are the whole of a person's capability.</strong> They are
+      a modelling device, not a taxonomy anyone should defend.</li>
+      <li><strong>Mortality has one route.</strong> Health literacy is the only pathway, which is a
+      strong and deliberate constraint.</li>
+      <li><strong>Governance is thin.</strong> Presidency, assembly and accountability, with no parties,
+      no press and no courts — which is precisely why two of its outputs carried no signal.</li>
+    </ul>
+
+  </section>
+  <section id="s5">
+    <h2><span class="idx">05</span> What this cannot establish <span class="trail"></span></h2>
+
+    <div class="panel warn">
+      <div class="ptitle">Read this before quoting any number from the page</div>
+      <p><strong>No production campaign has been run and no scientific findings exist.</strong> The only
+      quantitative results in the repository are benchmark measurements, test outcomes, and
+      exploratory-tagged engineering runs. A working batch runner does not make an experiment
+      scientifically ready.</p>
+    </div>
+    <ul class="cannot">
+      <li>It cannot say anything about real people, real cognitive ability, or real policy. It is a
+      fictional society, and <code>docs/ETHICS_AND_LIMITATIONS.md</code> exists to keep that clear.</li>
+      <li>It cannot report an effect size you should believe. The preregistration is a draft, not
+      frozen, and the runs behind the explorer are tagged exploratory.</li>
+      <li>It cannot be calibrated by construction — no parameter is fitted to data, so the model has no
+      empirical anchor to be right or wrong against.</li>
+      <li>It cannot support conclusions about detection delay or governance quality. Those two outputs
+      were shown to be structurally severed from the treatment; that finding is what
+      <a href="../sentinel/methods.html">Sentinel</a> was built to pursue.</li>
+      <li>It cannot generalise beyond the sampled parameter ranges, and the sensitivity work that would
+      bound that is listed as outstanding.</li>
+    </ul>
+
+  </section>
+  <section id="s6">
+    <h2><span class="idx">06</span> Validation status <span class="trail"></span></h2>
+
+    <h3>Where the project actually is</h3>
+    <p><strong>Model version 0.1.0-milestone0.</strong> Milestone 0 complete; Milestone 1 kernel
+    complete; Milestone 3 batch runner built and validated through five gates. Charts, PDF reporting,
+    golden regression digests and pattern validation remain outstanding.</p>
+
+    <h3>Tests</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Suite</th><th class="num">Assertions</th><th>Command</th></tr></thead>
+      <tbody>
+        <tr><td>Invariants</td><td class="num">21</td><td><code>python3 engine/tests/test_invariants.py</code></td></tr>
+        <tr><td>Batch</td><td class="num">22</td><td><code>python3 engine/tests/test_batch.py</code></td></tr>
+      </tbody>
+    </table></div>
+    <p>43 of 43 passing under <code>PYTHONWARNINGS=error</code>. A single run directory can be verified
+    with <code>python3 -m cce_engine.cli verify runs/CCE-A-0001 --society A --seed 1</code>.</p>
+
+    <h3>What validation is still missing</h3>
+    <ul>
+      <li>Pattern validation against any external reference.</li>
+      <li>Golden regression digests.</li>
+      <li>A frozen preregistration — <code>docs/PREREGISTRATION_DRAFT.md</code> is a draft.</li>
+      <li>The pilot blockers listed in <code>docs/PILOT_ANALYSIS_PLAN.md</code> §6.</li>
+    </ul>
+    <p class="dim">Twenty-five design documents cover the research question, hypotheses, ODD protocol,
+    experimental design, statistical analysis plan, validation plan, risk register and reproducibility
+    contract. That apparatus is the strongest on this site — and it is also what makes the honest
+    status "no findings yet" rather than a result.</p>
+
+  </section>
+  <section id="s7">
+    <h2><span class="idx">07</span> Version history <span class="trail"></span></h2>
+
+    <div class="vhist">
+      <div class="v"><div class="vno">v0.1.0-milestone0 · Aug 2026</div>
+        <p>Milestone 0 complete. Engine kernel, 92 registered parameters, 43 passing tests, batch
+        runner validated through five gates, and the self-contained results explorer generated from
+        stored output. No production campaign; no findings.</p></div>
+    </div>
+    <div class="panel note">
+      <div class="ptitle">Next</div>
+      <p>Charts, PDF reporting, golden regression digests and pattern validation. The preregistration
+      is to be frozen before any production runs — see <code>docs/ROADMAP.md</code>.</p>
+    </div>
+
+  </section>
+
+
+  <footer class="mfoot">
+    <div><a href="../index.html">← All instruments</a></div>
+    <div><a href="cce.html">Run The Cognitive Civilization Experiment →</a></div>
+    <div>Candice Cantrelle · 2026</div>
+  </footer>
+
+</div>
+
+<script>
+/* Badges and the spec block come from assets/catalogue.js so this page can
+   never disagree with the card that links to it. */
+(function () {
+  var s = byId("cce");
+  if (!s) return;
+  document.getElementById("badges").innerHTML =
+    Orbital.evidenceBadge(s.evidence) + Orbital.basisBadge(s.basis) +
+    Orbital.stateBadge(s.state) + Orbital.flagChips(s.flags);
+  document.getElementById("spec").innerHTML = [
+    ["Domain", s.domain],
+    ["What you do", s.mode.join(", ")],
+    ["Duration", s.duration],
+    ["Difficulty", s.complexity],
+    ["Model type", s.model.join(" + ")],
+    ["Version", "v" + s.version + " · " + s.updated]
+  ].concat(s.basis ? [["Built on", s.basis.detail, "wide"]] : []).map(function (r) {
+    return "<div class=\"" + (r[2] || "") + "\"><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>";
+  }).join("");
+})();
+</script>
+</body>
+</html>

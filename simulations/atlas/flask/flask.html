@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evolution in a Flask — twelve populations, fifty thousand generations</title>
+<meta name="description" content="Twelve populations of E. coli, the same medium, one transfer a day. A simulation of the long-term evolution experiment, where nothing is decided by a fitness number and every measurement costs bench time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/orbital.css">
+<script src="../assets/orbital.js" data-title="Evolution in a Flask" data-tag="LTEE · 12 populations" data-sim="flask"></script>
+<link rel="stylesheet" href="css/flask.css">
+<link rel="stylesheet" href="../assets/orbital-sim.css">
+<script src="../assets/catalogue.js"></script>
+</head>
+<body>
+<a class="rf-skip" href="#home">Skip to the instrument</a>
+
+<!-- ============================ home ============================ -->
+<div id="home">
+  <div class="wrap">
+    <div class="hero">
+      <div class="eyebrow upper">Experimental evolution</div>
+      <h1>Evolution<br>in a Flask</h1>
+      <p class="lede">
+        Twelve flasks. The same strain in all of them, the same thin sugar medium, the same
+        incubator. Every morning one part in a hundred is moved into fresh medium, and every
+        five hundred generations a sample is frozen. Nothing else happens. Nothing else needs to.
+      </p>
+      <p class="lede" style="margin-top:14px;font-size:14px">
+        You run the bench. You decide the conditions, and then you decide what to look at — because
+        looking costs time, and there is never enough of it. Fitness here is not a number the
+        simulation hands you. It is a competition you have to set up, against something you were
+        careful enough to freeze.
+      </p>
+      <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button class="btn ghost" id="themeBtn">Switch light / dark</button>
+        <span class="pill">Space to pause &middot; 1&ndash;5 for speed</span>
+      </div>
+    </div>
+  </div>
+  <div class="modes" id="homeModes"></div>
+  <div class="wrap">
+    <div class="assumption" style="border-top:1px solid var(--line);padding-top:16px;padding-bottom:60px">
+      <b>On the history.</b> The long-term evolution experiment began on 24 February 1988 with twelve
+      populations founded from a single strain of <i>Escherichia coli</i>, propagated by daily
+      hundredfold transfer in a minimal medium containing 25 micrograms of glucose per millilitre.
+      Samples have been frozen every 500 generations throughout, which is why evolved bacteria can
+      be thawed and made to compete directly against their own ancestors. Published findings include
+      a fitness gain that decelerates without ever quite stopping, repeated mutation of the same
+      handful of genes across populations that have never met, hypermutability evolving in about
+      half of them, and — in one population, after roughly thirty thousand generations — the
+      appearance of aerobic citrate use, an ability the ancestor did not have and the other eleven
+      never found.
+      <br><br>
+      This simulation is <i>historically informed</i>. It is not a reconstruction. Every screen
+      labels which of its numbers are documented, which are estimated from general microbiology,
+      and which were invented so that the thing would run.
+    </div>
+  </div>
+</div>
+
+<!-- ========================= application ========================= -->
+<div id="app">
+
+  <div class="benchbar">
+    <div class="bb-title">EVOLUTION <span>&middot; in a Flask</span></div>
+    <div class="bb-clock" id="bbClock"></div>
+    <div class="bb-stats" id="bbStats"></div>
+    <div class="bb-controls">
+      <button class="btn primary" id="playBtn">&#9654; Run</button>
+      <div class="seg" id="speedSeg"></div>
+      <button class="btn ghost sm" id="themeBtn2" title="Light or dark">&#9680;</button>
+      <button class="btn ghost sm" id="homeBtn" title="End the experiment">&#10005;</button>
+    </div>
+  </div>
+
+  <nav class="rail" id="rail">
+    <div class="grouplabel upper">The bench</div>
+    <div class="navitem on" data-screen="bench"><span class="ico">&#9633;</span><span class="lbl">Bench</span></div>
+    <div class="navitem" data-screen="population"><span class="ico">&#9679;</span><span class="lbl">Population</span></div>
+    <div class="navitem" data-screen="tree"><span class="ico">&#8916;</span><span class="lbl">Lineage tree</span></div>
+    <div class="grouplabel upper">Measurement</div>
+    <div class="navitem" data-screen="fitness"><span class="ico">&#8599;</span><span class="lbl">Fitness</span></div>
+    <div class="navitem" data-screen="genomes"><span class="ico">&#9776;</span><span class="lbl">Genomes</span></div>
+    <div class="navitem" data-screen="freezer"><span class="ico">&#10052;</span><span class="lbl">Freezer</span></div>
+    <div class="grouplabel upper">The experiment</div>
+    <div class="navitem" data-screen="conditions"><span class="ico">&#9881;</span><span class="lbl">Conditions</span></div>
+    <div class="navitem" data-screen="notebook"><span class="ico">&#9998;</span><span class="lbl">Notebook</span></div>
+    <div class="navitem" data-screen="assumptions"><span class="ico">&#10038;</span><span class="lbl">Assumptions</span></div>
+  </nav>
+
+  <main class="main" id="main">
+    <section class="screen on" id="screen-bench"></section>
+    <section class="screen" id="screen-population"></section>
+    <section class="screen" id="screen-tree"></section>
+    <section class="screen" id="screen-fitness"></section>
+    <section class="screen" id="screen-genomes"></section>
+    <section class="screen" id="screen-freezer"></section>
+    <section class="screen" id="screen-conditions"></section>
+    <section class="screen" id="screen-notebook"></section>
+    <section class="screen" id="screen-assumptions"></section>
+  </main>
+
+  <aside class="inspector" id="inspector"></aside>
+</div>
+
+<div class="scrim" id="scrim"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="js/config.js"></script>
+<script src="js/model.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/lineage.js"></script>
+<script src="js/events.js"></script>
+<script src="js/screens.js"></script>
+<script src="js/main.js"></script>
+<script>Game.boot();</script>
+</body>
+</html>

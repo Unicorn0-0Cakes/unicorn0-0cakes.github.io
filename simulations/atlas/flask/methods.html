@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methods — Evolution in a Flask</title>
+<meta name="description" content="Methods and limitations for Evolution in a Flask: source, rules, parameters, simplifications, what it cannot establish, validation status and version history.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/orbital.css">
+<link rel="stylesheet" href="../assets/methods.css">
+<script src="../assets/orbital.js" data-title="Evolution in a Flask" data-tag="Methods"></script>
+<script src="../assets/catalogue.js"></script>
+</head>
+<body>
+
+<a class="rf-skip" href="#s1">Skip to methods</a>
+
+<div class="wrap">
+
+  <header class="mhead">
+    <span class="rf-regmark rm-tl"></span>
+    <span class="rf-regmark rm-tr"></span>
+    <div class="kicker">Methods &amp; limitations</div>
+    <h1>Evolution in a Flask</h1>
+    <p class="q">Run the same environment twelve times over — does evolution repeat itself?</p>
+    <div class="badges" id="badges"></div>
+    <div class="actions">
+      <a class="rf-btn primary" href="flask.html">Run instrument</a>
+      <a class="rf-btn" href="../index.html#catalogue">All instruments</a>
+    </div>
+    <dl class="spec" id="spec"></dl>
+    <nav class="toc" aria-label="Sections">
+      <a href="#s1">01 Source</a><a href="#s2">02 Rules &amp; equations</a>
+      <a href="#s3">03 Parameters</a><a href="#s4">04 What is simplified</a>
+      <a href="#s5">05 What this cannot establish</a><a href="#s6">06 Validation</a>
+      <a href="#s7">07 Version history</a>
+    </nav>
+    <hr style="margin-top:20px">
+  </header>
+
+  <section id="s1">
+    <h2><span class="idx">01</span> The source <span class="trail"></span></h2>
+
+    <p>This is a simulation of the <strong>long-term evolution experiment</strong> (LTEE) begun by
+    Richard Lenski in 1988: twelve populations of <em>Escherichia coli</em>, founded from a single
+    ancestor, propagated in the same minimal glucose medium (DM25), transferred one part in a
+    hundred every day, with a sample frozen every five hundred generations.</p>
+
+    <div class="panel note">
+      <div class="ptitle">Historical position</div>
+      <p>The simulation is <strong>historically informed, not a reconstruction</strong>. Every screen
+      labels its numbers as <span class="tagp documented">documented</span>
+      <span class="tagp estimated">estimated</span> <span class="tagp invented">invented</span> or
+      <span class="tagp emergent">emergent</span>, and the in-page <em>Assumptions</em> screen lists
+      all four categories in full — including a section on where the model is deliberately wrong,
+      and why.</p>
+    </div>
+
+    <h3>The governing constraint</h3>
+    <p>One rule shapes everything else:</p>
+    <div class="eq">Fitness is not reported. It is measured.</div>
+    <p>Nothing in the model decides who wins by comparing fitness numbers. Lineages grow on a shared
+    and finite supply of carbon, and whoever ends the day with more cells has more cells at the next
+    transfer. Relative fitness exists here only as the outcome of a competition assay you set up
+    against a sample you were careful enough to freeze, paid for out of bench hours you could have
+    spent on something else. The bench shows a dash where you have not looked.</p>
+
+  </section>
+  <section id="s2">
+    <h2><span class="idx">02</span> Rules and equations <span class="trail"></span></h2>
+
+    <p>Growth is <strong>Monod kinetics</strong> on three carbon sources, integrated over each
+    twenty-four hour cycle.</p>
+
+    <div class="tablewrap"><table>
+      <thead><tr><th>Source</th><th class="num">Concentration</th><th>Behaviour in the model</th></tr></thead>
+      <tbody>
+        <tr><td>Glucose</td><td class="num">25 µg/mL</td>
+            <td>Exhausted about nine hours in. Most of a cell's life here is starvation.</td></tr>
+        <tr><td>Acetate</td><td class="num">secreted</td>
+            <td>Nobody adds it — it is excreted during growth on glucose and eaten afterwards.</td></tr>
+        <tr><td>Citrate</td><td class="num">500 µg/mL</td>
+            <td>About twenty times the carbon of the glucose, and completely unavailable: the
+                ancestor cannot bring it across the membrane in the presence of oxygen.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Where chance enters</h3>
+    <p>At exactly two places, which is where it enters in the laboratory:</p>
+    <ol>
+      <li><strong>Mutation.</strong> Mutations arise at random against a per-genome rate that can
+      itself change when mismatch repair breaks.</li>
+      <li><strong>The daily transfer.</strong> One part in a hundred is a random sample of what was in
+      the flask. This is where drift lives, and why a mutation arising late in the growth phase is
+      usually lost no matter how good it is.</li>
+    </ol>
+    <p>Every stochastic decision draws from a seeded Mulberry32 generator rather than
+    <code>Math.random</code>, so <em>same seed, same history</em> holds exactly.</p>
+
+    <h3>Emergent coexistence</h3>
+    <p>Because the acetate available to a specialist depends on how many specialists there are, the
+    model produces genuine <strong>negative frequency dependence</strong>. Stable two-lineage
+    coexistence emerges without being written in anywhere — it is not a rule, it is a consequence.
+    <span class="tagp emergent">emergent</span></p>
+
+    <h3>The genetic architecture</h3>
+    <ul>
+      <li>Seventeen heritable traits, each with a physiological range it cannot leave.</li>
+      <li>Twenty-six gene targets drawn from the real parallelism data.</li>
+      <li>Exponential beneficial effects with <strong>diminishing-returns epistasis</strong>.</li>
+      <li>Mismatch repair that can break, producing hypermutators.</li>
+      <li>A three-stage citrate innovation that requires a potentiated background before it is
+      reachable at all.</li>
+    </ul>
+
+  </section>
+  <section id="s3">
+    <h2><span class="idx">03</span> Parameters <span class="trail"></span></h2>
+
+    <h3>The bench-hour budget</h3>
+    <p>One bench hour accrues per simulated day, to a ceiling of 120. You cannot measure everything,
+    and that is the design rather than a limitation of it.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Procedure</th><th class="num">Cost</th><th>What it tells you</th></tr></thead>
+      <tbody>
+        <tr><td>Competition assay</td><td class="num">3 h</td><td>Relative fitness against any frozen sample, three replicates, with error</td></tr>
+        <tr><td>Assay when rare</td><td class="num">5 h</td><td>The same competition started at 5 %, which is how you catch frequency dependence</td></tr>
+        <tr><td>Plate for colonies</td><td class="num">1 h</td><td>Cell size, density, and how many visibly different types there are</td></tr>
+        <tr><td>Sequence one clone</td><td class="num">8 h</td><td>Every mutation in one genome, drivers and passengers alike</td></tr>
+        <tr><td>Sequence the population</td><td class="num">18 h</td><td>Every lineage above five per cent</td></tr>
+        <tr><td>Reciprocal invasion</td><td class="num">6 h</td><td>Whether two lineages exclude each other or coexist</td></tr>
+        <tr><td>Replay</td><td class="num">26 h</td><td>Twenty restarts from one archived timepoint, two thousand generations each</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Modes</h3>
+    <ul>
+      <li><strong>The experiment as it was run</strong> — twelve populations, DM25, 37 °C, 1:100 daily
+      transfer, frozen every 500 generations, target 50,000. The recommended first run.</li>
+      <li><strong>Two thousand generations</strong> — the same design on a shorter clock, one sitting.</li>
+      <li><strong>Design the experiment</strong> — a five-stage wizard covering medium, incubator,
+      transfer regime, pressures and length, including the knobs that turn this into a different
+      experiment entirely.</li>
+      <li><strong>Blind bench</strong> — the historical protocol with half the bench hours, so that
+      deciding what is worth knowing becomes the game.</li>
+    </ul>
+    <p class="dim">The full constant set, gene table and mutation parameters live in
+    <code>js/config.js</code>; the engine itself is <code>js/model.js</code>, which has no DOM access
+    and runs headless under node. The code is the specification — this page is a summary of it.</p>
+
+  </section>
+  <section id="s4">
+    <h2><span class="idx">04</span> What is simplified <span class="trail"></span></h2>
+
+    <p>Four things exist in the simulation that were no part of the original design. They are here
+    because <em>what if it had been run differently</em> is worth being able to ask, and they are
+    marked <span class="tagp invented">invented</span> wherever they appear:</p>
+    <ul>
+      <li>Phage</li>
+      <li>Antibiotics</li>
+      <li>Spatial structure</li>
+      <li>Alternating environments</li>
+    </ul>
+    <p>The bench-hour budget is likewise a device rather than a feature of the real experiment.</p>
+
+    <h3>Bounded by construction</h3>
+    <p>Fitness is bounded because the traits are. Each has a physiological range it cannot leave, and
+    a lineage sitting at the floor for its lag phase gets nothing from a mutation that would have
+    shortened it. With every trait pushed to its limit at once, a Cit− lineage measures 2.14 and a
+    Cit+ one 2.91. Nothing in the model can go beyond that.</p>
+
+  </section>
+  <section id="s5">
+    <h2><span class="idx">05</span> What this cannot establish <span class="trail"></span></h2>
+
+    <ul class="cannot">
+      <li>It is not evidence about <em>E. coli</em>. A result here is a statement about this model,
+      under its parameters, and nothing more.</li>
+      <li>It cannot settle whether the real citrate innovation was contingent. It reproduces the
+      <em>rate</em> at which such an innovation appears under an assumed three-stage architecture —
+      an architecture the model asserts rather than discovers.</li>
+      <li>It cannot extrapolate past its own ceilings. The trajectory flattens a little earlier than
+      the real one after twenty thousand generations, because the trait bounds bind before the
+      biology would.</li>
+      <li>It under-produces hypermutators: three to four of twelve by 50,000 generations against six
+      of twelve in the real experiment. Any conclusion that turns on mutator frequency is unsafe.</li>
+      <li>It says nothing about mechanism at the molecular level. Gene targets are drawn from real
+      parallelism data, but the model has no biochemistry underneath them.</li>
+    </ul>
+
+  </section>
+  <section id="s6">
+    <h2><span class="idx">06</span> Validation status <span class="trail"></span></h2>
+
+    <p>The engine was tuned headlessly against published benchmarks before any interface existed
+    (<code>node js/calibrate.js</code>). The comparison, including where it misses:</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Measure</th><th class="num">Model — mean of twelve, three seeds</th><th class="num">The real experiment</th></tr></thead>
+      <tbody>
+        <tr><td>Fitness at 2,000 generations</td><td class="num">1.28 – 1.34</td><td class="num">≈ 1.3</td></tr>
+        <tr><td>Fitness at 10,000</td><td class="num">1.52 – 1.57</td><td class="num">≈ 1.55</td></tr>
+        <tr><td>Fitness at 20,000</td><td class="num">1.60 – 1.63</td><td class="num">≈ 1.65</td></tr>
+        <tr><td>Fitness at 50,000</td><td class="num">1.71 – 1.73 (spread 1.59 – 1.89)</td><td class="num">≈ 1.7 – 1.8</td></tr>
+        <tr><td>Hypermutable by 50,000</td><td class="num">3 – 4 of 12</td><td class="num">6 of 12</td></tr>
+        <tr><td>Aerobic citrate use by 50,000</td><td class="num">0 – 1 of 12</td><td class="num">1 of 12</td></tr>
+        <tr><td>Generations per day</td><td class="num">6.64</td><td class="num">6.64</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Automated checks</h3>
+    <ul>
+      <li><code>node js/test.js</code> — 39 assertions on the model.</li>
+      <li><code>node js/smoke.js</code> — renders every screen without a browser.</li>
+      <li><code>node js/calibrate.js</code> — the headless calibration harness that produced the table above.</li>
+    </ul>
+
+  </section>
+  <section id="s7">
+    <h2><span class="idx">07</span> Version history <span class="trail"></span></h2>
+
+    <div class="vhist">
+      <div class="v"><div class="vno">v1.0 · Aug 2026</div>
+        <p>First public release. Calibrated against the published fitness trajectory, the rate of
+        hypermutator evolution and the contingency of the citrate innovation. Four modes, seven bench
+        procedures, Muller plots and lineage trees.</p></div>
+    </div>
+    <div class="panel warn">
+      <div class="ptitle">Housekeeping</div>
+      <p>Version numbers on this site are editorial rather than derived from the code. If you want
+      them to mean something stricter, that convention should be written down here first.</p>
+    </div>
+
+  </section>
+
+
+  <footer class="mfoot">
+    <div><a href="../index.html">← All instruments</a></div>
+    <div><a href="flask.html">Run Evolution in a Flask →</a></div>
+    <div>Candice Cantrelle · 2026</div>
+  </footer>
+
+</div>
+
+<script>
+/* Badges and the spec block come from assets/catalogue.js so this page can
+   never disagree with the card that links to it. */
+(function () {
+  var s = byId("flask");
+  if (!s) return;
+  document.getElementById("badges").innerHTML =
+    Orbital.evidenceBadge(s.evidence) + Orbital.basisBadge(s.basis) +
+    Orbital.stateBadge(s.state) + Orbital.flagChips(s.flags);
+  document.getElementById("spec").innerHTML = [
+    ["Domain", s.domain],
+    ["What you do", s.mode.join(", ")],
+    ["Duration", s.duration],
+    ["Difficulty", s.complexity],
+    ["Model type", s.model.join(" + ")],
+    ["Version", "v" + s.version + " · " + s.updated]
+  ].concat(s.basis ? [["Built on", s.basis.detail, "wide"]] : []).map(function (r) {
+    return "<div class=\"" + (r[2] || "") + "\"><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>";
+  }).join("");
+})();
+</script>
+</body>
+</html>

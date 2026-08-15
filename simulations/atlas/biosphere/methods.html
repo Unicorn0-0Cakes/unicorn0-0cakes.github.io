@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methods — Biosphere: Closed World</title>
+<meta name="description" content="Methods and limitations for Biosphere: Closed World: source, rules, parameters, simplifications, what it cannot establish, validation status and version history.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/orbital.css">
+<link rel="stylesheet" href="../assets/methods.css">
+<script src="../assets/orbital.js" data-title="Biosphere: Closed World" data-tag="Methods"></script>
+<script src="../assets/catalogue.js"></script>
+</head>
+<body>
+
+<a class="rf-skip" href="#s1">Skip to methods</a>
+
+<div class="wrap">
+
+  <header class="mhead">
+    <span class="rf-regmark rm-tl"></span>
+    <span class="rf-regmark rm-tr"></span>
+    <div class="kicker">Methods &amp; limitations</div>
+    <h1>Biosphere: Closed World</h1>
+    <p class="q">Why is oxygen disappearing when carbon dioxide is not rising to match?</p>
+    <div class="badges" id="badges"></div>
+    <div class="actions">
+      <a class="rf-btn primary" href="biosphere.html">Run instrument</a>
+      <a class="rf-btn" href="../index.html#catalogue">All instruments</a>
+    </div>
+    <dl class="spec" id="spec"></dl>
+    <nav class="toc" aria-label="Sections">
+      <a href="#s1">01 Source</a><a href="#s2">02 Rules &amp; equations</a>
+      <a href="#s3">03 Parameters</a><a href="#s4">04 What is simplified</a>
+      <a href="#s5">05 What this cannot establish</a><a href="#s6">06 Validation</a>
+      <a href="#s7">07 Version history</a>
+    </nav>
+    <hr style="margin-top:20px">
+  </header>
+
+  <section id="s1">
+    <h2><span class="idx">01</span> The source <span class="trail"></span></h2>
+
+    <p>The first closure of <strong>Biosphere 2</strong> ran from September 1991 to September 1993:
+    eight people sealed inside roughly three acres of glass in Arizona, with seven biomes, an ocean,
+    an agricultural system and a great deal of soil. The first campaign here is built around the
+    documented atmospheric anomaly of that closure.</p>
+
+    <div class="panel note">
+      <div class="ptitle">The anomaly the model is about</div>
+      <p>Oxygen fell from a normal atmospheric level to roughly <strong>14 per cent</strong> over about
+      sixteen months, while carbon dioxide conspicuously <strong>failed to rise in proportion</strong>.
+      Carbon was going somewhere other than the air. Finding out where is the entire mechanic.</p>
+    </div>
+
+    <h3>Historical position</h3>
+    <ul>
+      <li>The crew are fictional and are not portrayals of the historical participants.</li>
+      <li>Every screen labels its numbers as <span class="tagp documented">historical</span>
+      <span class="tagp estimated">estimated</span> or <span class="tagp emergent">model</span>.</li>
+      <li>The in-page <em>Assumptions</em> screen separates what is documented, what is derived from
+      published ranges, what was invented for playability, and what is not represented at all.</li>
+      <li>A counterfactual result is a statement about this model. It is never presented as evidence
+      about the real facility, and the end-of-mission report says so explicitly.</li>
+    </ul>
+
+  </section>
+  <section id="s2">
+    <h2><span class="idx">02</span> Rules and equations <span class="trail"></span></h2>
+
+    <p>This is a <strong>stock-and-flow systems model</strong> integrated on a daily step, not an
+    agent model. The eight crew are individuals; everything else is a stock with rates in and out.</p>
+
+    <div class="tablewrap"><table>
+      <thead><tr><th>System</th><th>What it models</th></tr></thead>
+      <tbody>
+        <tr><td>Atmosphere</td><td>O₂, CO₂, pressure, humidity, diurnal and seasonal gas exchange, envelope leakage</td></tr>
+        <tr><td>Carbon</td><td>Photosynthesis, plant and soil respiration, litter, humification, concrete carbonation, ocean dissolution</td></tr>
+        <tr><td>Water</td><td>Evapotranspiration, condensation, rainfall distribution, irrigation, treatment, potable and grey streams</td></tr>
+        <tr><td>Agriculture</td><td>Twelve crops with real growth curves, nutrition, labour, seed stocks, pests, storage life</td></tr>
+        <tr><td>Ecology</td><td>Functional roles rather than individuals — pollinators, decomposers, herbivores, an invasive tramp ant, a reef</td></tr>
+        <tr><td>Crew</td><td>Eight people with health, fatigue, morale, body mass, skills, sleep debt and opinions</td></tr>
+        <tr><td>Technosphere</td><td>Ten machines with condition, wear driven by humidity and heat, failure, spares and repair skill</td></tr>
+        <tr><td>Closure</td><td>Separate ledgers for atmospheric, water, nutrient, food, biological, mechanical and informational closure</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Everything is coupled</h3>
+    <p>Human breath becomes plant carbon; plant waste becomes soil; soil microbes change the air;
+    rainforest humidity becomes condensation; condensation becomes stored water; food shortages reduce
+    labour; delayed labour damages the machinery that keeps the food growing. There is no isolated
+    subsystem to optimise.</p>
+
+    <h3>Diagnosis, not accumulation</h3>
+    <p>The interface does not tell you what is wrong. It shows evidence:</p>
+    <div class="eq">Oxygen concentration has declined for 31 consecutive days.
+Carbon dioxide is not rising proportionally.
+Night-time oxygen loss exceeds daytime recovery.
+Soil temperature in the agricultural biome has risen 1.7 °C.</div>
+    <p>The hypothesis workbench exists so you can commit to an explanation before the model confirms
+    or refuses it.</p>
+
+  </section>
+  <section id="s3">
+    <h2><span class="idx">03</span> Parameters <span class="trail"></span></h2>
+
+    <h3>Modes</h3>
+    <ul>
+      <li><strong>Guided mission (365 days)</strong> — a facility built to the historical
+      specification. The recommended first run.</li>
+      <li><strong>Architect mode</strong> — a six-stage design wizard: purpose, biome areas, soil
+      carbon, concrete sealing, pollinator strategy, crew selection from a pool of twelve, reserves
+      against a fixed budget, and the closure protocol that defines what counts as intervention.</li>
+      <li><strong>Short mission (120 days)</strong> — one full crop cycle, a single sitting.</li>
+      <li><strong>No outside help (365 days)</strong> — strict closure. No oxygen, food, parts or
+      outside expertise may enter.</li>
+    </ul>
+
+    <h3>The high-leverage design parameters</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Parameter</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr><td>Soil organic carbon</td><td>The dominant term in the oxygen budget. Lean soil ends a year nearly two percentage points higher in O₂.</td></tr>
+        <tr><td>Concrete sealing</td><td>Unsealed concrete carbonates, absorbing CO₂ and hiding the carbon. Sealing it before closure raises CO₂ roughly fivefold while barely touching the oxygen curve.</td></tr>
+        <tr><td>Biome areas</td><td>Sets photosynthetic capacity against respiratory load.</td></tr>
+        <tr><td>Pollinator strategy</td><td>Determines whether the crop system reproduces without hand labour.</td></tr>
+        <tr><td>Crew composition</td><td>Skill coverage against the ten machines; a repair gap compounds.</td></tr>
+        <tr><td>Closure protocol</td><td>Defines what counts as intervention, and therefore what a "successful" run means.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="dim">Constants, the biome table, crop table, crew pool, machinery and the calibration
+    handles are in <code>js/config.js</code>. The world itself is <code>js/model.js</code>, which is
+    deliberately free of DOM access so it can be driven from node.</p>
+
+  </section>
+  <section id="s4">
+    <h2><span class="idx">04</span> What is simplified <span class="trail"></span></h2>
+
+    <ul>
+      <li><strong>Ecology is functional, not taxonomic.</strong> Pollinators, decomposers and
+      herbivores are roles with rates, not species with populations. One invasive tramp ant and one
+      reef are represented specifically; nothing else is.</li>
+      <li><strong>The daily step hides sub-daily dynamics.</strong> Diurnal gas exchange is modelled
+      as a within-day term rather than integrated at finer resolution.</li>
+      <li><strong>Soil is one pool per biome</strong>, with humification as a single transfer, rather
+      than a layered profile with distinct microbial guilds.</li>
+      <li><strong>Crew psychology is four scalars</strong> — health, fatigue, morale, sleep debt —
+      plus opinions. The documented interpersonal history of the real closure is not modelled and
+      deliberately so.</li>
+      <li><strong>Machinery is ten items</strong> with a condition scalar, not a maintenance graph.</li>
+      <li><strong>Weather is seasonal forcing</strong>, not a simulated climate.</li>
+    </ul>
+
+  </section>
+  <section id="s5">
+    <h2><span class="idx">05</span> What this cannot establish <span class="trail"></span></h2>
+
+    <ul class="cannot">
+      <li>It cannot tell you what actually happened in Biosphere 2. It reproduces a documented
+      trajectory from an assumed mechanism; agreement with the record is not proof of the mechanism.</li>
+      <li>It cannot apportion the real oxygen loss between soil respiration and concrete carbonation.
+      The split here follows from parameters you set.</li>
+      <li>It cannot support engineering claims about closed life-support systems. Nothing here is
+      dimensioned against a real facility other than the one it is loosely modelled on.</li>
+      <li>It cannot say anything about the people involved. The crew are invented, and a bad outcome
+      in a run is a property of the model's rates, not a judgement about anyone.</li>
+      <li>It cannot be used to argue that a counterfactual design would have worked. A counterfactual
+      result is a statement about this model, and the end-of-mission report says so on the page.</li>
+    </ul>
+
+  </section>
+  <section id="s6">
+    <h2><span class="idx">06</span> Validation status <span class="trail"></span></h2>
+
+    <p><code>js/model.js</code> is free of DOM access so it can be driven headlessly. Three checks
+    were run.</p>
+
+    <h3>1 · Carbon conservation</h3>
+    <p>Total carbon across soil, litter, biomass, food, bodies, atmospheric CO₂, carbonated concrete
+    and ocean DIC closes to within <strong>0.03 per cent over 365 simulated days</strong>.</p>
+    <div class="panel note">
+      <div class="ptitle">What the check caught</div>
+      <p>Three separate carbon-creating bugs were found this way — humification returning more carbon
+      than it moved, herbivores respiring carbon they had not eaten, and crew exhaling carbon that was
+      never taken out of the food store. A conservation test is worth more than a plausible-looking
+      output curve.</p>
+    </div>
+
+    <h3>2 · Historical pace</h3>
+    <p>A control run ends 365 days at <strong>16.6 per cent oxygen</strong>, on the documented
+    trajectory.</p>
+
+    <h3>3 · Counterfactual behaviour</h3>
+    <p>Lean soil ends nearly two percentage points higher in oxygen. Sealing the concrete before
+    closure raises CO₂ roughly fivefold while leaving the oxygen curve almost untouched — which is the
+    entire lesson of the scenario, and it is arrived at by the model rather than scripted.
+    <span class="tagp emergent">emergent</span></p>
+
+  </section>
+  <section id="s7">
+    <h2><span class="idx">07</span> Version history <span class="trail"></span></h2>
+
+    <div class="vhist">
+      <div class="v"><div class="vno">v1.0 · Aug 2026</div>
+        <p>First public release. Four modes, eight coupled systems, the cutaway with six diagnostic
+        overlays, the hypothesis workbench, and the end-of-mission report. Carbon ledger closing to
+        0.03 per cent; control run on the documented oxygen trajectory.</p></div>
+    </div>
+
+    <h3>Accessibility notes</h3>
+    <p class="dim">Both themes use tabular figures so numbers do not jitter as they change. Charts
+    carry named units, safe operating bands and markers for your own interventions. Colour never
+    carries meaning alone — every state is also carried by a label, a shape or a position.</p>
+
+  </section>
+
+
+  <footer class="mfoot">
+    <div><a href="../index.html">← All instruments</a></div>
+    <div><a href="biosphere.html">Run Biosphere: Closed World →</a></div>
+    <div>Candice Cantrelle · 2026</div>
+  </footer>
+
+</div>
+
+<script>
+/* Badges and the spec block come from assets/catalogue.js so this page can
+   never disagree with the card that links to it. */
+(function () {
+  var s = byId("biosphere");
+  if (!s) return;
+  document.getElementById("badges").innerHTML =
+    Orbital.evidenceBadge(s.evidence) + Orbital.basisBadge(s.basis) +
+    Orbital.stateBadge(s.state) + Orbital.flagChips(s.flags);
+  document.getElementById("spec").innerHTML = [
+    ["Domain", s.domain],
+    ["What you do", s.mode.join(", ")],
+    ["Duration", s.duration],
+    ["Difficulty", s.complexity],
+    ["Model type", s.model.join(" + ")],
+    ["Version", "v" + s.version + " · " + s.updated]
+  ].concat(s.basis ? [["Built on", s.basis.detail, "wide"]] : []).map(function (r) {
+    return "<div class=\"" + (r[2] || "") + "\"><dt>" + r[0] + "</dt><dd>" + r[1] + "</dd></div>";
+  }).join("");
+})();
+</script>
+</body>
+</html>

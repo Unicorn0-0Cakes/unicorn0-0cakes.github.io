@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" data-world="simulations">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulations — Candice Cantrelle</title>
+<meta name="description" content="Nine self-contained browser instruments that rebuild documented experiments. Set the conditions, run the world, read what comes out.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/simulations/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Simulations — Candice Cantrelle">
+<meta property="og:description" content="Nine self-contained browser instruments that rebuild documented experiments. Set the conditions, run the world, read what comes out.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/simulations/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/cards.css">
+<link rel="stylesheet" href="../assets/css/worlds.css">
+<script src="../assets/js/shell.js"></script>
+
+<style>
+.atlas-cta {
+  display: grid; grid-template-columns: 1fr auto; gap: var(--s-6);
+  align-items: center; padding: var(--s-6);
+  background: var(--rf-scope); border-radius: var(--rf-radius);
+  border: 1px solid var(--rf-scope-line); color: #F4E6C8;
+}
+@media (max-width: 780px) { .atlas-cta { grid-template-columns: 1fr; gap: var(--s-4); } }
+.atlas-cta h2 { color: #F4E6C8; font-size: var(--t-h2); margin: 0 0 var(--s-3); }
+.atlas-cta p { color: #C2AE89; font-size: var(--t-small); margin: 0; max-width: 62ch; }
+/* This panel is dark in BOTH themes, so its button pins the night
+   accent rather than reading the theme token — the day orange is a
+   dark ink and would sit at 3.1:1 against a near-black panel. */
+.atlas-cta .btn { background: #FF8A3D; border-color: #FF8A3D; color: #14100A; }
+.atlas-cta .btn:hover { filter: brightness(1.08); color: #14100A; }
+
+.taxo { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: var(--s-5); }
+.taxo dt { font-family: var(--rf-mono); font-size: var(--t-nano); letter-spacing: var(--rf-track);
+           text-transform: uppercase; color: var(--w-accent); font-weight: 600; margin-bottom: 6px; }
+.taxo dd { margin: 0; font-size: var(--t-small); color: var(--rf-ink-dim); line-height: 1.5; }
+</style>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">Simulations</span></li></ol></div>
+  <header class="plate">
+    <div class="wrap plate__grid">
+      <div>
+        <p class="plate__kicker">Wing 01 · The instrument archive</p>
+        <h1>Simulations</h1>
+        <p class="plate__lede">Nine self-contained instruments. Each one rebuilds a documented experiment or an established model, puts you at the controls, and makes you pay for what you measure. None of them tells you the answer first.</p>
+      </div>
+      <p class="stamp"><b>9</b> instruments<br>6 playable · 3 research preview<br>Built 2025–26<br>Runs in the browser</p>
+    </div>
+    <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
+  </header>
+
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">01</span> What this is <span class="trail"></span></h2>
+      <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:var(--s-8)">
+        <div>
+          <p>
+            These are not demonstrations. A demonstration shows you a result; an instrument
+            makes you go and get one. Every simulation here gives you a system, a set of
+            controls, and instruments that are worse than the system — noisy, partial,
+            expensive to use — because that is the situation the original experimenters
+            were actually in.
+          </p>
+          <p>
+            The consequence is that you can be wrong in them. You can spend your whole
+            measurement budget on the thing that turns out not to matter. You can lock in an
+            analysis and then find out what the accepted value was. That is the point.
+          </p>
+        </div>
+        <div>
+          <dl class="taxo">
+            <div><dt>Domain</dt><dd>Physics · Biology · Ecology · Society · Earth · Cognition</dd></div>
+            <div><dt>Mode</dt><dd>What you actually do: Observe · Diagnose · Design · Measure · Infer</dd></div>
+            <div><dt>Model</dt><dd>Agent-based · Differential equation · Statistical · Historical reconstruction</dd></div>
+            <div><dt>State</dt><dd>Playable · Research preview · Development</dd></div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">02</span> How to read an evidence badge <span class="trail"></span></h2>
+      <p class="sec-hint">
+        Every instrument carries exactly one. It says what kind of thing the model is, so that
+        &ldquo;this simulation shows&hellip;&rdquo; can be checked rather than taken on trust. A new instrument
+        renders a dashed <em>status pending</em> chip until its methods page can show the work — visibly
+        unfinished beats quietly overclaiming.
+      </p>
+      <dl class="evidence-key">
+        <div><dt>Historical reconstruction</dt><dd>Rebuilds a documented experiment.</dd></div>
+        <div><dt>Established mathematical model</dt><dd>Published equations with known behaviour.</dd></div>
+        <div><dt>Calibrated research model</dt><dd>Tuned against published benchmarks; the table is shown.</dd></div>
+        <div><dt>Exploratory agent-based model</dt><dd>Dramatises a mechanism. The numbers illustrate; they do not measure.</dd></div>
+        <div><dt>Uncalibrated prototype</dt><dd>Internally consistent. Nothing has been fitted to data.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">03</span> The catalogue <span class="trail"></span></h2>
+      <p class="sec-hint">
+        Each card opens the instrument itself, on the atlas site where it lives. Every instrument
+        also has a methods page documenting its model, its assumptions and what it does not do.
+      </p>
+      <div class="grid" id="sims"></div>
+    </div>
+  </section>
+
+  <section class="doc">
+    <div class="wrap">
+      <div class="atlas-cta">
+        <div>
+          <h2>The full atlas</h2>
+          <p>
+            The instruments are served from this site, with filters across all six taxonomies,
+            search, and a methods page for each one. This wing is the front door; that is the
+            reading room.
+          </p>
+        </div>
+        <a class="btn btn--solid" href="atlas/">Enter the atlas</a>
+      </div>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="../data/projects.js"></script>
+<script src="../assets/js/cards.js"></script>
+<script>
+CC.renderInto("#sims", CC.curated(CC.byCategory("simulations")));
+/* Deep links go to the atlas wing of this same site. */
+document.querySelectorAll("#sims .card__title a").forEach(function (a) {
+  a.setAttribute("rel", "noopener");
+});
+</script>
+</body>
+</html>

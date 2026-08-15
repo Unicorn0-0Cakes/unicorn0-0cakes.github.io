@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" data-world="research">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research — Candice Cantrelle</title>
+<meta name="description" content="Exploratory work where the investigation is the output. Implemented and proposed are labelled separately, and no performance claims are made without evidence.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/research/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Research — Candice Cantrelle">
+<meta property="og:description" content="Exploratory work where the investigation is the output. Implemented and proposed are labelled separately, and no performance claims are made without evidence.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/research/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/cards.css">
+<link rel="stylesheet" href="../assets/css/worlds.css">
+<script src="../assets/js/shell.js"></script>
+
+<style>
+.principle { border-top: 1px solid var(--rf-line); padding-top: var(--s-4); }
+.principle h3 { font-family: var(--rf-mono); font-size: var(--t-micro); letter-spacing: var(--rf-track);
+                text-transform: uppercase; color: var(--w-accent); margin: 0 0 var(--s-2); font-weight: 600; }
+.principle p { font-size: var(--t-small); color: var(--rf-ink-dim); margin: 0; font-family: var(--rf-sans); }
+</style>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+<div class="wrap"><ol class="crumbs"><li><a href="../">Portfolio</a></li><li><span aria-current="page">Research</span></li></ol></div>
+  <header class="plate">
+    <div class="wrap plate__grid">
+      <div>
+        <p class="plate__kicker">Wing 04 · The notebook</p>
+        <h1>Research</h1>
+        <p class="plate__lede">Work where the question is the deliverable. A finished research project can be one that establishes an approach does not work — provided it says so, and shows how it found out.</p>
+      </div>
+      <p class="stamp"><b>1</b> project<br>Conceptual prototype<br>Python · PyTorch<br>2026</p>
+    </div>
+    <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
+  </header>
+
+
+  <section class="doc">
+    <div class="wrap prose">
+      <h2 class="sec-head"><span class="idx">01</span> The standard <span class="trail"></span></h2>
+      <div style="display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:var(--s-8)">
+        <div>
+          <p>
+            The hardest part of showing research on a portfolio is that a portfolio wants
+            finished things and research mostly is not. The usual resolution is to describe an
+            unbuilt system in the present tense and hope nobody opens the repository.
+          </p>
+          <p>
+            The resolution here is the opposite. Every research project separates what has been
+            implemented from what has only been proposed, and the separation is the first thing
+            you read — on the project page and in the repository's own README. Rigorous
+            unfinished work is a legitimate thing to show. Unfinished work described as
+            finished is not.
+          </p>
+        </div>
+        <div class="stack">
+          <div class="principle"><h3>Implemented / proposed</h3>
+            <p>Two columns, always. A reader should never have to open the source to find out
+               which side something is on.</p></div>
+          <div class="principle"><h3>No unearned numbers</h3>
+            <p>If a model has not been trained on real data, it has no metrics — and the page
+               says that instead of leaving a gap for the reader to fill in optimistically.</p></div>
+          <div class="principle"><h3>A next milestone</h3>
+            <p>Each project names the single smallest next step that would produce a real
+               result. Usually it narrows the scope rather than widening it.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">02</span> Projects <span class="trail"></span></h2>
+      <div class="grid grid--2" id="rs"></div>
+    </div>
+  </section>
+
+  <section class="doc">
+    <div class="wrap">
+      <h2 class="sec-head"><span class="idx">03</span> Research-shaped work elsewhere <span class="trail"></span></h2>
+      <p class="sec-hint">
+        Several instruments in the Simulations wing are research instruments rather than
+        demonstrations, and are labelled that way there.
+      </p>
+      <div class="grid grid--2" id="adjacent"></div>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="../data/projects.js"></script>
+<script src="../assets/js/cards.js"></script>
+<script>
+CC.renderInto("#rs", CC.curated(CC.byCategory("research")));
+CC.renderInto("#adjacent", ["cce", "sentinel"].map(CC.byId).filter(Boolean));
+</script>
+</body>
+</html>
