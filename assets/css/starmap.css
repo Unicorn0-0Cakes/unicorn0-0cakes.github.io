@@ -6,8 +6,8 @@
    leave the site.
 
    The figure is generated from data/projects.js, so it cannot drift out
-   of step with the registry — a project added there appears here, and a
-   project set to "hidden" disappears from both.
+   of step with the registry — a project added there appears here, and an
+   unlisted project disappears from both.
 
    Everything the map shows is also present as an ordinary nested list
    below it. The list is the accessible source of truth; the map is the
@@ -148,6 +148,8 @@
   color: var(--rf-muted);
 }
 .sm-legend svg { flex: none; overflow: visible; }
+
+.note-inline { display: block; margin-top: 6px; color: var(--rf-muted); font-size: var(--t-small); }
 
 /* ---- the same map, as a list -------------------------------------------- */
 .sm-index { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));

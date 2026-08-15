@@ -4,9 +4,14 @@
    Reads data/projects.js. Renders the card system described in
    assets/css/cards.css.
 
-   The single rule enforced here: a project whose portfolioStatus is
-   "hidden" is filtered out at the query layer, before anything can
-   render it. There is no code path that draws a hidden record.
+   The single rule enforced here: a project renders only if its
+   visibility is exactly "public". The filter is fail-closed — a record
+   with a missing, misspelled or unknown visibility does not render — so
+   the failure mode of a typo is an absent project rather than a
+   published one.
+
+   visibility answers "should this appear"; portfolioStatus answers
+   "what kind of work is this". They are separate fields on purpose.
    ===================================================================== */
 (function () {
   "use strict";
@@ -29,7 +34,7 @@
      QUERIES
      ------------------------------------------------------------------ */
   function visible() {
-    return P.filter(function (p) { return p.portfolioStatus !== "hidden"; });
+    return P.filter(function (p) { return p.visibility === "public"; });
   }
   function byCategory(cat) {
     return visible().filter(function (p) { return p.category === cat; });
@@ -396,10 +401,73 @@
     el.innerHTML = html;
   }
 
+  /* ------------------------------------------------------------------
+     COUNTS — the registry states them, the pages do not
+     ---------------------------------------------------------------------
+     Wing headers used to carry counts typed by hand, which drifted the
+     moment a project was added or unlisted. Instead the markup carries a
+     placeholder with the last-known text inside it:
+
+       <span data-cc-count="design" data-cc-noun="project">3 projects</span>
+       <span data-cc-breakdown="design">3 showcase</span>
+
+     The static text is a real fallback — correct when written, and all a
+     reader without JavaScript ever sees — and this replaces it with the
+     live figure on load. Nothing here invents a number: every value is
+     counted out of the registry.
+     ------------------------------------------------------------------ */
+  var TIER_ORDER = ["showcase", "prototype", "research", "workshop"];
+
+  /* "entry" must not become "entrys". Only the -y rule is needed for the
+     nouns this site uses; anything else takes a plain -s. */
+  function pluralise(noun, n) {
+    if (n === 1) return noun;
+    return /[^aeiou]y$/.test(noun) ? noun.slice(0, -1) + "ies" : noun + "s";
+  }
+  function plural(n, noun) { return n + " " + pluralise(noun, n); }
+
+  function breakdown(cat) {
+    var list = byCategory(cat), out = [];
+    TIER_ORDER.forEach(function (tier) {
+      var n = list.filter(function (p) { return p.portfolioStatus === tier; }).length;
+      if (n) out.push(n + " " + tier);
+    });
+    return out.join(" · ");
+  }
+
+  function counts(root) {
+    root = root || document;
+
+    root.querySelectorAll("[data-cc-count]").forEach(function (el) {
+      var n = countIn(el.getAttribute("data-cc-count"));
+      var noun = el.getAttribute("data-cc-noun") || "project";
+      el.innerHTML = "<b>" + n + "</b> " + esc(pluralise(noun, n));
+    });
+
+    root.querySelectorAll("[data-cc-breakdown]").forEach(function (el) {
+      var text = breakdown(el.getAttribute("data-cc-breakdown"));
+      if (text) el.textContent = text;
+      else if (el.parentNode) el.parentNode.removeChild(el);
+    });
+
+    root.querySelectorAll("[data-cc-total]").forEach(function (el) {
+      var noun = el.getAttribute("data-cc-noun") || "project";
+      var total = visible().length;
+      el.innerHTML = "<b>" + total + "</b> " + esc(pluralise(noun, total));
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { counts(document); });
+  } else {
+    counts(document);
+  }
+
   window.CC = {
     esc: esc, visible: visible, byCategory: byCategory, byId: byId,
     featured: featured, countIn: countIn, category: category, curated: curated,
     card: card, renderInto: renderInto, doors: doors, statusChip: statusChip,
-    catPath: catPath
+    catPath: catPath, counts: counts, breakdown: breakdown,
+    plural: plural, pluralise: pluralise
   };
 })();

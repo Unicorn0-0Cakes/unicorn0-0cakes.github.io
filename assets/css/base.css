@@ -223,6 +223,19 @@ html[data-theme="night"] .btn--solid:hover { box-shadow: var(--rf-glow); }
 .btn--quiet { background: transparent; border-color: transparent; padding-left: 0; padding-right: 0; }
 .btn--quiet:hover { transform: none; }
 
+/* A prose column beside a narrower aside. Two wings had this inlined with
+   no breakpoint, which overflowed the viewport on a phone; it is defined
+   once here so it can only be got right. */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: var(--s-8);
+}
+.split > * { min-width: 0; }
+@media (max-width: 820px) {
+  .split { grid-template-columns: 1fr; gap: var(--s-6); }
+}
+
 /* ---------------------------------------------------------------------
    MOTION — one switch, honoured everywhere
    ------------------------------------------------------------------ */

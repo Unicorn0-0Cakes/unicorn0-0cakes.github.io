@@ -10,19 +10,38 @@
    made private, or deleted, the site keeps working and simply shows what
    this file says.
 
+   ─────────────────────────────────────────────────────────────────────
+   THIS FILE IS PUBLIC. It is served to every visitor at /data/projects.js
+   and is readable by anyone.
+
+   DO NOT store private repository names, credentials, client-sensitive
+   data, secrets, unpublished commercial figures, or confidential project
+   metadata here. "unlisted" controls RENDERING ONLY — it is not privacy,
+   not access control, and not a secret. If something must not be read by
+   the public, it must not be in this file at all.
+   ─────────────────────────────────────────────────────────────────────
+
    ADDING A PROJECT
      Append a record. Required: id, title, category, portfolioStatus,
-     summary. Everything else is optional and renders only if present —
-     a link with a null value is never drawn, so there are no dead
-     "Live demo" buttons pointing at things that do not exist.
+     visibility, summary. Everything else is optional and renders only if
+     present — a link with a null value is never drawn, so there are no
+     dead "Live demo" buttons pointing at things that do not exist.
 
-   portfolioStatus  — the honesty control. Exactly one of:
+   portfolioStatus  — WHAT THE WORK IS. Exactly one of:
      "showcase"   complete enough to represent professionally
      "prototype"  functional or meaningful, still evolving
      "research"   exploration is the point; the outcome is a finding
      "workshop"   small, worth showing, not a major piece
-     "hidden"     NEVER RENDERED. Kept here so the decision is recorded
-                  rather than lost. Flip to another status to publish.
+
+   visibility       — WHETHER IT RENDERS. Exactly one of:
+     "public"     appears in its wing, the counts, the map and search
+     "unlisted"   never rendered anywhere. The record is kept so the
+                  decision is written down rather than lost, and so the
+                  reason survives. Flip to "public" to publish.
+
+     These are two different questions and they used to be one field.
+     A piece of work does not stop being a prototype because it is
+     unlisted, and "unlisted" was never a status a visitor should read.
 
    treatment        — which card plate is used. diagram | scope | ui |
                       art | image | none. Purely visual; does not affect
@@ -48,11 +67,12 @@ const PROJECTS = [
     title: "Evolution in a Flask",
     category: "simulations",
     portfolioStatus: "showcase",
+    visibility: "public",
     featured: true,
     featuredNote: "Start here",
     treatment: "scope",
     year: "2026",
-    summary: "Twelve populations of E. coli in the same thin sugar medium, one transfer a day, fifty thousand generations of nothing else happening. Fitness is never reported to you — it is a competition assay you have to set up against something you were careful enough to freeze.",
+    summary: "Twelve populations of E. coli, one transfer a day, fifty thousand generations. Fitness is never reported to you — it is an assay you have to run against something you were careful enough to freeze.",
     question: "Run the same environment twelve times over — does evolution repeat itself?",
     role: "Design, model, implementation, calibration",
     tech: ["JavaScript", "Canvas", "Monod kinetics", "Muller plots"],
@@ -66,11 +86,12 @@ const PROJECTS = [
     title: "Universe 25",
     category: "simulations",
     portfolioStatus: "showcase",
+    visibility: "public",
     featured: true,
     featuredNote: "Most immediately legible",
     treatment: "scope",
     year: "2026",
-    summary: "A living recreation of Calhoun's mouse-utopia density study — unlimited resources, limited space. A colony rises and collapses through Growth, Breakdown and Collapse, with terrain, water, predators and prey all interacting on one scope.",
+    summary: "Calhoun's mouse-utopia study, alive: unlimited resources, limited space. A colony rises and collapses through Growth, Breakdown and Collapse, with terrain, predators and prey on one scope.",
     question: "Can abundance without space collapse a society — and can predation prevent it?",
     role: "Design, agent model, implementation",
     tech: ["JavaScript", "Agent-based model", "Canvas"],
@@ -84,9 +105,10 @@ const PROJECTS = [
     title: "Biosphere: Closed World",
     category: "simulations",
     portfolioStatus: "showcase",
+    visibility: "public",
     treatment: "scope",
     year: "2026",
-    summary: "Eight people, seven biomes and one atmosphere with nowhere to go, sealed inside three acres of glass. Built around the documented anomaly of the first Biosphere 2 closure: oxygen falling steadily while carbon dioxide failed to rise to match. The mechanic is causal diagnosis, not resource accumulation.",
+    summary: "Eight people, seven biomes, one atmosphere with nowhere to go. Built around the first closure's documented anomaly — oxygen fell while carbon dioxide failed to rise to match. Causal diagnosis, not resource accumulation.",
     question: "Why is oxygen disappearing when carbon dioxide is not rising to match?",
     role: "Design, systems model, implementation",
     tech: ["JavaScript", "Differential equations", "Carbon ledger"],
@@ -100,9 +122,10 @@ const PROJECTS = [
     title: "The Commons",
     category: "simulations",
     portfolioStatus: "showcase",
+    visibility: "public",
     treatment: "scope",
     year: "2026",
-    summary: "Everyone holds their own resources, but survival depends on a shared system nobody is obliged to maintain. The interesting question is not whether the society survived — it is what kind survived, and what survival cost it.",
+    summary: "Everyone holds their own resources; survival depends on a system nobody is obliged to maintain. The question is not whether the society survived but what kind did, and what that cost.",
     question: "Can a shared system nobody is obliged to maintain survive the incentive not to?",
     role: "Design, agent model, implementation",
     tech: ["JavaScript", "Public-goods game", "Agent-based model"],
@@ -117,9 +140,10 @@ const PROJECTS = [
     title: "Sentinel: The Oversight Experiment",
     category: "simulations",
     portfolioStatus: "prototype",
+    visibility: "public",
     treatment: "scope",
     year: "2026",
-    summary: "A spin-off built around the two metrics its parent simulation could not move. Detection delay and governance quality behaved as white noise there — both structurally severed from anything the experiment varied. This one measures the noise floor instead of assuming it.",
+    summary: "Built around the two metrics its parent simulation could not move. Detection delay and governance quality behaved there as white noise. This one measures the noise floor instead of assuming it.",
     question: "Why did adding more oversight change nothing?",
     role: "Design, sensitivity analysis, implementation",
     tech: ["JavaScript", "Global sensitivity analysis", "Statistical model"],
@@ -132,9 +156,10 @@ const PROJECTS = [
     title: "Inside the Atom",
     category: "simulations",
     portfolioStatus: "prototype",
+    visibility: "public",
     treatment: "scope",
     year: "2026",
-    summary: "Fire alpha particles through thin foil and measure where they emerge. Most pass straight through. A rare few carry the evidence that changes the model — and you have to decide where it is worth spending exposures to find them.",
+    summary: "Fire alpha particles through thin foil and measure where they emerge. Most pass straight through; a rare few carry the evidence that changes the model — and exposures cost.",
     question: "Can the paths of scattered particles reveal structures too small to see?",
     role: "Design, physics model, implementation",
     tech: ["JavaScript", "Rutherford scattering", "Seeded trials"],
@@ -148,9 +173,10 @@ const PROJECTS = [
     title: "The Falling Charge",
     category: "simulations",
     portfolioStatus: "prototype",
+    visibility: "public",
     treatment: "scope",
     year: "2026",
-    summary: "Nothing in the apparatus shows you a charge. You measure how fast a droplet falls and how that changes under a field, and the elementary unit appears only as a spacing that keeps recurring. The accepted value stays sealed until you lock your analysis.",
+    summary: "Nothing here shows you a charge. You measure a droplet's fall, and the elementary unit appears only as a spacing that keeps recurring. The accepted value stays sealed until you lock your analysis.",
     question: "Can an invisible unit of charge be recovered from the motion of falling oil droplets?",
     role: "Design, measurement model, implementation",
     tech: ["JavaScript", "Blind analysis", "Brownian noise model"],
@@ -164,9 +190,10 @@ const PROJECTS = [
     title: "The Magnetic Ocean",
     category: "simulations",
     portfolioStatus: "prototype",
+    visibility: "public",
     treatment: "scope",
     year: "2026",
-    summary: "The stripes are not shown to you. They are buried in basalt beneath the ocean, and all you receive is a noisy magnetic trace collected behind a moving ship. Reconstruct the seafloor history that produced it, on a finite survey budget.",
+    summary: "The stripes are buried in basalt under the ocean. All you get is a noisy trace collected behind a moving ship. Reconstruct the seafloor history that produced it, on a finite budget.",
     question: "Can a noisy magnetic trace reveal the hidden motion and age of an ocean floor?",
     role: "Design, inference model, implementation",
     tech: ["JavaScript", "Signal inference", "Polarity timescale data"],
@@ -181,11 +208,12 @@ const PROJECTS = [
     title: "The Cognitive Civilization Experiment",
     category: "simulations",
     portfolioStatus: "research",
+    visibility: "public",
     featured: true,
     featuredNote: "Deepest apparatus",
     treatment: "scope",
     year: "2026",
-    summary: "Three societies of a hundred thousand people, five hundred years, the same disasters in each. A research instrument rather than a game — matched seeds, effect sizes fixed before the runs, and a model built so that no single number is allowed to explain a person.",
+    summary: "Three societies of a hundred thousand, five hundred years, the same disasters in each. Matched seeds, effect sizes fixed before the runs, and no single number allowed to explain a person.",
     question: "Does the rule a society uses to allocate work, housing and office change how long its people live?",
     role: "Design, experimental protocol, model, implementation",
     tech: ["JavaScript", "Agent-based model", "Matched-seed design", "Checksummed runs"],
@@ -208,12 +236,13 @@ const PROJECTS = [
        thing "showcase" would be exactly the overclaim this registry
        exists to prevent. */
     portfolioStatus: "prototype",
+    visibility: "public",
     featured: true,
     featuredNote: "Most complete system",
     treatment: "diagram",
     diagramStages: 4,
     year: "2026",
-    summary: "Four delivery surfaces — CV core, HTTP API, browser client and desktop build — over one idea: recover a printable profile from a photograph. The desktop path thresholds, traces and extrudes a real silhouette. The hosted path validates licences and returns a placeholder mesh; the bitting extraction is not finished, and the code says so.",
+    summary: "Four surfaces — CV core, HTTP API, browser client, desktop build — over one idea: recover a printable key profile from a photograph. The desktop path extrudes a real silhouette. Bitting extraction is unfinished, and the code says so.",
     question: "How much of a physical object can be recovered from a single ordinary photograph?",
     role: "Whole system — CV work, API, web client, desktop app, build & release, documentation",
     tech: ["Python", "FastAPI", "OpenCV", "NumPy", "JavaScript", "GitHub Actions", "Keygen"],
@@ -228,9 +257,10 @@ const PROJECTS = [
     title: "Cube Timer",
     category: "software",
     portfolioStatus: "prototype",
+    visibility: "public",
     treatment: "ui",
     year: "2025",
-    summary: "A speedcubing timer that runs entirely in the page — inspection countdown, solve history, session statistics, no account and no network. Built because every timer worth using is either a login wall or an app install.",
+    summary: "Inspection countdown, solve history, session statistics, entirely in the page. Built because every timer worth using is a login wall or an app install.",
     role: "Design and build",
     tech: ["HTML", "CSS", "JavaScript"],
     chips: ["Zero dependencies", "Offline", "Solve history"],
@@ -246,11 +276,12 @@ const PROJECTS = [
     title: "Facial Emotion Detection",
     category: "ai-ml",
     portfolioStatus: "showcase",
+    visibility: "public",
     featured: true,
     featuredNote: "Measured, not asserted",
     treatment: "viz",
     year: "2025",
-    summary: "Four-class facial expression recognition using VGG16 transfer learning. The interesting part is not the architecture, it is the reporting: the model lands in the low seventies and the write-up says so, alongside the class imbalance that partly explains it.",
+    summary: "Four-class facial expression recognition with VGG16 transfer learning. The interesting part is the reporting — the model lands in the low seventies, and the write-up says so.",
     question: "Which architecture balances accuracy against the cost of training it?",
     role: "Dataset analysis, architecture selection, training, evaluation, write-up",
     tech: ["Python", "TensorFlow/Keras", "VGG16", "Transfer learning", "MLflow-style run logging"],
@@ -272,9 +303,10 @@ const PROJECTS = [
     title: "SVHN Digit Recognition",
     category: "ai-ml",
     portfolioStatus: "showcase",
+    visibility: "public",
     treatment: "viz",
     year: "2025",
-    summary: "Four architectures on Street View House Numbers — two dense networks, two convolutional — compared not only on accuracy but on what each one cost to train. The deepest CNN was abandoned: it needed restarts for memory and made hyperparameter search impractical.",
+    summary: "Four architectures on Street View House Numbers, compared on accuracy and on what each cost to train. The deepest CNN was abandoned: restarts for memory, and hyperparameter search became impractical.",
     question: "Where does added depth stop paying for itself?",
     role: "Architecture comparison, training, analysis, write-up",
     tech: ["Python", "TensorFlow/Keras", "CNN", "Dropout", "Batch normalisation", "Leaky ReLU"],
@@ -289,9 +321,10 @@ const PROJECTS = [
     title: "Turbofan Remaining Useful Life",
     category: "ai-ml",
     portfolioStatus: "prototype",
+    visibility: "public",
     treatment: "viz",
     year: "2025",
-    summary: "Predictive maintenance on NASA's C-MAPSS FD001 engine degradation set, deliberately scoped as a minimal viable model. Ridge regression rather than a deep network, so that the sensor-drift analysis and the RUL labelling are the visible work.",
+    summary: "Predictive maintenance on NASA's C-MAPSS FD001 set, scoped deliberately small. Ridge regression rather than a deep network, so sensor-drift analysis and RUL labelling stay the visible work.",
     question: "How much of remaining useful life is recoverable from a linear model and honest preprocessing?",
     role: "Preprocessing, RUL labelling, EDA, modelling",
     tech: ["Python", "pandas", "scikit-learn", "Ridge regression", "Matplotlib", "Seaborn"],
@@ -304,9 +337,10 @@ const PROJECTS = [
     title: "Cube AI",
     category: "ai-ml",
     portfolioStatus: "workshop",
+    visibility: "public",
     treatment: "none",
     year: "2025",
-    summary: "A Rubik's Cube solver ported to Lua for the Roblox runtime, alongside the original Processing version. An exercise in moving a search algorithm between two very different environments.",
+    summary: "A Rubik's Cube solver moved from Processing to Lua for the Roblox runtime — a search algorithm carried between two very different environments.",
     role: "Lua port and cube-state module",
     tech: ["Lua", "Roblox", "Processing/Java", "BFS / DFS / heuristic search"],
     chips: ["Search algorithms", "Cross-runtime port"],
@@ -318,9 +352,10 @@ const PROJECTS = [
     title: "Chatbot Interaction Archive",
     category: "ai-ml",
     portfolioStatus: "workshop",
+    visibility: "public",
     treatment: "none",
     year: "2025",
-    summary: "A small dataset and processing script for archiving and analysing chatbot conversation records in a structured, plain-CSV format. Data plumbing rather than modelling.",
+    summary: "A dataset and processing script for archiving chatbot conversation records as plain CSV. Data plumbing rather than modelling.",
     role: "Schema, dataset, processing script",
     tech: ["Python", "pandas", "CSV"],
     chips: ["Dataset + script", "No model"],
@@ -336,12 +371,13 @@ const PROJECTS = [
     title: "Multimodal Archaeological Site Detection",
     category: "research",
     portfolioStatus: "research",
+    visibility: "public",
     featured: true,
     featuredNote: "Unfinished, on purpose, in writing",
     treatment: "diagram",
     diagramTiered: true,
     year: "2026",
-    summary: "A proposed three-tier pipeline for locating unrecorded archaeological sites: wide-area satellite scan, high-resolution boundary delineation, then multimodal characterisation. The architecture, configuration and model cards are built. The training loop is not, and the README says so in its first line.",
+    summary: "A proposed three-tier pipeline for finding unrecorded archaeological sites: wide-area scan, boundary delineation, characterisation. The architecture is built; the training loop is not, and the README says so in its first line.",
     question: "Could a staged detector triage satellite, LiDAR and archival text faster than survey alone — and how would you know?",
     role: "Architecture, configuration system, model cards, pipeline orchestration, documentation",
     tech: ["Python", "YOLOv8", "SegFormer", "Swin Transformer", "PyTorch", "MLflow", "GDAL/Rasterio", "YAML"],
@@ -372,9 +408,10 @@ const PROJECTS = [
     title: "Coastline Crane",
     category: "design",
     portfolioStatus: "showcase",
+    visibility: "public",
     treatment: "image",
     year: "2026",
-    summary: "Identity and a single-page site for an industrial crane repair and parts business. The brief was trust on first contact: an operator with a broken machine needs to know within seconds that this is a real company that answers the phone.",
+    summary: "Identity and a single-page site for an industrial crane repair business. The brief was trust on first contact: an operator with a broken machine needs to know someone answers the phone.",
     role: "Identity, art direction, copy, build",
     tech: ["HTML", "CSS", "Responsive layout"],
     chips: ["Identity", "Single-page site", "Industrial / municipal"],
@@ -388,9 +425,10 @@ const PROJECTS = [
     title: "Fine Jewelry Visualization",
     category: "design",
     portfolioStatus: "showcase",
+    visibility: "public",
     treatment: "image",
     year: "2024–25",
-    summary: "Product and editorial imagery for fine and estate jewellery — bridal, pendants, drop earrings, turquoise collections, full sets worn on figure. The constraint is that a stone has to read correctly: facet, metal and setting all have to survive the crop.",
+    summary: "Product and editorial imagery for fine and estate jewellery. The constraint is that a stone has to read correctly — facet, metal and setting all have to survive the crop.",
     role: "Art direction, visualization, post-production",
     tech: ["3D visualization", "Compositing", "Retouching"],
     chips: ["Product & editorial", "Estate & bridal", "Stone-first framing"],
@@ -410,9 +448,10 @@ const PROJECTS = [
     title: "Virtual Staging",
     category: "design",
     portfolioStatus: "showcase",
+    visibility: "public",
     treatment: "image",
     year: "2024–25",
-    summary: "Virtual staging for residential listings across Louisiana and Texas — vacant and dated interiors furnished digitally, and exteriors refreshed. Each property was staged in more than one direction so an agent could choose the read that matched the buyer.",
+    summary: "Virtual staging for listings across Louisiana and Texas, interiors and exteriors. Each property was staged more than one way, so an agent could pick the read that matched the buyer.",
     role: "Art direction, staging, compositing",
     tech: ["3D staging", "Compositing", "Photo restoration"],
     chips: ["Six properties", "Multiple treatments each", "Interior & exterior"],
@@ -432,13 +471,14 @@ const PROJECTS = [
     id: "brand-dna",
     title: "Studio brand sheet",
     category: "design",
-    /* Hidden after review. On inspection these are a one-page brand
+    /* Unlisted after review. On inspection these are a one-page brand
        guideline sheet for my own former studio positioning — logo, type
        specimen, palette swatches, tagline, brand values — not an
        identity study for a client, and generated largely by a
        brand-kit tool. It also advertises a positioning this site has
        retired. Recorded here so the decision is written down. */
-    portfolioStatus: "hidden",
+    portfolioStatus: "workshop",
+    visibility: "unlisted",
     year: "2025",
     summary: "A one-page brand guideline sheet for my own studio: logo lockup, type specimen, three-colour palette, tagline and brand values.",
     links: {}
@@ -452,9 +492,10 @@ const PROJECTS = [
     title: "Text Slot Machine",
     category: "workshop",
     portfolioStatus: "workshop",
+    visibility: "public",
     treatment: "none",
     year: "2025",
-    summary: "A terminal slot machine in Python — deposits, multi-line bets, payout logic, balance management. Kept because the repository holds three numbered versions of it, and the diff between them is a decent record of learning to structure a program.",
+    summary: "A terminal slot machine in Python. Kept because the repository holds three numbered versions of it, and the diff between them records learning to structure a program.",
     role: "Build",
     tech: ["Python"],
     chips: ["Three versioned iterations", "Terminal"],
@@ -465,9 +506,10 @@ const PROJECTS = [
     title: "CafeIQ",
     category: "workshop",
     portfolioStatus: "workshop",
+    visibility: "public",
     treatment: "none",
     year: "2025",
-    summary: "An early scraper for collecting menu, review and trend data on local cafés. One module, unfinished, listed here rather than dressed up as a product.",
+    summary: "An early scraper for café menu and review data. One module, unfinished, listed rather than dressed up as a product.",
     role: "Build",
     tech: ["Python", "Web scraping"],
     chips: ["Single module", "Unfinished"],
@@ -478,9 +520,10 @@ const PROJECTS = [
     title: "Orbital",
     category: "workshop",
     portfolioStatus: "workshop",
+    visibility: "public",
     treatment: "diagram",
     year: "2026",
-    summary: "The design system behind the Simulations atlas, and now behind this portfolio. Two complete themes rather than a palette and its inverse — a 1974 field manual and a 3am phosphor console — plus a catalogue schema whose evidence field makes overclaiming visibly awkward.",
+    summary: "The design system behind the Simulations atlas, and now this portfolio. Two authored themes rather than a palette and its inverse, plus a catalogue schema whose evidence field makes overclaiming awkward.",
     role: "Design and implementation",
     tech: ["CSS custom properties", "Design tokens", "Progressive enhancement"],
     chips: ["Two authored themes", "Token-driven worlds", "Evidence badges"],
@@ -496,9 +539,10 @@ const PROJECTS = [
     title: "Studio Royale",
     category: "games",
     portfolioStatus: "workshop",
+    visibility: "public",
     treatment: "none",
     year: "2025",
-    summary: "A filmmaking sandbox for Roblox — scene creator, camera rig, script and timeline editors — scoped to an alpha feature set. This is a design document, not a build: the systems are specified and the release checklist exists, but nothing has been implemented.",
+    summary: "A filmmaking sandbox for Roblox — scene creator, camera rig, timeline editor — scoped to an alpha feature set. A design document, not a build: the systems are specified, nothing is implemented.",
     role: "Game design, systems specification, scope definition",
     tech: ["Roblox", "Lua"],
     chips: ["Design document", "Not implemented", "Alpha scope defined"],
@@ -512,7 +556,8 @@ const PROJECTS = [
     id: "admin-training",
     title: "Admin Training Programme",
     category: "workshop",
-    portfolioStatus: "hidden",
+    portfolioStatus: "workshop",
+    visibility: "unlisted",
     summary: "Anonymised internal administrative training material. Public on GitHub, but organisational rather than technical, and the anonymisation deserves a second read before it is surfaced on a portfolio.",
     links: { source: GH + "admin-training" }
   },
@@ -520,7 +565,8 @@ const PROJECTS = [
     id: "legacy-portfolio",
     title: "Portfolio (planning repository)",
     category: "workshop",
-    portfolioStatus: "hidden",
+    portfolioStatus: "workshop",
+    visibility: "unlisted",
     summary: "An outline of repositories that might be created, written in the second person. A planning document, superseded by this site. Kept in git history; not linked.",
     links: { source: GH + "Portfolio" }
   }
@@ -528,10 +574,36 @@ const PROJECTS = [
 
 /* ---------------------------------------------------------------------
    SELECTED WORK — the homepage set, in display order.
-   A curatorial decision, not a sort. Eight projects chosen to show the
-   range and the throughline: three instruments, two models, one system,
-   one research proposal, one visual piece. Deliberately not "the eight
-   most recent commits".
+   ---------------------------------------------------------------------
+   A curatorial decision, not a sort, and deliberately not "the nine most
+   recent commits". Nothing here is chosen automatically; changing this
+   list is the only way to change the homepage.
+
+   WHY THESE NINE
+     Three instruments   flask, universe-25, cce — the largest body of
+                         work, and the clearest statement of method.
+     Two models          facial-emotion-detection, svhn — the numbers are
+                         reported with what they cost and what they miss.
+     One system          key-to-stl — the only project shown across four
+                         delivery surfaces.
+     One research piece  multimodal-archaeology — proposed, not claimed;
+                         it is here precisely because it says so.
+     Two visual pieces   jewelry-visualization for craft, coastline-crane
+                         for a client-facing build carried end to end —
+                         identity, copy and responsive front-end. Without
+                         it the set shows no commercial delivery at all.
+
+   WHAT IS DELIBERATELY ABSENT
+     Games               nothing playable exists yet. Studio Royale is a
+                         design document, and a homepage slot would imply
+                         otherwise. It enters when something runs.
+     Workshop            by definition too small for this set.
+     cube-timer,         both are real and both are linked from their
+     orbital-design-     wings; neither adds range the nine do not
+     system              already cover.
+
+   Balance is checked against the wings, not enforced. Strong research is
+   never dropped to make the category histogram look even.
    ------------------------------------------------------------------ */
 const SELECTED = [
   "flask",
@@ -541,7 +613,8 @@ const SELECTED = [
   "universe-25",
   "cce",
   "svhn-digit-recognition",
-  "jewelry-visualization"
+  "jewelry-visualization",
+  "coastline-crane"
 ];
 
 /* ---------------------------------------------------------------------

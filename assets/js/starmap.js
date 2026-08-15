@@ -4,17 +4,20 @@
    Draws the site as one figure, entirely from data/projects.js:
 
      core            the portfolio root
-     site pages      About, Credentials, Archive — small satellites
+     site pages      About and Credentials — small satellites
      disciplines     one node per wing, on a ring around the core
      stars           one per curated project, fanned out from its wing
      offsite marks   dashed spurs to anything that leaves this site
 
    Nothing is hardcoded except the geometry. Add a project to the
-   registry and a star appears; set it to "hidden" and the star goes.
+   registry and a star appears; set its visibility to "unlisted" and the
+   star goes.
 
-   The same content is rendered as a nested list by index(), which is
-   what a screen reader or a visitor without JavaScript relies on. The
-   figure is the second view, not the only one.
+   The same content sits on the page as a static nested list, written
+   into map/index.html by tools/sync-static.js. That list is what a
+   screen reader and a visitor without JavaScript rely on, so it is
+   deliberately NOT generated here — this file draws the figure and
+   nothing else. The figure is the second view, not the only one.
    ===================================================================== */
 (function () {
   "use strict";
@@ -88,9 +91,8 @@
   }
 
   var SITE_PAGES = [
-    { href: "/about/", label: "About", deg: 90 },
-    { href: "/about/credentials/", label: "Credentials", deg: 141 },
-    { href: "/archive/", label: "Archive", deg: 39 }
+    { href: "/about/", label: "About", deg: 66 },
+    { href: "/about/credentials/", label: "Credentials", deg: 114 }
   ];
 
   /* ------------------------------------------------------------------
@@ -303,45 +305,5 @@
     } catch (e) { /* no layout available; the square default still works */ }
   }
 
-  /* ------------------------------------------------------------------
-     THE SAME MAP, AS A LIST
-     ------------------------------------------------------------------ */
-  var LINK_LABEL = {
-    live: "Live", methods: "Methods", source: "Source",
-    docs: "Docs", notebook: "Notebook", upstream: "Upstream"
-  };
-
-  function index(selector) {
-    var host = document.querySelector(selector);
-    if (!host) return;
-    var CATS = (window.CATEGORIES || []).filter(function (c) { return c.nav !== false; });
-    var esc = CC.esc || function (s) { return String(s == null ? "" : s); };
-
-    /* Appended, not assigned: the host already carries the site's standing
-       pages as plain HTML, so those survive even if this never runs. */
-    host.insertAdjacentHTML("beforeend", CATS.map(function (c) {
-      var list = projects(c.id);
-      return '<li style="--sm-accent: var(' + c.accent + ')">' +
-        '<h3><a href="' + U(catPath(c)) + '">' + esc(c.name) + "</a></h3>" +
-        "<ul>" + list.map(function (p) {
-          var tgt = target(p);
-          var links = Object.keys(p.links || {}).map(function (k) {
-            var href = p.links[k];
-            if (!href) return "";
-            return '<a href="' + esc(href) + '"' +
-                   (isOffsite(href) ? ' rel="noopener"' : "") + ">" +
-                   esc(LINK_LABEL[k] || k) + "</a>";
-          }).filter(Boolean).join("");
-          return "<li>" +
-            '<span class="sm-index__title">' +
-              (tgt ? '<a href="' + esc(tgt.href) + '">' + esc(p.title) + "</a>" : esc(p.title)) +
-            "</span>" +
-            (links ? '<span class="sm-index__links">' + links + "</span>" : "") +
-          "</li>";
-        }).join("") + "</ul>" +
-      "</li>";
-    }).join(""));
-  }
-
-  window.CCStarMap = { map: map, index: index };
+  window.CCStarMap = { map: map };
 })();
