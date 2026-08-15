@@ -34,7 +34,16 @@ function fail(group, message) { problems.push({ group, message }); }
 function ok() { checks++; }
 function note(message) { notes.push(message); }
 
-/* ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------
+   WHAT COUNTS AS "THE SITE"
+   ---------------------------------------------------------------------
+   Only tracked files. GitHub Pages publishes the committed tree, so an
+   untracked scratch directory sitting in the working copy is not part of
+   the site and must not be able to fail this — nor to hide a real problem
+   in the noise. Falling back to a filesystem walk keeps the validator
+   usable outside a git checkout, e.g. from an extracted archive.
+   ------------------------------------------------------------------ */
 function walk(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.name === ".git" || entry.name === "node_modules") continue;
@@ -44,8 +53,19 @@ function walk(dir, out = []) {
   }
   return out;
 }
+function trackedFiles() {
+  try {
+    return execFileSync("git", ["ls-files", "-z"], { cwd: ROOT, encoding: "utf8" })
+      .split("\0").filter(Boolean).map((f) => path.join(ROOT, f))
+      .filter((f) => fs.existsSync(f));
+  } catch (e) {
+    return null;
+  }
+}
 const rel = (f) => path.relative(ROOT, f).split(path.sep).join("/");
-const allFiles = walk(ROOT);
+const tracked = trackedFiles();
+const allFiles = tracked && tracked.length ? tracked : walk(ROOT);
+if (!tracked) note("git is unavailable — validating every file on disk rather than tracked files only");
 const htmlFiles = allFiles.filter((f) => f.endsWith(".html") && !rel(f).startsWith("tools/"));
 const exists = (p) => fs.existsSync(path.join(ROOT, p.replace(/^\//, "")));
 
