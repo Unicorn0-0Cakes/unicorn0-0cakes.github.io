@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OG card source — 1200 × 630</title>
+<!--
+  =====================================================================
+  CC / PORTFOLIO — THE SHARE CARD, AS A PAGE
+  ---------------------------------------------------------------------
+  This is the source of assets/og-card.png. It is a page rather than an
+  image file so that it uses the site's own tokens and typefaces: change
+  a colour in tokens.css and this changes with it.
+
+  TO REGENERATE
+    Open this file in a browser, set the window to 1200 × 630, and
+    screenshot it — or shoot it headless:
+
+      npx playwright screenshot --viewport-size=1200,630 \
+        tools/og-card.html assets/og-card.png
+
+  The card is deliberately mono-set. IBM Plex Mono is the site's chrome
+  face — the nav, the kickers, the stamps — so a mono card reads as this
+  portfolio rather than as a generic social banner, and it degrades to a
+  sane fallback anywhere the webfont does not load.
+  =====================================================================
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<style>
+  html, body { margin: 0; padding: 0; }
+  body { width: 1200px; height: 630px; overflow: hidden; }
+
+  .card {
+    width: 1200px; height: 630px; box-sizing: border-box;
+    position: relative; display: grid;
+    grid-template-columns: 1fr 470px; align-items: center;
+    gap: 48px; padding: 74px 78px;
+    background: var(--rf-bg);
+    background-image: var(--rf-texture), var(--rf-wash);
+    color: var(--rf-ink);
+    font-family: "IBM Plex Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+  }
+  /* The rule that runs under the wordmark on every page of the site. */
+  .card::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+    height: 10px; background: var(--rf-orange);
+  }
+
+  .mark {
+    font-size: 22px; font-weight: 600; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--rf-muted);
+    display: flex; align-items: baseline; gap: 10px; margin-bottom: 46px;
+  }
+  .mark em { font-style: normal; color: var(--rf-ink); font-size: 27px; letter-spacing: .1em; }
+  .mark .slash { color: var(--rf-orange); }
+
+  h1 {
+    margin: 0 0 26px;
+    font-size: 78px; line-height: .98; font-weight: 600;
+    letter-spacing: -.02em; text-transform: uppercase;
+  }
+  .disciplines {
+    margin: 0 0 30px; font-size: 19px; line-height: 1.75;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--rf-ink-dim);
+  }
+  .disciplines b { color: var(--rf-orange); font-weight: 600; }
+  .line {
+    margin: 0; font-size: 23px; line-height: 1.42; letter-spacing: -.005em;
+    color: var(--rf-ink); max-width: 30ch; text-transform: none;
+  }
+  .url {
+    position: absolute; left: 78px; bottom: 46px;
+    font-size: 18px; letter-spacing: .1em; color: var(--rf-muted);
+  }
+  .orbit { width: 470px; height: 470px; display: block; }
+  .orbit .lbl {
+    font-size: 8px; letter-spacing: .1em; text-transform: uppercase;
+    fill: var(--rf-muted); font-family: inherit;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div>
+    <p class="mark"><em>CC</em><span class="slash">/</span>Portfolio</p>
+    <h1>Candice<br>Cantrelle</h1>
+    <p class="disciplines">Software · AI / ML<br><b>Scientific simulation</b> · Systems design</p>
+    <p class="line">The medium changes.<br>The systems thinking does not.</p>
+    <p class="url">unicorn0-0cakes.github.io</p>
+  </div>
+
+  <!-- The same figure the homepage carries: six disciplines, one centre. -->
+  <svg class="orbit" viewBox="0 0 260 260" aria-hidden="true">
+    <g fill="none" stroke="var(--rf-line)" stroke-width=".8">
+      <circle cx="130" cy="130" r="40"/>
+      <circle cx="130" cy="130" r="52"/>
+      <circle cx="130" cy="130" r="70"/>
+      <circle cx="130" cy="130" r="88"/>
+      <circle cx="130" cy="130" r="104"/>
+      <circle cx="130" cy="130" r="118"/>
+    </g>
+    <g stroke-width="2.2" fill="none" stroke-linecap="round">
+      <path d="M130 26a104 104 0 0 1 90 52" stroke="var(--rf-orange)"/>
+      <path d="M130 42a88 88 0 0 0-84 62" stroke="var(--rf-indigo)"/>
+      <path d="M130 60a70 70 0 0 1 62 38" stroke="var(--rf-teal)"/>
+      <path d="M130 78a52 52 0 0 0-48 32" stroke="var(--rf-violet)"/>
+      <path d="M130 12a118 118 0 0 1 104 62" stroke="var(--rf-oxide)"/>
+      <path d="M130 90a40 40 0 0 1 36 21" stroke="var(--rf-gold)"/>
+    </g>
+    <g fill="var(--rf-ink)">
+      <circle cx="220" cy="78" r="4.6" fill="var(--rf-orange)"/>
+      <circle cx="46" cy="104" r="4" fill="var(--rf-indigo)"/>
+      <circle cx="192" cy="98" r="3.6" fill="var(--rf-teal)"/>
+      <circle cx="82" cy="110" r="3.4" fill="var(--rf-violet)"/>
+      <circle cx="234" cy="74" r="4.2" fill="var(--rf-oxide)"/>
+      <circle cx="166" cy="111" r="3.2" fill="var(--rf-gold)"/>
+    </g>
+    <circle cx="130" cy="130" r="27" fill="var(--rf-panel)" stroke="var(--rf-ink)" stroke-width="1.4"/>
+    <text class="lbl" x="130" y="133" text-anchor="middle" style="fill:var(--rf-ink)">SYSTEMS</text>
+  </svg>
+</div>
+</body>
+</html>
