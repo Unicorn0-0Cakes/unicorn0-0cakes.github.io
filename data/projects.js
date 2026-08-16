@@ -43,9 +43,10 @@
      A piece of work does not stop being a prototype because it is
      unlisted, and "unlisted" was never a status a visitor should read.
 
-   treatment        — which card plate is used. diagram | scope | ui |
-                      art | image | none. Purely visual; does not affect
-                      the metadata structure.
+   treatment        — which card plate is used. diagram | scope | viz |
+                      ui | image | flow | lanes | territory | none.
+                      Purely visual; does not affect the metadata
+                      structure.
 
    A NOTE ON NUMBERS
      No metric appears in this file unless it was read out of the
@@ -252,18 +253,69 @@ const PROJECTS = [
     linkNote: "No public demo: the hosted service is licence-gated, and the hosted conversion path is not finished."
   },
   {
-    id: "cube-timer",
-    plateCap: "Runs offline",
-    title: "Cube Timer",
+    id: "bayou-vendor-records",
+    plateCap: "Four-lane attention model",
+    title: "Bayou Vendor Records",
     category: "software",
     portfolioStatus: "prototype",
     visibility: "public",
+    treatment: "lanes",
+    year: "2026",
+    summary: "A vendor-record system for property managers whose sharpest design decision is a refusal. It records that a document arrived and the date given for it; it will not say whether the document is sufficient — and the field names are written so nobody can later read it as though it did.",
+    question: "How do you build a compliance-adjacent tool that is useful without pretending to be the compliance decision?",
+    role: "Product concept, record-state model, workflow architecture, boundary design, UX, copy, commercial offer, deployment",
+    tech: ["Polsia", "Records model", "Workflow design"],
+    techNote: "Built and directed on an agentic development platform (Polsia). The repository is private and the implementation stack was not independently verified, so no framework or library is named here or on the case study.",
+    chips: ["Receipt status, not sufficiency", "Four-lane Weekly Rundown", "Boundary gate on intake"],
+    metricsNote: "Pilot stage. Every figure on the live product is composed sample data and is labelled as such there. No adoption, retention or time-saved figure is recorded, because none has been measured.",
+    caseStudy: "/software/bayou-vendor-records/",
+    links: { live: "https://bayou-vendor-records.polsia.app" },
+    linkNote: "Live pilot only. The repository is private and is deliberately not named in this public file."
+  },
+  {
+    id: "territoryone",
+    plateCap: "One contractor per ZIP",
+    title: "TerritoryOne",
+    category: "software",
+    portfolioStatus: "prototype",
+    visibility: "public",
+    treatment: "territory",
+    year: "2026",
+    summary: "A territory-routing prototype: homeowner requests are validated, checked against recent duplicates, resolved to a ZIP-based territory and assigned to the one contractor who owns it. Exclusivity as an inventory constraint rather than a slogan. The live site runs on synthetic demo data and says so.",
+    question: "If a lead can be sold to five contractors, what exactly did any of them buy?",
+    role: "Product concept, system rules, territory model, workflow architecture, UX direction, commercial model, deployment",
+    tech: ["Polsia", "Routing rules", "Territory model"],
+    techNote: "Built and directed on an agentic development platform (Polsia). No public repository exists and the implementation stack was not independently verified, so no framework or library is named here or on the case study.",
+    chips: ["One contractor per ZIP range", "Duplicate check before handoff", "Synthetic demo data"],
+    metricsNote: "Demonstration only. No paying contractors, live traffic, lead volume or conversion figure exists to report, and none is implied.",
+    caseStudy: "/software/territoryone/",
+    links: { live: "https://territoryone.polsia.app" },
+    linkNote: "Working demo only. No public repository exists, so no source link is offered — a live deployment is not evidence that source should be linked."
+  },
+  {
+    id: "cube-timer",
+    plateCap: "Runs offline",
+    title: "CUBE//TIMER",
+    category: "software",
+    portfolioStatus: "showcase",
+    visibility: "public",
     treatment: "ui",
-    year: "2025",
-    summary: "Inspection countdown, solve history, session statistics, entirely in the page. Built because every timer worth using is a login wall or an app install.",
+    year: "2026",
+    summary: "A terminal-style speedcubing console: five puzzles, WCA inspection with its +2 and DNF rules, full averages, and a year of practice drawn as a matrix. Everything is in the page \u2014 no account, no network, no dependency.",
+    question: "What does a practice tool look like when the practice history is the point, not the stopwatch?",
     role: "Design and build",
-    tech: ["HTML", "CSS", "JavaScript"],
-    chips: ["Zero dependencies", "Offline", "Solve history"],
+    tech: ["HTML", "CSS", "JavaScript", "Web Audio", "localStorage"],
+    chips: ["Zero dependencies", "Offline", "Five puzzles", "365-day matrix"],
+    /* Every number here was counted out of the source, not estimated.
+       Scrambles are random-MOVE with redundant-turn filtering, which is the
+       right tool for practice and is NOT the random-state generation the WCA
+       requires for competition \u2014 so the description says "WCA inspection",
+       which it implements exactly, and never "WCA scrambles". */
+    metrics: [
+      { k: "Puzzles scrambled", v: "5" },
+      { k: "Runtime dependencies", v: "0" }
+    ],
+    metricsNote: "Counted from data/projects.js's sibling source at projects/cube-timer/. Five scramble generators (3x3, 2x2, 4x4, Pyraminx, Skewb); no library is loaded at runtime.",
     links: { live: "/projects/cube-timer/", source: GH + "unicorn0-0cakes.github.io/tree/main/projects/cube-timer" }
   },
 
@@ -403,6 +455,32 @@ const PROJECTS = [
   /* ═══════════════════════════════════════════════════════════════════
      DESIGN
      ═══════════════════════════════════════════════════════════════ */
+  {
+    id: "lantern-reply",
+    plateCap: "Intake → approval → delivery",
+    title: "Lantern Reply",
+    category: "design",
+    /* Showcase, and the only self-created commercial product in this
+       wing. Filed under Design because the designed artefact is the
+       service — what is asked, in what order, what is held back for
+       approval, and which claims are ruled out — not the website. */
+    portfolioStatus: "showcase",
+    visibility: "public",
+    featured: true,
+    featuredNote: "A product, not a client brief",
+    treatment: "flow",
+    year: "2026",
+    summary: "A local-visibility service for independent HVAC companies, built as a workflow rather than a promise: four intake fields, a manual review across five fixed dimensions, exactly three prioritised actions — and a monthly engagement in which nothing is published until the owner has approved the wording.",
+    question: "What does a small contractor actually buy when they buy help with Google?",
+    role: "Product concept, service architecture, workflow, UX, copy system, positioning, commercial offer, deployment",
+    tech: ["Polsia", "Service design", "Product strategy"],
+    techNote: "Built and directed on an agentic development platform (Polsia). The repository is private and the implementation stack was not independently verified, so no framework or library is named here or on the case study.",
+    chips: ["Free tier stops at three actions", "Approval before publication", "Refusal list published"],
+    metricsNote: "No ranking, lead, revenue or customer figure appears anywhere for this project. The product tells its own customers it does not guarantee them; the portfolio does not claim them on its behalf.",
+    caseStudy: "/design/lantern-reply/",
+    links: { live: "https://www.lanternreply.com" },
+    linkNote: "Live product only. The repository is private and is deliberately not named in this public file."
+  },
   {
     id: "coastline-crane",
     title: "Coastline Crane",
@@ -582,22 +660,40 @@ const PROJECTS = [
    WHY THESE NINE
      Three instruments   flask, universe-25, cce — the largest body of
                          work, and the clearest statement of method.
-     Two models          facial-emotion-detection, svhn — the numbers are
-                         reported with what they cost and what they miss.
+     One model           facial-emotion-detection — the numbers are
+                         reported with what they cost and what they miss,
+                         and they were read out of stored notebook output.
      One system          key-to-stl — the only project shown across four
                          delivery surfaces.
      One research piece  multimodal-archaeology — proposed, not claimed;
                          it is here precisely because it says so.
+     One product         lantern-reply — a service conceived, scoped,
+                         priced and deployed here rather than briefed by a
+                         client. It is the only evidence on this page of
+                         commercial execution: an offer, a workflow, a
+                         boundary and a live domain.
      Two visual pieces   jewelry-visualization for craft, coastline-crane
                          for a client-facing build carried end to end —
-                         identity, copy and responsive front-end. Without
-                         it the set shows no commercial delivery at all.
+                         identity, copy and responsive front-end.
+
+   WHAT CHANGED, AND WHY
+     svhn-digit-recognition left this set when lantern-reply joined it, to
+     hold the list at nine. It is the more redundant of the two AI/ML
+     entries: both are notebooks from the same repository making the same
+     methodological point, and SVHN is the one whose headline accuracy is
+     quoted from the author's own write-up rather than re-verified from
+     stored output. It remains public and unchanged in the AI + ML wing.
 
    WHAT IS DELIBERATELY ABSENT
      Games               nothing playable exists yet. Studio Royale is a
                          design document, and a homepage slot would imply
                          otherwise. It enters when something runs.
      Workshop            by definition too small for this set.
+     bayou-vendor-       both are prototypes running on labelled sample or
+     records,            synthetic data. They belong in the Software wing,
+     territoryone        where the status badge is read alongside them. A
+                         homepage slot each would present three products
+                         as equally mature when only one of them is.
      cube-timer,         both are real and both are linked from their
      orbital-design-     wings; neither adds range the nine do not
      system              already cover.
@@ -608,11 +704,11 @@ const PROJECTS = [
 const SELECTED = [
   "flask",
   "key-to-stl",
+  "lantern-reply",
   "multimodal-archaeology",
   "facial-emotion-detection",
   "universe-25",
   "cce",
-  "svhn-digit-recognition",
   "jewelry-visualization",
   "coastline-crane"
 ];
@@ -646,7 +742,7 @@ const CATEGORIES = [
     desc: "Mechanics, interaction and art direction as one design problem." },
   { id: "design",      name: "Design",       nav: true,  accent: "--rf-gold",
     tagline: "Identity, interface and image",
-    desc: "Visual systems and client work — jewellery, property, and industrial identity." },
+    desc: "Visual systems, client work, and one product of my own — jewellery, property, industrial identity, and a service designed end to end." },
   { id: "workshop",    name: "Workshop",     nav: true,  accent: "--rf-moss",
     tagline: "Small things, kept honest",
     desc: "One-day experiments, sketches and utilities. Shown without a case study, because they do not need one." }

@@ -100,6 +100,9 @@
     if (t === "diagram") return '<div class="plate-area plate-area--diagram">' + diagramArt(p) + cap + "</div>";
     if (t === "viz")     return '<div class="plate-area plate-area--diagram">' + vizArt(p, index) + cap + "</div>";
     if (t === "ui")      return '<div class="plate-area plate-area--ui">' + uiArt(p) + cap + "</div>";
+    if (t === "flow")      return '<div class="plate-area plate-area--diagram">' + flowArt(p) + cap + "</div>";
+    if (t === "lanes")     return '<div class="plate-area plate-area--diagram">' + lanesArt(p) + cap + "</div>";
+    if (t === "territory") return '<div class="plate-area plate-area--diagram">' + territoryArt(p) + cap + "</div>";
     return "";
   }
 
@@ -286,6 +289,116 @@
     return open + 'Abstract class distribution">' + axes +
       '<path d="M12 40H190M12 66H190" stroke="var(--rf-line)" stroke-width=".5" stroke-dasharray="2 3"/>' +
       bars + "</svg>";
+  }
+
+  /* ------------------------------------------------------------------
+     THREE SYSTEM FIGURES, one per product.
+     ---------------------------------------------------------------------
+     The three self-created products are not three websites, and three
+     copies of the generic pipeline plate would say that they were. Each
+     draws the shape of its own system instead: a service pipeline with an
+     approval gate, a four-lane attention board, and a territory grid with
+     exactly one cell owned. All three are fixed drawings rather than
+     seeded ones — they are diagrams of a specific thing, so there is
+     nothing for randomness to do.
+     ------------------------------------------------------------------ */
+
+  function marker(id, suffix, colour) {
+    return "<marker id='fa" + suffix + "-" + esc(id) + "' viewBox='0 0 8 8' refX='6' refY='4' " +
+      "markerWidth='5' markerHeight='5' orient='auto'>" +
+      "<path d='M0 1 L6 4 L0 7 z' fill='" + colour + "'/></marker>";
+  }
+  function arrowDefs(id) {
+    return "<defs>" + marker(id, "a", "var(--w-accent)") +
+                      marker(id, "w", "var(--rf-watch)") + "</defs>";
+  }
+
+  /* FLOW — a service pipeline whose fourth stage is a gate everything
+     has to pass through, with the held-for-approval return drawn as the
+     dashed arc back into the previous stage. */
+  function flowArt(p) {
+    var A = "var(--w-accent)", W = "var(--rf-watch)";
+    var boxes = [22, 66, 110, 186], out = "";
+    for (var i = 0; i < boxes.length; i++) {
+      var x = boxes[i] - 15;
+      out += '<rect x="' + x + '" y="44" width="30" height="22" rx="2" fill="var(--rf-panel)" ' +
+             'stroke="var(--rf-ink)" stroke-width="1.1"/>' +
+             '<rect x="' + (x + 5) + '" y="50" width="' + (i === 3 ? 14 : 20) + '" height="2.2" fill="' + A + '" opacity=".85"/>' +
+             '<rect x="' + (x + 5) + '" y="56" width="' + (i === 3 ? 18 : 12) + '" height="1.8" fill="var(--rf-line)"/>';
+    }
+    /* the gate */
+    out += '<path d="M152 39 L165 55 L152 71 L139 55 Z" fill="var(--rf-panel)" stroke="' + W + '" stroke-width="1.6"/>' +
+           '<circle cx="152" cy="55" r="3" fill="' + W + '"/>';
+    /* forward arrows */
+    out += '<path d="M37 55h12" stroke="' + A + '" stroke-width="1.2" marker-end="url(#faa-' + esc(p.id) + ')"/>' +
+           '<path d="M81 55h12" stroke="' + A + '" stroke-width="1.2" marker-end="url(#faa-' + esc(p.id) + ')"/>' +
+           '<path d="M125 55h8" stroke="' + A + '" stroke-width="1.2" marker-end="url(#faa-' + esc(p.id) + ')"/>' +
+           '<path d="M167 55h2" stroke="' + A + '" stroke-width="1.2" marker-end="url(#faa-' + esc(p.id) + ')"/>';
+    /* held for approval: back to the drafting stage */
+    out += '<path d="M152 39 C152 16 110 16 110 40" stroke="' + W + '" stroke-width="1.1" ' +
+           'stroke-dasharray="3 2.5" fill="none" marker-end="url(#faw-' + esc(p.id) + ')" opacity=".9"/>';
+    return '<svg viewBox="0 0 200 110" role="img" aria-label="A four-stage service pipeline with an approval gate before the final stage, and a dashed return path from the gate back to the drafting stage">' +
+      arrowDefs(p.id) + out + "</svg>";
+  }
+
+  /* LANES — a weekly attention board. Four tracks, most of the volume
+     in the settled lane at the bottom and the short queue at the top:
+     the point of the model is that the list a person reads is small. */
+  function lanesArt(p) {
+    var LANES = [
+      { y: 16, n: 3, c: "var(--rf-action)" },
+      { y: 40, n: 2, c: "var(--rf-watch)" },
+      { y: 64, n: 4, c: "var(--rf-info)" },
+      { y: 88, n: 7, c: "var(--rf-ok)" }
+    ];
+    var out = "";
+    for (var i = 0; i < LANES.length; i++) {
+      var L = LANES[i];
+      out += '<rect x="26" y="' + (L.y - 7) + '" width="166" height="14" rx="2" ' +
+             'fill="var(--rf-panel)" stroke="var(--rf-line)" stroke-width="1"/>' +
+             '<rect x="8" y="' + (L.y - 7) + '" width="12" height="14" rx="1.5" fill="' + L.c + '" opacity=".9"/>';
+      for (var j = 0; j < L.n; j++) {
+        out += '<rect x="' + (32 + j * 15) + '" y="' + (L.y - 3.5) + '" width="11" height="7" rx="1" ' +
+               'fill="' + L.c + '" opacity="' + (i === 3 ? ".38" : ".8") + '"/>';
+      }
+    }
+    return '<svg viewBox="0 0 200 110" role="img" aria-label="Four horizontal lanes holding different numbers of records: a short queue needing attention at the top, and a longer settled lane at the bottom">' +
+      out + "</svg>";
+  }
+
+  /* TERRITORY — a grid of ZIP ranges in which exactly one is owned and
+     routed to a single contractor, and one inbound request is suppressed
+     before it gets there. */
+  function territoryArt(p) {
+    var A = "var(--w-accent)", D = "var(--rf-danger)";
+    var out = "", cols = 4, rows = 3, w = 26, h = 20, gx = 6, gy = 7, x0 = 12, y0 = 13;
+    var ownCol = 2, ownRow = 1;
+    for (var r = 0; r < rows; r++) {
+      for (var c = 0; c < cols; c++) {
+        var owned = (c === ownCol && r === ownRow);
+        var x = x0 + c * (w + gx), y = y0 + r * (h + gy);
+        out += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="2" ' +
+               'fill="' + (owned ? A : "var(--rf-panel)") + '" ' +
+               (owned ? 'opacity=".22" ' : "") +
+               'stroke="' + (owned ? A : "var(--rf-line)") + '" stroke-width="' + (owned ? 1.6 : 1) + '" ' +
+               (owned ? "" : 'stroke-dasharray="2.5 2.5" ') + "/>";
+        if (owned) {
+          out += '<rect x="' + (x + 6) + '" y="' + (y + 7) + '" width="14" height="2.4" fill="' + A + '"/>' +
+                 '<rect x="' + (x + 6) + '" y="' + (y + 12) + '" width="9" height="2" fill="' + A + '" opacity=".6"/>';
+        }
+      }
+    }
+    /* the one contractor the owned territory routes to */
+    var ox = x0 + ownCol * (w + gx) + w, oy = y0 + ownRow * (h + gy) + h / 2;
+    out += '<path d="M' + ox + " " + oy + "H" + (ox + 22) + '" stroke="' + A + '" stroke-width="1.4" ' +
+           'marker-end="url(#faa-' + esc(p.id) + ')"/>' +
+           '<circle cx="' + (ox + 32) + '" cy="' + oy + '" r="8" fill="var(--rf-panel)" stroke="' + A + '" stroke-width="1.6"/>' +
+           '<circle cx="' + (ox + 32) + '" cy="' + oy + '" r="3" fill="' + A + '"/>';
+    /* a duplicate, stopped before it is routed anywhere */
+    out += '<path d="M56 92 H92" stroke="' + D + '" stroke-width="1.1" stroke-dasharray="3 2.5" opacity=".85"/>' +
+           '<path d="M96 88 l7 7 M103 88 l-7 7" stroke="' + D + '" stroke-width="1.5" stroke-linecap="round"/>';
+    return '<svg viewBox="0 0 200 110" role="img" aria-label="A grid of ZIP ranges in which one cell is marked as owned and routed to a single contractor node, while a second inbound request is struck out before routing">' +
+      arrowDefs(p.id) + out + "</svg>";
   }
 
   function uiArt(p) {
