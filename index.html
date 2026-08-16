@@ -17,13 +17,13 @@
 <meta property="og:image" content="https://unicorn0-0cakes.github.io/assets/og-card.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Share card: the wordmark C C slash Portfolio, the name Candice Cantrelle set large, the disciplines Software, AI/ML, Scientific simulation and Systems design, the line “The medium changes. The systems thinking does not.”, and a six-ring orbit diagram centred on the word Systems.">
+<meta property="og:image:alt" content="Share card: the wordmark C C slash Portfolio, the name Candice Cantrelle set large, the disciplines Software, AI/ML, Scientific simulation and Systems design, the line “The medium changes. The systems thinking does not.”, and a seven-ring orbit diagram centred on the word Systems, one ring per discipline.">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Candice Cantrelle — Systems, Software, Simulation, Research, Design">
 <meta name="twitter:description" content="The medium changes. The systems thinking does not.">
 <meta name="twitter:image" content="https://unicorn0-0cakes.github.io/assets/og-card.png">
-<meta name="twitter:image:alt" content="Share card: the wordmark C C slash Portfolio, the name Candice Cantrelle set large, the disciplines Software, AI/ML, Scientific simulation and Systems design, the line “The medium changes. The systems thinking does not.”, and a six-ring orbit diagram centred on the word Systems.">
+<meta name="twitter:image:alt" content="Share card: the wordmark C C slash Portfolio, the name Candice Cantrelle set large, the disciplines Software, AI/ML, Scientific simulation and Systems design, the line “The medium changes. The systems thinking does not.”, and a seven-ring orbit diagram centred on the word Systems, one ring per discipline.">
 
 
 <!-- Structured data. Deliberately minimal: a name, the site, and two
@@ -122,14 +122,20 @@
   .orbit-link:focus-visible .orbit-link__cue { color: var(--w-accent); }
   .orbit-link:hover .orbit, .orbit-link:focus-visible .orbit { opacity: .92; }
 
-  /* The orbit plate. Six rings, one per discipline, drawn to the same
-     centre — the argument of the whole site, stated as a figure. */
+  /* The orbit plate. Seven rings, one per discipline, drawn to the same
+     centre — the argument of the whole site, stated as a figure. Ring
+     radius, arc colour and label all belong to the same wing, so the
+     figure says the same thing as the navigation. */
   .orbit { width: 100%; max-width: 300px; margin: 0 auto; display: block; }
   .orbit .ring { fill: none; stroke: var(--rf-line); stroke-width: 1; }
   .orbit .arc  { fill: none; stroke-width: 1.6; stroke-linecap: round; }
   .orbit .core { fill: var(--rf-panel); stroke: var(--rf-ink); stroke-width: 1.6; }
   .orbit .node { stroke: none; }
-  .orbit .lbl  { fill: var(--rf-muted); font-family: var(--rf-mono); font-size: 5.6px; letter-spacing: .16em; text-transform: uppercase; }
+  /* The arcs rotate, so one will eventually pass behind the label column.
+     Knocking the labels out of the background keeps them readable at every
+     point in the cycle rather than only at the moment of the screenshot. */
+  .orbit .lbl  { fill: var(--rf-muted); font-family: var(--rf-mono); font-size: 5.6px; letter-spacing: .16em; text-transform: uppercase;
+                 paint-order: stroke; stroke: var(--rf-bg); stroke-width: 2.6; stroke-linejoin: round; }
   .orbit .ctr  { fill: var(--rf-ink); font-family: var(--rf-mono); font-size: 6.4px; letter-spacing: .18em; text-transform: uppercase; }
   html[data-theme="night"] .orbit .arc, html[data-theme="night"] .orbit .node { filter: drop-shadow(0 0 4px currentColor); }
   .orbit .spin { transform-origin: 130px 130px; animation: orbit-spin 90s linear infinite; }
@@ -211,42 +217,46 @@
       <div>
         <a class="orbit-link" href="map/" aria-label="Open the star map: the whole site as one figure">
         <svg class="orbit" viewBox="0 0 260 260" role="img" aria-labelledby="orbit-t orbit-d">
-          <title id="orbit-t">Six disciplines on concentric orbits around one centre</title>
-          <desc id="orbit-d">A diagram: six rings of different radii share a single centre marked "systems", each carrying one discipline — simulation, machine learning, software, research, games and design.</desc>
+          <title id="orbit-t">Seven disciplines on concentric orbits around one centre</title>
+          <desc id="orbit-d">A diagram: seven rings of different radii share a single centre marked &quot;systems&quot;, each carrying one discipline &mdash; simulations, AI and machine learning, software, research, games, design and workshop. Each ring is drawn in that discipline&#39;s own colour.</desc>
 
-          <circle class="ring" cx="130" cy="130" r="34"/>
-          <circle class="ring" cx="130" cy="130" r="52"/>
-          <circle class="ring" cx="130" cy="130" r="70"/>
-          <circle class="ring" cx="130" cy="130" r="88"/>
-          <circle class="ring" cx="130" cy="130" r="106"/>
           <circle class="ring" cx="130" cy="130" r="122"/>
+          <circle class="ring" cx="130" cy="130" r="108"/>
+          <circle class="ring" cx="130" cy="130" r="94"/>
+          <circle class="ring" cx="130" cy="130" r="79"/>
+          <circle class="ring" cx="130" cy="130" r="64"/>
+          <circle class="ring" cx="130" cy="130" r="49"/>
+          <circle class="ring" cx="130" cy="130" r="34"/>
 
           <g class="spin">
-            <path class="arc" style="stroke:var(--rf-orange)" d="M130 24 A106 106 0 0 1 224 78"/>
-            <circle class="node" style="fill:var(--rf-orange)" cx="224" cy="78" r="3.6"/>
-            <path class="arc" style="stroke:var(--rf-teal)"   d="M130 60 A70 70 0 0 1 60 130"/>
-            <circle class="node" style="fill:var(--rf-teal)" cx="60" cy="130" r="3.2"/>
-            <path class="arc" style="stroke:var(--rf-gold)"   d="M130 96 A34 34 0 0 1 156 155"/>
-            <circle class="node" style="fill:var(--rf-gold)" cx="156" cy="155" r="2.8"/>
+            <path class="arc" style="stroke:var(--rf-orange)" d="M211.6 39.3 A122 122 0 0 1 220.7 211.6"/>
+            <circle class="node" style="fill:var(--rf-orange)" cx="220.7" cy="211.6" r="3.6"/>
+            <path class="arc" style="stroke:var(--rf-teal)" d="M207.9 77.4 A94 94 0 0 1 177 211.4"/>
+            <circle class="node" style="fill:var(--rf-teal)" cx="177" cy="211.4" r="3.2"/>
+            <path class="arc" style="stroke:var(--rf-oxide)" d="M177.6 87.2 A64 64 0 0 1 172.8 177.6"/>
+            <circle class="node" style="fill:var(--rf-oxide)" cx="172.8" cy="177.6" r="3.0"/>
+            <path class="arc" style="stroke:var(--rf-moss)" d="M160 114 A34 34 0 0 1 146 160"/>
+            <circle class="node" style="fill:var(--rf-moss)" cx="146" cy="160" r="2.8"/>
           </g>
           <g class="spin rev">
-            <path class="arc" style="stroke:var(--rf-indigo)" d="M130 42 A88 88 0 0 0 48 172"/>
-            <circle class="node" style="fill:var(--rf-indigo)" cx="48" cy="172" r="3.4"/>
-            <path class="arc" style="stroke:var(--rf-violet)" d="M130 78 A52 52 0 0 0 176 158"/>
-            <circle class="node" style="fill:var(--rf-violet)" cx="176" cy="158" r="3"/>
-            <path class="arc" style="stroke:var(--rf-oxide)"  d="M130 8 A122 122 0 0 0 24 190"/>
-            <circle class="node" style="fill:var(--rf-oxide)" cx="24" cy="190" r="3.4"/>
+            <path class="arc" style="stroke:var(--rf-indigo)" d="M52.3 55 A108 108 0 0 0 63.5 215.1"/>
+            <circle class="node" style="fill:var(--rf-indigo)" cx="63.5" cy="215.1" r="3.4"/>
+            <path class="arc" style="stroke:var(--rf-violet)" d="M67.7 81.4 A79 79 0 0 0 88.1 197"/>
+            <circle class="node" style="fill:var(--rf-violet)" cx="88.1" cy="197" r="3.1"/>
+            <path class="arc" style="stroke:var(--rf-gold)" d="M92.5 98.5 A49 49 0 0 0 102.6 170.6"/>
+            <circle class="node" style="fill:var(--rf-gold)" cx="102.6" cy="170.6" r="2.9"/>
           </g>
 
           <circle class="core" cx="130" cy="130" r="21"/>
           <text class="ctr" x="130" y="132" text-anchor="middle">Systems</text>
 
-          <text class="lbl" x="130" y="6"   text-anchor="middle">Games</text>
-          <text class="lbl" x="130" y="20"  text-anchor="middle">Simulation</text>
-          <text class="lbl" x="130" y="38"  text-anchor="middle">Machine learning</text>
-          <text class="lbl" x="130" y="56"  text-anchor="middle">Software</text>
-          <text class="lbl" x="130" y="74"  text-anchor="middle">Research</text>
-          <text class="lbl" x="130" y="92"  text-anchor="middle">Design</text>
+          <text class="lbl" x="130" y="10" text-anchor="middle">Simulations</text>
+          <text class="lbl" x="130" y="24" text-anchor="middle">AI + ML</text>
+          <text class="lbl" x="130" y="38" text-anchor="middle">Software</text>
+          <text class="lbl" x="130" y="53" text-anchor="middle">Research</text>
+          <text class="lbl" x="130" y="68" text-anchor="middle">Games</text>
+          <text class="lbl" x="130" y="83" text-anchor="middle">Design</text>
+          <text class="lbl" x="130" y="98" text-anchor="middle">Workshop</text>
         </svg>
         <span class="orbit-link__cue">Open the star map</span>
         </a>
