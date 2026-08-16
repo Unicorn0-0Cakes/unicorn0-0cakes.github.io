@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" data-world="software">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bayou Vendor Records — Candice Cantrelle</title>
+<meta name="description" content="A vendor-record system for property managers that tracks whether documents arrived and when they lapse, and refuses on purpose to judge whether they are sufficient. The boundary is the design.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/software/bayou-vendor-records/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bayou Vendor Records — Candice Cantrelle">
+<meta property="og:description" content="A vendor-record system for property managers that tracks whether documents arrived and when they lapse, and refuses on purpose to judge whether they are sufficient. The boundary is the design.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/software/bayou-vendor-records/">
+<meta property="og:site_name" content="Candice Cantrelle">
+<meta property="og:image" content="https://unicorn0-0cakes.github.io/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Share card: the wordmark C C slash Portfolio, the name Candice Cantrelle set large, the disciplines Software, AI/ML, Scientific simulation and Systems design, the line &ldquo;The medium changes. The systems thinking does not.&rdquo;, and a seven-ring orbit diagram centred on the word Systems, one ring per discipline.">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bayou Vendor Records — Candice Cantrelle">
+<meta name="twitter:description" content="A vendor-record system for property managers that tracks whether documents arrived and when they lapse, and refuses on purpose to judge whether they are sufficient. The boundary is the design.">
+<meta name="twitter:image" content="https://unicorn0-0cakes.github.io/assets/og-card.png">
+<meta name="twitter:image:alt" content="Share card: the wordmark C C slash Portfolio, the name Candice Cantrelle set large, the disciplines Software, AI/ML, Scientific simulation and Systems design, the line &ldquo;The medium changes. The systems thinking does not.&rdquo;, and a seven-ring orbit diagram centred on the word Systems, one ring per discipline.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/shell.css">
+<link rel="stylesheet" href="../../assets/css/cards.css">
+<link rel="stylesheet" href="../../assets/css/worlds.css">
+<script src="../../assets/js/shell.js"></script>
+
+<style>
+.case { display:grid; grid-template-columns: minmax(0,1fr) 300px; gap: var(--s-8); align-items:start; }
+@media (max-width: 980px) { .case { grid-template-columns: 1fr; gap: var(--s-6); } }
+/* Grid items default to min-width:auto, so the inner auto-fit figure grid
+   would otherwise push this column past a phone viewport. Load-bearing. */
+.case > * { min-width: 0; }
+.case__aside { position: sticky; top: 84px; display: grid; gap: var(--s-5); }
+@media (max-width: 980px) { .case__aside { position: static; } }
+.facts { border:1px solid var(--rf-line); border-radius:var(--w-radius);
+         background:var(--rf-panel); padding:var(--s-5); margin:0; }
+.facts dt { font-family:var(--rf-mono); font-size:var(--t-nano); letter-spacing:var(--rf-track-s);
+            text-transform:uppercase; color:var(--rf-muted); font-weight:600; }
+.facts dd { margin:3px 0 var(--s-4); font-size:var(--t-small); color:var(--rf-ink); }
+.facts dd:last-child { margin-bottom:0; }
+.linklist { list-style:none; padding:0; margin:0; display:grid; gap:var(--s-2); }
+.linklist li { margin:0; }
+.linklist a { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track-s);
+              text-transform:uppercase; font-weight:600; }
+.q { font-family:var(--rf-display); font-size:clamp(19px,2.2vw,26px); font-weight:500;
+     line-height:1.32; letter-spacing:-.02em; color:var(--rf-ink); margin:0 0 var(--s-5);
+     padding-left:var(--s-5); border-left:3px solid var(--w-accent); max-width:34ch; }
+.caveat { border:1px solid var(--rf-watch); border-left-width:3px; border-radius:var(--rf-radius);
+          padding:var(--s-5); background:var(--rf-panel); }
+.caveat h3 { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+             text-transform:uppercase; color:var(--rf-watch); margin:0 0 var(--s-3); font-weight:600; }
+.caveat p { font-size:var(--t-small); color:var(--rf-ink-dim); }
+h2.case-h { font-family:var(--rf-display); font-size:var(--t-h2); margin:var(--s-8) 0 var(--s-4);
+            padding-bottom:var(--s-3); border-bottom:1px solid var(--rf-line); }
+h2.case-h:first-child { margin-top:0; }
+h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+               color:var(--w-accent); margin-right:var(--s-3); }
+
+/* Figures. Wrapping grids rather than a wide SVG, so a phone gets a
+   readable vertical sequence instead of a shrunk picture of one. */
+.sysflow { list-style:none; padding:0; margin:var(--s-5) 0 var(--s-4);
+           display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:var(--s-3); }
+.sysflow li { margin:0; border:1px solid var(--rf-line); border-top:2px solid var(--w-accent);
+              border-radius:var(--rf-radius); background:var(--rf-panel); padding:var(--s-4); }
+.sysflow li.gate { border-top-color:var(--rf-watch); }
+.sysflow .n { display:block; font-family:var(--rf-mono); font-size:var(--t-nano);
+              letter-spacing:var(--rf-track-s); text-transform:uppercase; color:var(--w-accent);
+              font-weight:600; margin-bottom:var(--s-2); }
+.sysflow li.gate .n { color:var(--rf-watch); }
+.sysflow b { display:block; font-size:var(--t-small); margin-bottom:4px; line-height:1.3; }
+.sysflow .d { display:block; font-size:var(--t-nano); line-height:1.55; color:var(--rf-ink-dim); }
+.figcap { font-family:var(--rf-mono); font-size:var(--t-nano); letter-spacing:var(--rf-track-s);
+          text-transform:uppercase; color:var(--rf-muted); margin:0 0 var(--s-6); }
+
+/* The four lanes, as four stacked tracks. Vertical at every width —
+   a lane board that needs sideways scrolling is not a lane board. */
+.lanes { display:grid; gap:var(--s-3); margin:var(--s-5) 0 var(--s-4); }
+.lane { display:grid; grid-template-columns:minmax(0,190px) minmax(0,1fr); gap:var(--s-4);
+        border:1px solid var(--rf-line); border-left:3px solid var(--rf-line);
+        border-radius:var(--rf-radius); background:var(--rf-panel); padding:var(--s-4); align-items:baseline; }
+.lane--now  { border-left-color:var(--rf-action); }
+.lane--soon { border-left-color:var(--rf-watch); }
+.lane--wait { border-left-color:var(--rf-info); }
+.lane--done { border-left-color:var(--rf-ok); }
+.lane h3 { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track-s);
+           text-transform:uppercase; margin:0; font-weight:600; }
+.lane--now  h3 { color:var(--rf-action); }
+.lane--soon h3 { color:var(--rf-watch); }
+.lane--wait h3 { color:var(--rf-info); }
+.lane--done h3 { color:var(--rf-ok); }
+.lane p { margin:0; font-size:var(--t-small); color:var(--rf-ink-dim); }
+@media (max-width:620px) { .lane { grid-template-columns:1fr; gap:var(--s-2); } }
+
+.refuse { list-style:none; padding:0; margin:var(--s-4) 0 0; display:grid; gap:var(--s-3); }
+.refuse li { margin:0; padding-left:1.5em; position:relative; font-size:var(--t-small); color:var(--rf-ink-dim); }
+.refuse li::before { content:"\00D7"; position:absolute; left:0; color:var(--rf-danger); font-weight:700; }
+.refuse b { color:var(--rf-ink); }
+</style>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+<div class="wrap"><ol class="crumbs"><li><a href="../../">Portfolio</a></li><li><a href="../../software/">Software</a></li><li><span aria-current="page">Bayou Vendor Records</span></li></ol></div>
+  <header class="plate">
+    <div class="wrap plate__grid">
+      <div>
+        <p class="plate__kicker">Case study &middot; Software &middot; Operational records</p>
+        <h1>Bayou Vendor Records</h1>
+        <p class="plate__lede">A vendor-record system whose most important design decision is a refusal: it records that a document arrived and when it lapses, and it will not tell you whether the document is any good.</p>
+      </div>
+      <p class="stamp"><b>Prototype</b><br>Records &middot; Workflow systems<br>2026</p>
+    </div>
+    <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
+  </header>
+
+
+  <section class="doc">
+    <div class="wrap case">
+      <div>
+        <p class="q">How do you build a compliance-adjacent tool that is genuinely useful without pretending to be the compliance decision?</p>
+
+        <h2 class="case-h"><span class="n">01</span>What it is</h2>
+        <p>
+          Bayou Vendor Records is a lightweight system of record for residential property managers
+          in South Louisiana. It tracks, per vendor, whether a small fixed set of documents has
+          arrived, what dates the client has given for them, and what needs a human this week. Once
+          a week it produces a <strong>Weekly Rundown</strong>: everything sorted into four lanes,
+          readable in one pass.
+        </p>
+        <p>
+          It is not a vendor-management platform, and describing it as one would miss the
+          interesting part. The interesting part is where the system stops.
+        </p>
+
+        <h2 class="case-h"><span class="n">02</span>The problem</h2>
+        <p>
+          A property manager is accountable for a long tail of vendor relationships across a
+          portfolio, and for keeping records on each one current enough to answer a question when a
+          work order, an insurance query or an audit arrives. In practice the receipt status of a
+          W-9, a certificate of insurance or a contractor licence lives in some mix of inboxes,
+          shared drives, paper folders and whoever touched the file last.
+        </p>
+        <p>
+          That arrangement works right up until someone needs to find something quickly and nobody
+          can say with confidence which record is current. The failure is not that the documents are
+          missing &mdash; it is that their <em>state</em> is unknown, and reconstructing it costs more
+          attention than the question was worth.
+        </p>
+
+        <h2 class="case-h"><span class="n">03</span>The system</h2>
+        <p>
+          The atomic unit is not the document. It is the <strong>receipt status</strong> of a
+          document: a fact about whether something arrived, and when, recorded from what the client
+          supplied. That choice determines everything downstream, including what the system is
+          allowed to say.
+        </p>
+        <ol class="sysflow">
+          <li><span class="n">01</span><b>Requested</b><span class="d">A vendor is added from the manager&rsquo;s own portfolio and a small fixed set of documents is expected of them.</span></li>
+          <li><span class="n">02</span><b>Recorded</b><span class="d">Receipt status is recorded per vendor, per document, with a date. Only that it arrived &mdash; never its contents and never its sufficiency.</span></li>
+          <li><span class="n">03</span><b>Dated</b><span class="d">Client-supplied expiration or review dates are attached, so a record has a future as well as a present.</span></li>
+          <li><span class="n">04</span><b>Sorted weekly</b><span class="d">Every item falls into exactly one of four lanes. The lane, not the record, is what the manager reads.</span></li>
+          <li class="gate"><span class="n">05</span><b>Draft held</b><span class="d">Any follow-up to a vendor is prepared as a draft with its context attached, and held. Nothing leaves the office unsigned.</span></li>
+          <li><span class="n">06</span><b>Human acts</b><span class="d">The manager approves, sends, or decides it is not worth chasing. The system records what happened; it does not decide.</span></li>
+        </ol>
+        <p class="figcap">Fig. 1 &mdash; the record lifecycle. Every arc ends at a person.</p>
+
+        <h2 class="case-h"><span class="n">04</span>The four lanes</h2>
+        <p>
+          The Weekly Rundown is the product&rsquo;s real interface. It exists because a list of every
+          vendor is not actionable and a notification per event is noise; a weekly sort into four
+          buckets is the smallest thing that turns a pile of records into a short queue of
+          decisions.
+        </p>
+        <div class="lanes">
+          <div class="lane lane--now"><h3>Needs attention</h3><p>Items where client approval is the next required step before any outbound contact happens.</p></div>
+          <div class="lane lane--soon"><h3>Approaching review date</h3><p>Documents whose client-supplied expiration or review date falls inside the next sixty days.</p></div>
+          <div class="lane lane--wait"><h3>Awaiting response</h3><p>The outreach log &mdash; drafts prepared, not sent until the manager signs off, and then tracked.</p></div>
+          <div class="lane lane--done"><h3>Recorded as received</h3><p>Items whose receipt status was recorded as received during the current week. Confirmation, not a to-do.</p></div>
+        </div>
+        <p class="figcap">Fig. 2 &mdash; the attention model. Four lanes, one weekly read.</p>
+        <p>
+          The tracked record set is deliberately short &mdash; seven lines, readable at a glance: W-9
+          receipt status, certificate-of-insurance receipt status, client-supplied policy dates,
+          contractor or business-licence reference status, follow-up draft prepared, the attention
+          queue, and the weekly summary itself. A manager can read the whole list and know exactly
+          what the system will and will not say about a vendor.
+        </p>
+
+        <h2 class="case-h"><span class="n">05</span>Boundaries, as a design decision</h2>
+        <p>
+          Vendor paperwork sits next to real legal and insurance consequences. A tool in that space
+          can drift very easily into implying it has checked something it has not, and the cost of
+          that drift lands on the customer, not the vendor. So the boundary is stated as product
+          behaviour, in the same type size as the features:
+        </p>
+        <ul class="refuse">
+          <li><b>Does not determine legal compliance.</b> Sufficiency of a record is a judgement the manager makes with their own advisors.</li>
+          <li><b>Does not determine insurance adequacy.</b> It records that a certificate arrived and the date given for it &mdash; not whether the coverage is right.</li>
+          <li><b>Does not approve vendors.</b> There is no approved state in the system, because approval is not a thing the software is competent to grant.</li>
+          <li><b>Does not verify contractor qualifications.</b> A licence reference being filed is not a licence being checked, and the field is named accordingly.</li>
+          <li><b>Does not send vendor communication without client approval.</b> Every outbound draft stops at a person.</li>
+          <li><b>Does not store W-9 forms or taxpayer identification numbers.</b> The storage boundary and the judgement boundary are the same decision: hold the status, not the artefact.</li>
+        </ul>
+        <p style="margin-top:var(--s-5)">
+          Two things make this structural rather than decorative. First, the boundary statement is
+          an acknowledgement the prospective client has to tick before the inquiry form will submit
+          &mdash; it is a gate on the way in, not a disclaimer on the way out. Second, the field names
+          carry it: every tracked value is worded as <em>receipt status recorded from
+          client-provided information</em>, so the schema itself cannot be read as a verification.
+        </p>
+        <p>
+          The last one is the part I would defend hardest. If the field were called
+          <code>coi_valid</code>, no amount of footer text would stop someone treating it as a
+          compliance check a year from now. Naming is a boundary that survives the next person to
+          touch the system.
+        </p>
+
+        <h2 class="case-h"><span class="n">06</span>My role</h2>
+        <p>
+          Product conception, the record-state model and its vocabulary, the weekly attention
+          model and its four lanes, the scope boundary and where it is enforced, the interface and
+          copy, the regional positioning, the commercial offer, and deployment of the live pilot.
+        </p>
+        <p>
+          The application was <strong>built and directed on an agentic development platform</strong>
+          &mdash; Polsia &mdash; rather than from a blank repository. The framework scaffolding is the
+          platform&rsquo;s; the system this is a system <em>of</em> &mdash; what a record is, what states it can
+          hold, what the software is allowed to assert, and what has to stop at a person &mdash; is mine.
+        </p>
+
+        <h2 class="case-h"><span class="n">07</span>What exists now</h2>
+        <p>
+          A deployed application with a public product surface, account creation and sign-in, the
+          workflow and record set specified in detail, a worked illustration of the Weekly Rundown
+          and the status board, a scope-acknowledgement gate on the inquiry path, and a defined
+          commercial offer: a Founding Five cohort of South Louisiana property-management
+          businesses, a stated setup and first-month price, up to twenty-five active vendors per
+          client, and no automatic renewal.
+        </p>
+
+        <h2 class="case-h"><span class="n">08</span>Current status and limitations</h2>
+        <div class="caveat">
+          <h3>Pilot stage. Every figure on the live site is illustrative, and says so.</h3>
+          <p>
+            The dashboard preview, the vendor table and all four Weekly Rundown lanes are populated
+            with composed sample data, labelled as fictional on the page. That is honest of the
+            product, and it is also the reason this is filed as a <strong>prototype</strong> and not
+            a showcase: the founding cohort is open, not filled, and no operating portfolio has been
+            run through it in public.
+          </p>
+          <p style="margin-bottom:0">
+            No adoption, retention, time-saved or volume figure appears anywhere on this page,
+            because none has been measured.
+          </p>
+        </div>
+        <p style="margin-top:var(--s-5)">Also:</p>
+        <ul>
+          <li>The working application is behind account creation, so the publicly inspectable
+              surface is the product specification and the illustrated board rather than live
+              tooling.</li>
+          <li>The repository is private. The implementation stack is not enumerated here &mdash; see the
+              technology note in the sidebar.</li>
+          <li>Scope is capped by design at twenty-five active vendors per client and to one region.
+              Whether the weekly-lane model still reads well at ten times that size is untested.</li>
+        </ul>
+
+        <h2 class="case-h"><span class="n">09</span>How this differs from TerritoryOne</h2>
+        <p>
+          Both are prototypes in this wing and both are small operational systems, but they are
+          built around different questions. Bayou is about <strong>state over time</strong>: what do
+          we hold, when does it lapse, and what needs a person this week. <a href="../territoryone/">TerritoryOne</a>
+          is about <strong>allocation at a moment</strong>: is this request real, and who owns it. One
+          accumulates and expires; the other validates and assigns.
+        </p>
+      </div>
+
+      <aside class="case__aside">
+<dl class="facts"><dt>Status</dt><dd>Prototype &mdash; pilot stage</dd><dt>Year</dt><dd>2026</dd><dt>Type</dt><dd>Self-created product</dd><dt>Domain</dt><dd>Residential property management, South Louisiana</dd><dt>Core model</dt><dd>Receipt status &rarr; dated record &rarr; weekly lane &rarr; held draft &rarr; human action</dd><dt>Role</dt><dd>Product concept, record-state design, workflow architecture, boundary design, UX, copy, commercial offer, deployment</dd><dt>Built with</dt><dd>Polsia &mdash; agentic development platform</dd><dt>Technology note</dt><dd>The repository is private and the implementation stack was not independently verified for this page, so no framework or library is listed here.</dd><dt>Data shown live</dt><dd>Illustrative sample data, labelled as such on the product</dd></dl><div class="facts"><dt style="font-family:var(--rf-mono);font-size:var(--t-nano);letter-spacing:var(--rf-track-s);text-transform:uppercase;color:var(--rf-muted);font-weight:600;margin-bottom:12px">Links</dt><ul class="linklist"><li><a href="https://bayou-vendor-records.polsia.app" rel="noopener">Open Live Pilot &rarr;</a></li></ul></div>
+      </aside>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="../../data/projects.js"></script>
+<script src="../../assets/js/cards.js"></script>
+</body>
+</html>
