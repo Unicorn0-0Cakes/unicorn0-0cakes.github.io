@@ -1,417 +1,289 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#111318">
-  <meta name="description" content="A speedcubing timer that runs entirely in the page: inspection countdown, solve history and session statistics, with no account and no network.">
-  <title>Cube Timer — Candice Cantrelle</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0d0f13;
-      --panel: #151820;
-      --panel-2: #1b1f29;
-      --text: #f4f5f7;
-      --muted: #9ca3af;
-      --border: #2a2f3a;
-      --accent: #7dd3fc;
-      --ready: #86efac;
-      --danger: #fca5a5;
-    }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; }
-    body {
-      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #171b24 0, var(--bg) 48%);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 24px;
-    }
-    button { font: inherit; }
-    .app {
-      width: min(900px, 100%);
-      margin: 0 auto;
-      display: grid;
-      gap: 18px;
-    }
-    .topbar {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    h1 { font-size: 1.05rem; margin: 0; font-weight: 650; letter-spacing: .03em; }
-    .hint { margin: 0; color: var(--muted); font-size: .88rem; }
-    .timer-panel {
-      min-height: 360px;
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      background: rgba(21,24,32,.86);
-      display: grid;
-      place-items: center;
-      padding: 34px 20px;
-      text-align: center;
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: manipulation;
-      transition: border-color .15s ease, background .15s ease;
-    }
-    .timer-panel.ready {
-      border-color: var(--ready);
-      background: rgba(20, 45, 32, .72);
-    }
-    .status {
-      color: var(--muted);
-      font-size: .95rem;
-      margin-bottom: 12px;
-      min-height: 1.2em;
-    }
-    .timer {
-      font-variant-numeric: tabular-nums;
-      font-size: clamp(4.5rem, 14vw, 8.5rem);
-      letter-spacing: -.06em;
-      line-height: .95;
-      font-weight: 680;
-    }
-    .timer.ready { color: var(--ready); }
-    .subhint { margin-top: 18px; color: var(--muted); font-size: .86rem; }
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0,1fr));
-      gap: 12px;
-    }
-    .stat, .history-card {
-      border: 1px solid var(--border);
-      background: var(--panel);
-      border-radius: 18px;
-    }
-    .stat { padding: 15px 16px; }
-    .stat-label { color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; }
-    .stat-value { margin-top: 6px; font-size: 1.45rem; font-variant-numeric: tabular-nums; }
-    .history-card { padding: 16px; }
-    .history-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-    .history-head h2 { margin: 0; font-size: 1rem; }
-    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
-    .btn {
-      border: 1px solid var(--border);
-      background: var(--panel-2);
-      color: var(--text);
-      border-radius: 10px;
-      padding: 8px 11px;
-      cursor: pointer;
-    }
-    .btn:hover { border-color: #4b5563; }
-    .btn.danger { color: var(--danger); }
-    .history {
-      display: grid;
-      gap: 2px;
-      max-height: 340px;
-      overflow: auto;
-    }
-    .row {
-      display: grid;
-      grid-template-columns: 55px 1fr auto;
-      gap: 12px;
-      align-items: center;
-      padding: 10px 6px;
-      border-top: 1px solid var(--border);
-      font-variant-numeric: tabular-nums;
-    }
-    .row:first-child { border-top: 0; }
-    .num, .stamp { color: var(--muted); font-size: .86rem; }
-    .time { font-size: 1.05rem; }
-    .empty { color: var(--muted); padding: 12px 6px; }
-    .footer-note { color: var(--muted); font-size: .78rem; text-align: center; }
-    @media (max-width: 650px) {
-      body { padding: 14px; }
-      .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
-      .timer-panel { min-height: 300px; }
-      .row { grid-template-columns: 45px 1fr; }
-      .stamp { display: none; }
-    }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A terminal-style speedcubing timer: five puzzles, random-move scrambles, WCA inspection, +2 and DNF penalties, Ao5/Ao12/Ao50 and a 365-day practice matrix. No account, no network.">
+  <title>CUBE//TIMER — Candice Cantrelle</title>
+  <meta name="author" content="Candice Cantrelle">
+  <meta name="theme-color" content="#070908">
+  <link rel="icon" type="image/png" href="../../favicon.png">
+  <link rel="canonical" href="https://unicorn0-0cakes.github.io/projects/cube-timer/">
 
-    /* Return-to-portfolio strip. Every page below the top level carries
-       one; this app keeps its own palette, so the strip adopts it. */
-    .cc-return {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 16px; flex-wrap: wrap;
-      padding: 10px 18px; border-bottom: 1px solid var(--border);
-      background: rgba(13,15,19,.92);
-      font: 600 10px/1.6 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-      letter-spacing: .16em; text-transform: uppercase;
-    }
-    .cc-return a { color: var(--accent); text-decoration: none; }
-    .cc-return a:hover, .cc-return a:focus-visible { text-decoration: underline; }
-    .cc-return a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-    .cc-return .cc-mark { color: var(--muted); }
-    .skip-link cc-skip { position:absolute; left:12px; top:8px; transform:translateY(-200%);
-      background:var(--accent); color:#0d0f13; font:600 10px/1 ui-monospace,Menlo,monospace;
-      letter-spacing:.16em; text-transform:uppercase; padding:8px 14px; border-radius:4px;
-      z-index:50; transition:transform .14s ease; text-decoration:none; }
-    .skip-link cc-skip:focus-visible { transform:translateY(0); }
-    .cc-return .cc-mark b { color: var(--text); font-weight: 700; letter-spacing: .28em; }
-  </style>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="CUBE//TIMER — Candice Cantrelle">
+  <meta property="og:description" content="A terminal-style speedcubing timer: five puzzles, random-move scrambles, WCA inspection, penalties, full averages and a 365-day practice matrix. Runs entirely in the page.">
+  <meta property="og:url" content="https://unicorn0-0cakes.github.io/projects/cube-timer/">
+  <meta property="og:site_name" content="Candice Cantrelle">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
-<a class="skip-link cc-skip" href="#main">Skip to content</a>
-<nav class="cc-return" aria-label="Return to portfolio">
-  <span class="cc-mark"><b>CC</b> / Portfolio &mdash; Software</span>
-  <span><a href="../../software/">&larr; Back to Software</a> &nbsp;&middot;&nbsp; <a href="../../">Portfolio home</a></span>
-</nav>
-<main id="main">
+<body class="theme-matrix">
+  <a class="cc-skip" href="#main-grid">Skip to the timer</a>
 
-  <main class="app">
-    <header class="topbar">
-      <h1>Cube Timer</h1>
-      <p class="hint">Offline • Spacebar or touch</p>
+  <!-- Every standalone build in this portfolio carries a way back. This one
+       is written as a shell path because that is the register the rest of
+       the interface speaks in. -->
+  <nav class="cc-return" aria-label="Return to portfolio">
+    <span class="cc-path"><span class="cc-prompt">$</span> ~/portfolio/software/<b>cube-timer</b></span>
+    <span class="cc-links">
+      <a href="../../software/">cd ../software</a>
+      <a href="../../">cd ~/portfolio</a>
+    </span>
+  </nav>
+
+  <div class="terminal-container">
+    
+    <!-- HEADER BAR -->
+    <header class="top-bar">
+      <div class="brand">
+        <span class="terminal-prompt">$</span>
+        <h1 class="logo-text">CUBE//TIMER</h1>
+        <span class="version-tag">v1.0.0</span>
+      </div>
+
+      <div class="puzzle-selector-wrap">
+        <label for="puzzle-select" class="sr-only">Select Puzzle</label>
+        <select id="puzzle-select" class="term-select">
+          <option value="333">3x3x3</option>
+          <option value="222">2x2x2</option>
+          <option value="444">4x4x4</option>
+          <option value="pyram">Pyraminx</option>
+          <option value="skewb">Skewb</option>
+        </select>
+      </div>
+
+      <div class="controls-right">
+        <button id="btn-sound" class="icon-btn" title="Toggle Audio (M)" aria-label="Toggle Sound">
+          <span class="icon" aria-hidden="true">🔊</span> <span class="btn-lbl">AUDIO</span>
+        </button>
+        <button id="btn-inspection" class="icon-btn" title="Toggle 15s WCA Inspection (I)" aria-label="Toggle Inspection">
+          <span class="icon" aria-hidden="true">⏱️</span> <span class="btn-lbl">INSPECT: <span id="inspect-status">OFF</span></span>
+        </button>
+        <button id="btn-theme" class="icon-btn" title="Cycle Terminal Theme (T)" aria-label="Cycle Theme">
+          <span class="icon" aria-hidden="true">🎨</span> <span class="btn-lbl">THEME</span>
+        </button>
+        <button id="btn-help" class="icon-btn" title="Shortcuts & Help (?)" aria-label="Help">
+          <span class="icon" aria-hidden="true">❓</span>
+        </button>
+      </div>
     </header>
 
-    <section id="timerPanel" class="timer-panel" aria-label="Cube timer control">
-      <div>
-        <div id="status" class="status" aria-live="polite">Hold SPACE to arm</div>
-        <div id="timer" class="timer">0.00</div>
-        <div class="subhint">Hold until READY • release to start • press SPACE to stop</div>
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="main-grid" id="main-grid">
+      
+      <!-- LEFT PANEL: STATS & SOLVE LOG -->
+      <aside class="panel stats-panel">
+        <div class="panel-header">
+          <h2><span class="prompt-sym">></span> SESSION STATS</h2>
+          <div class="panel-actions">
+            <button id="btn-clear-session" class="text-btn danger" title="Clear current session">RESET</button>
+          </div>
+        </div>
+
+        <div class="stats-cards">
+          <div class="stat-card pb-card">
+            <span class="stat-label">BEST (PB)</span>
+            <span id="stat-pb" class="stat-value highlight">--.--</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">SOLVES</span>
+            <span id="stat-count" class="stat-value">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">CURRENT Ao5</span>
+            <span id="stat-ao5" class="stat-value">--.--</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">BEST Ao5</span>
+            <span id="stat-best-ao5" class="stat-value">--.--</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">CURRENT Ao12</span>
+            <span id="stat-ao12" class="stat-value">--.--</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">BEST Ao12</span>
+            <span id="stat-best-ao12" class="stat-value">--.--</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Ao50</span>
+            <span id="stat-ao50" class="stat-value">--.--</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">MEAN</span>
+            <span id="stat-mean" class="stat-value">--.--</span>
+          </div>
+        </div>
+
+        <div class="history-section">
+          <div class="section-title">
+            <span><span class="prompt-sym">></span> SOLVE LOG</span>
+            <div class="history-tools">
+              <button id="btn-export" class="mini-btn" title="Export session data">EXPORT</button>
+              <button id="btn-import" class="mini-btn" title="Import session data">IMPORT</button>
+              <input type="file" id="import-file" accept=".json,.csv" hidden>
+            </div>
+          </div>
+
+          <div class="solve-list-container">
+            <table class="solve-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>TIME</th>
+                  <th>Ao5</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody id="solve-list-body">
+                <!-- Dynamic solve entries -->
+              </tbody>
+            </table>
+            <div id="solve-list-empty" class="empty-state">
+              No solves in this session yet.<br>Press & Hold [SPACE] to timer!
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CENTER DISPLAY: SCRAMBLE & TIMER -->
+      <section class="panel timer-panel">
+        <div class="scramble-box" id="scramble-box" title="Click to copy scramble">
+          <div class="scramble-meta">
+            <span class="scramble-puzzle-tag" id="scramble-puzzle-tag">3x3x3</span>
+            <button id="btn-new-scramble" class="icon-btn-sm" title="Generate New Scramble (R)"><span aria-hidden="true">🔄</span> Next</button>
+          </div>
+          <div class="scramble-text" id="scramble-text">Loading scramble...</div>
+        </div>
+
+        <!-- TIMER DISPLAY AREA -->
+        <div class="timer-display-wrap" id="timer-touch-area">
+          <div class="inspection-display hidden" id="inspection-display">
+            <span class="inspection-label">INSPECTION</span>
+            <span class="inspection-time" id="inspection-time">15</span>
+          </div>
+
+          <div class="timer-display" id="timer-display">0.00</div>
+
+          <div class="timer-status-hint" id="timer-status-hint">
+            HOLD [SPACE] OR TOUCH & HOLD SCREEN
+          </div>
+
+          <div class="timer-penalties-bar hidden" id="last-solve-bar">
+            <span class="last-solve-label">LAST: <strong id="last-solve-time">--.--</strong></span>
+            <button id="btn-last-plus2" class="tag-btn">+2</button>
+            <button id="btn-last-dnf" class="tag-btn">DNF</button>
+            <button id="btn-last-del" class="tag-btn danger">DEL</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT / BOTTOM PANEL: DYNAMIC HEATMAP MATRIX -->
+      <section class="panel matrix-panel">
+        <div class="panel-header">
+          <h2><span class="prompt-sym">></span> ACTIVITY MATRIX & STREAK TRACKER</h2>
+          <div class="matrix-stats-inline">
+            <span class="streak-badge" title="Current Daily Streak"><span aria-hidden="true">🔥</span> <strong id="current-streak">0</strong> DAYS STREAK</span>
+            <span class="streak-badge" title="Best Streak"><span aria-hidden="true">🏆</span> BEST: <strong id="best-streak">0</strong> DAYS</span>
+          </div>
+        </div>
+
+        <div class="heatmap-summary">
+          <div class="hm-stat">
+            <span class="hm-label">SOLVES YTD</span>
+            <span class="hm-val" id="hm-total-solves">0</span>
+          </div>
+          <div class="hm-stat">
+            <span class="hm-label">ACTIVE DAYS</span>
+            <span class="hm-val" id="hm-active-days">0/365</span>
+          </div>
+          <div class="hm-stat">
+            <span class="hm-label">YEARLY AVG</span>
+            <span class="hm-val" id="hm-yearly-avg">--.--</span>
+          </div>
+          <div class="hm-stat">
+            <span class="hm-label">CONSISTENCY</span>
+            <span class="hm-val" id="hm-consistency">0%</span>
+          </div>
+          <button id="btn-seed-data" class="text-btn" title="Fill the matrix with made-up sample solves so it has something to display. Not real practice data.">LOAD SAMPLE DATA</button>
+        </div>
+
+        <!-- THE DYNAMIC 365-DAY HEATMAP GRID -->
+        <div class="heatmap-scroll-wrap">
+          <div class="heatmap-grid-container" id="heatmap-grid">
+            <!-- Heatmap grid days dynamically generated here -->
+          </div>
+        </div>
+
+        <div class="heatmap-legend">
+          <span>Less</span>
+          <div class="legend-cells">
+            <span class="legend-cell lvl-0"></span>
+            <span class="legend-cell lvl-1"></span>
+            <span class="legend-cell lvl-2"></span>
+            <span class="legend-cell lvl-3"></span>
+            <span class="legend-cell lvl-4"></span>
+          </div>
+          <span>More</span>
+          <span class="legend-note">(Don't break the chain!)</span>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER / STATUS BAR -->
+    <footer class="bottom-bar">
+      <div class="status-left">
+        <span class="status-indicator"></span>
+        <span id="status-text">READY // SYSTEM ONLINE</span>
       </div>
-    </section>
+      <div class="status-right">
+        <span>[SPACE] Timer</span>
+        <span>[R] Scramble</span>
+        <span>[Alt+1] +2</span>
+        <span>[Alt+2] DNF</span>
+        <span>[Alt+D] Delete</span>
+      </div>
+    </footer>
 
-    <section class="stats" aria-label="Session statistics">
-      <div class="stat"><div class="stat-label">Solves</div><div id="count" class="stat-value">0</div></div>
-      <div class="stat"><div class="stat-label">Best</div><div id="best" class="stat-value">—</div></div>
-      <div class="stat"><div class="stat-label">Ao5</div><div id="ao5" class="stat-value">—</div></div>
-      <div class="stat"><div class="stat-label">Ao12</div><div id="ao12" class="stat-value">—</div></div>
-    </section>
+  </div>
 
-    <section class="history-card">
-      <div class="history-head">
-        <h2>Solve history</h2>
-        <div class="actions">
-          <button id="undoBtn" class="btn" type="button">Delete last</button>
-          <button id="exportBtn" class="btn" type="button">Export</button>
-          <button id="resetBtn" class="btn danger" type="button">Reset session</button>
+  <!-- MODAL / TOOLTIP OVERLAY FOR HELP -->
+  <div id="modal-help" class="modal-overlay hidden">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-help-title">
+      <div class="modal-header">
+        <h3 id="modal-help-title">SYSTEM COMMANDS &amp; SHORTCUTS</h3>
+        <button id="btn-close-help" class="modal-close" aria-label="Close help">&times;</button>
+      </div>
+      <div class="modal-body">
+        <table class="shortcuts-table">
+          <tr><th>Key / Gesture</th><th>Action</th></tr>
+          <tr><td><kbd>SPACE</kbd> (Hold & Release)</td><td>Arm timer -> Release to Start</td></tr>
+          <tr><td><kbd>ANY KEY</kbd> / Touch</td><td>Stop timer when running</td></tr>
+          <tr><td><kbd>ESC</kbd></td><td>Close this window</td></tr>
+          <tr><td><kbd>R</kbd></td><td>Generate New Scramble</td></tr>
+          <tr><td><kbd>Alt</kbd> + <kbd>1</kbd></td><td>Toggle +2 Penalty on last solve</td></tr>
+          <tr><td><kbd>Alt</kbd> + <kbd>2</kbd></td><td>Toggle DNF on last solve</td></tr>
+          <tr><td><kbd>Alt</kbd> + <kbd>D</kbd> / <kbd>Delete</kbd></td><td>Delete last solve</td></tr>
+          <tr><td><kbd>I</kbd></td><td>Toggle 15s WCA Inspection</td></tr>
+          <tr><td><kbd>M</kbd></td><td>Toggle Sound Effects</td></tr>
+          <tr><td><kbd>T</kbd></td><td>Cycle Terminal Theme</td></tr>
+          <tr><td><kbd>?</kbd></td><td>Open Help Window</td></tr>
+        </table>
+        <div class="modal-tip">
+          <strong>Tip:</strong> Daily solves are automatically tracked on your 365-day Activity Matrix. Keep solving daily to build your streak visual momentum!
         </div>
       </div>
-      <div id="history" class="history"></div>
-    </section>
+    </div>
+  </div>
 
-    <div class="footer-note">Times are saved in this browser on this Mac.</div>
-  </main>
+  <!-- TOOLTIP FOR HEATMAP HOVER -->
+  <div id="hm-tooltip" class="hm-tooltip hidden"></div>
 
-  <script>
-    (() => {
-      const STORAGE_KEY = "cube-timer-solves-v1";
-      const ARM_MS = 350;
-
-      const timerPanel = document.getElementById("timerPanel");
-      const timerEl = document.getElementById("timer");
-      const statusEl = document.getElementById("status");
-      const countEl = document.getElementById("count");
-      const bestEl = document.getElementById("best");
-      const ao5El = document.getElementById("ao5");
-      const ao12El = document.getElementById("ao12");
-      const historyEl = document.getElementById("history");
-      const undoBtn = document.getElementById("undoBtn");
-      const exportBtn = document.getElementById("exportBtn");
-      const resetBtn = document.getElementById("resetBtn");
-
-      let solves = loadSolves();
-      let state = "idle";
-      let holdStarted = 0;
-      let startedAt = 0;
-      let raf = null;
-      let armTimer = null;
-
-      function loadSolves() {
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          const parsed = raw ? JSON.parse(raw) : [];
-          return Array.isArray(parsed) ? parsed.filter(s => Number.isFinite(s.ms)) : [];
-        } catch {
-          return [];
-        }
-      }
-
-      function saveSolves() {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(solves)); } catch {}
-      }
-
-      function format(ms) {
-        const seconds = ms / 1000;
-        if (seconds < 60) return seconds.toFixed(2);
-        const min = Math.floor(seconds / 60);
-        const sec = (seconds % 60).toFixed(2).padStart(5, "0");
-        return `${min}:${sec}`;
-      }
-
-      function wcaAverage(n) {
-        if (solves.length < n) return null;
-        const values = solves.slice(-n).map(s => s.ms).sort((a, b) => a - b);
-        values.shift();
-        values.pop();
-        return values.reduce((sum, value) => sum + value, 0) / values.length;
-      }
-
-      function render() {
-        countEl.textContent = solves.length;
-        bestEl.textContent = solves.length ? format(Math.min(...solves.map(s => s.ms))) : "—";
-        const ao5 = wcaAverage(5);
-        const ao12 = wcaAverage(12);
-        ao5El.textContent = ao5 == null ? "—" : format(ao5);
-        ao12El.textContent = ao12 == null ? "—" : format(ao12);
-
-        if (!solves.length) {
-          historyEl.innerHTML = '<div class="empty">No solves yet. Your first one will land here.</div>';
-          return;
-        }
-
-        historyEl.innerHTML = solves
-          .map((solve, index) => {
-            const stamp = new Date(solve.at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-            return `<div class="row">
-              <span class="num">#${index + 1}</span>
-              <span class="time">${format(solve.ms)}</span>
-              <span class="stamp">${stamp}</span>
-            </div>`;
-          })
-          .reverse()
-          .join("");
-      }
-
-      function setReady(isReady) {
-        timerPanel.classList.toggle("ready", isReady);
-        timerEl.classList.toggle("ready", isReady);
-      }
-
-      function beginHold() {
-        if (state === "running" || state === "holding" || state === "ready") return;
-        state = "holding";
-        holdStarted = performance.now();
-        statusEl.textContent = "Keep holding…";
-        setReady(false);
-
-        clearTimeout(armTimer);
-        armTimer = setTimeout(() => {
-          if (state === "holding" && performance.now() - holdStarted >= ARM_MS) {
-            state = "ready";
-            statusEl.textContent = "READY";
-            setReady(true);
-          }
-        }, ARM_MS);
-      }
-
-      function releaseHold() {
-        clearTimeout(armTimer);
-        if (state === "ready") {
-          startTimer();
-        } else if (state === "holding") {
-          state = "idle";
-          statusEl.textContent = "Hold a little longer";
-          setReady(false);
-        }
-      }
-
-      function startTimer() {
-        state = "running";
-        setReady(false);
-        timerEl.textContent = "0.00";
-        statusEl.textContent = "Solving…";
-        startedAt = performance.now();
-
-        const tick = () => {
-          if (state !== "running") return;
-          timerEl.textContent = format(performance.now() - startedAt);
-          raf = requestAnimationFrame(tick);
-        };
-        raf = requestAnimationFrame(tick);
-      }
-
-      function stopTimer() {
-        if (state !== "running") return;
-        const ms = performance.now() - startedAt;
-        cancelAnimationFrame(raf);
-        solves.push({ ms, at: Date.now() });
-        saveSolves();
-        state = "idle";
-        timerEl.textContent = format(ms);
-        statusEl.textContent = "Stopped • hold SPACE for next solve";
-        render();
-      }
-
-      document.addEventListener("keydown", event => {
-        if (event.code !== "Space" || event.repeat) return;
-        event.preventDefault();
-        if (state === "running") stopTimer();
-        else beginHold();
-      });
-
-      document.addEventListener("keyup", event => {
-        if (event.code !== "Space") return;
-        event.preventDefault();
-        releaseHold();
-      });
-
-      timerPanel.addEventListener("pointerdown", event => {
-        event.preventDefault();
-        if (state === "running") stopTimer();
-        else beginHold();
-      });
-
-      timerPanel.addEventListener("pointerup", event => {
-        event.preventDefault();
-        releaseHold();
-      });
-
-      timerPanel.addEventListener("pointercancel", () => {
-        clearTimeout(armTimer);
-        if (state === "holding" || state === "ready") {
-          state = "idle";
-          setReady(false);
-          statusEl.textContent = "Hold SPACE to arm";
-        }
-      });
-
-      undoBtn.addEventListener("click", () => {
-        if (!solves.length) return;
-        solves.pop();
-        saveSolves();
-        timerEl.textContent = solves.length ? format(solves[solves.length - 1].ms) : "0.00";
-        statusEl.textContent = "Last solve deleted";
-        render();
-      });
-
-      resetBtn.addEventListener("click", () => {
-        if (!solves.length || !confirm("Reset the entire solve session?")) return;
-        solves = [];
-        saveSolves();
-        timerEl.textContent = "0.00";
-        statusEl.textContent = "Hold SPACE to arm";
-        render();
-      });
-
-      exportBtn.addEventListener("click", () => {
-        const header = "solve,time_seconds,timestamp\n";
-        const rows = solves.map((s, i) => `${i + 1},${(s.ms / 1000).toFixed(3)},${new Date(s.at).toISOString()}`).join("\n");
-        const blob = new Blob([header + rows], { type: "text/csv" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "cube-timer-solves.csv";
-        link.click();
-        setTimeout(() => URL.revokeObjectURL(url), 500);
-      });
-
-      render();
-    })();
-  </script>
-</main>
+  <script src="app.js"></script>
 </body>
 </html>
