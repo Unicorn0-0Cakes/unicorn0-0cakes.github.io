@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" data-world="software">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TerritoryOne — Candice Cantrelle</title>
+<meta name="description" content="A territory-routing prototype: homeowner requests are validated, checked for duplicates, resolved to a ZIP-based territory and assigned to the one contractor who owns it. Exclusivity as an inventory constraint, not a slogan.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/software/territoryone/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="TerritoryOne — Candice Cantrelle">
+<meta property="og:description" content="A territory-routing prototype: homeowner requests are validated, checked for duplicates, resolved to a ZIP-based territory and assigned to the one contractor who owns it. Exclusivity as an inventory constraint, not a slogan.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/software/territoryone/">
+<meta property="og:site_name" content="Candice Cantrelle">
+<meta property="og:image" content="https://unicorn0-0cakes.github.io/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Share card: the wordmark C C slash Portfolio, the name Candice Cantrelle set large, the disciplines Software, AI/ML, Scientific simulation and Systems design, the line &ldquo;The medium changes. The systems thinking does not.&rdquo;, and a seven-ring orbit diagram centred on the word Systems, one ring per discipline.">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TerritoryOne — Candice Cantrelle">
+<meta name="twitter:description" content="A territory-routing prototype: homeowner requests are validated, checked for duplicates, resolved to a ZIP-based territory and assigned to the one contractor who owns it. Exclusivity as an inventory constraint, not a slogan.">
+<meta name="twitter:image" content="https://unicorn0-0cakes.github.io/assets/og-card.png">
+<meta name="twitter:image:alt" content="Share card: the wordmark C C slash Portfolio, the name Candice Cantrelle set large, the disciplines Software, AI/ML, Scientific simulation and Systems design, the line &ldquo;The medium changes. The systems thinking does not.&rdquo;, and a seven-ring orbit diagram centred on the word Systems, one ring per discipline.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/shell.css">
+<link rel="stylesheet" href="../../assets/css/cards.css">
+<link rel="stylesheet" href="../../assets/css/worlds.css">
+<script src="../../assets/js/shell.js"></script>
+
+<style>
+.case { display:grid; grid-template-columns: minmax(0,1fr) 300px; gap: var(--s-8); align-items:start; }
+@media (max-width: 980px) { .case { grid-template-columns: 1fr; gap: var(--s-6); } }
+/* Grid items default to min-width:auto, so the inner auto-fit figure grid
+   would otherwise push this column past a phone viewport. Load-bearing. */
+.case > * { min-width: 0; }
+.case__aside { position: sticky; top: 84px; display: grid; gap: var(--s-5); }
+@media (max-width: 980px) { .case__aside { position: static; } }
+.facts { border:1px solid var(--rf-line); border-radius:var(--w-radius);
+         background:var(--rf-panel); padding:var(--s-5); margin:0; }
+.facts dt { font-family:var(--rf-mono); font-size:var(--t-nano); letter-spacing:var(--rf-track-s);
+            text-transform:uppercase; color:var(--rf-muted); font-weight:600; }
+.facts dd { margin:3px 0 var(--s-4); font-size:var(--t-small); color:var(--rf-ink); }
+.facts dd:last-child { margin-bottom:0; }
+.linklist { list-style:none; padding:0; margin:0; display:grid; gap:var(--s-2); }
+.linklist li { margin:0; }
+.linklist a { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track-s);
+              text-transform:uppercase; font-weight:600; }
+.q { font-family:var(--rf-display); font-size:clamp(19px,2.2vw,26px); font-weight:500;
+     line-height:1.32; letter-spacing:-.02em; color:var(--rf-ink); margin:0 0 var(--s-5);
+     padding-left:var(--s-5); border-left:3px solid var(--w-accent); max-width:34ch; }
+.caveat { border:1px solid var(--rf-watch); border-left-width:3px; border-radius:var(--rf-radius);
+          padding:var(--s-5); background:var(--rf-panel); }
+.caveat h3 { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+             text-transform:uppercase; color:var(--rf-watch); margin:0 0 var(--s-3); font-weight:600; }
+.caveat p { font-size:var(--t-small); color:var(--rf-ink-dim); }
+h2.case-h { font-family:var(--rf-display); font-size:var(--t-h2); margin:var(--s-8) 0 var(--s-4);
+            padding-bottom:var(--s-3); border-bottom:1px solid var(--rf-line); }
+h2.case-h:first-child { margin-top:0; }
+h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+               color:var(--w-accent); margin-right:var(--s-3); }
+
+/* Figures. Wrapping grids rather than a wide SVG, so a phone gets a
+   readable vertical sequence instead of a shrunk picture of one. */
+.sysflow { list-style:none; padding:0; margin:var(--s-5) 0 var(--s-4);
+           display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:var(--s-3); }
+.sysflow li { margin:0; border:1px solid var(--rf-line); border-top:2px solid var(--w-accent);
+              border-radius:var(--rf-radius); background:var(--rf-panel); padding:var(--s-4); }
+.sysflow li.gate { border-top-color:var(--rf-watch); }
+.sysflow li.stop { border-top-color:var(--rf-danger); }
+.sysflow .n { display:block; font-family:var(--rf-mono); font-size:var(--t-nano);
+              letter-spacing:var(--rf-track-s); text-transform:uppercase; color:var(--w-accent);
+              font-weight:600; margin-bottom:var(--s-2); }
+.sysflow li.gate .n { color:var(--rf-watch); }
+.sysflow li.stop .n { color:var(--rf-danger); }
+.sysflow b { display:block; font-size:var(--t-small); margin-bottom:4px; line-height:1.3; }
+.sysflow .d { display:block; font-size:var(--t-nano); line-height:1.55; color:var(--rf-ink-dim); }
+.figcap { font-family:var(--rf-mono); font-size:var(--t-nano); letter-spacing:var(--rf-track-s);
+          text-transform:uppercase; color:var(--rf-muted); margin:0 0 var(--s-6); }
+
+/* The territory figure: a ZIP grid where exactly one cell is owned.
+   Cells wrap; it never needs sideways scrolling. */
+.zipgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(84px,1fr)); gap:var(--s-2);
+           margin:var(--s-5) 0 var(--s-4); }
+.zipgrid span { display:grid; place-items:center; padding:var(--s-4) var(--s-2);
+                border:1px dashed var(--rf-line); border-radius:var(--rf-radius);
+                font-family:var(--rf-mono); font-size:var(--t-nano); letter-spacing:var(--rf-track-s);
+                color:var(--rf-muted); background:var(--rf-panel); }
+.zipgrid span.owned { border-style:solid; border-color:var(--w-accent); color:var(--w-accent);
+                      font-weight:600; box-shadow:inset 0 0 0 1px var(--w-accent); }
+.contrast { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:var(--s-4);
+            margin:var(--s-5) 0 0; }
+.contrast div { border:1px solid var(--rf-line); border-radius:var(--rf-radius);
+                background:var(--rf-panel); padding:var(--s-5); }
+.contrast h3 { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track-s);
+               text-transform:uppercase; color:var(--w-accent); margin:0 0 var(--s-3); font-weight:600; }
+.contrast p { margin:0; font-size:var(--t-small); color:var(--rf-ink-dim); }
+</style>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+<div class="wrap"><ol class="crumbs"><li><a href="../../">Portfolio</a></li><li><a href="../../software/">Software</a></li><li><span aria-current="page">TerritoryOne</span></li></ol></div>
+  <header class="plate">
+    <div class="wrap plate__grid">
+      <div>
+        <p class="plate__kicker">Case study &middot; Software &middot; Routing &amp; allocation</p>
+        <h1>TerritoryOne</h1>
+        <p class="plate__lede">A routing prototype built on one rule that costs it money: a homeowner request belongs to exactly one contractor, decided before anyone is contacted, and never sold twice.</p>
+      </div>
+      <p class="stamp"><b>Prototype</b><br>Routing &middot; Allocation<br>2026</p>
+    </div>
+    <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
+  </header>
+
+
+  <section class="doc">
+    <div class="wrap case">
+      <div>
+        <p class="q">If a lead can be sold to five contractors, what exactly did any of them buy?</p>
+
+        <h2 class="case-h"><span class="n">01</span>What it is</h2>
+        <p>
+          TerritoryOne is a working demonstration of a lead-routing system for independent
+          home-service contractors, scoped to residential air-conditioning repair and replacement
+          and to small companies &mdash; roughly two to fifteen employees. A homeowner submits a
+          request; the system validates it, resolves it to a ZIP-based territory, and delivers it to
+          the single contractor who holds that territory. There is no bidding, no auction, and no
+          resale.
+        </p>
+        <p>
+          Calling it a lead-generation site undersells the design problem. The generation part is a
+          form. The system is the part that decides whether a submission is real and who it now
+          belongs to.
+        </p>
+
+        <h2 class="case-h"><span class="n">02</span>The problem</h2>
+        <p>
+          The shared-lead marketplace model sells the same homeowner to several contractors at once.
+          For the marketplace this is efficient; for a two-truck HVAC company it means paying for the
+          right to be fourth to call, and for the homeowner it means five phone calls in an hour. The
+          product everyone is nominally buying &mdash; a customer &mdash; is not what changes hands. What changes
+          hands is a contact record with an unknown number of copies.
+        </p>
+        <p>
+          So the design question is not how to collect more requests. It is what would have to be
+          true structurally for a request to be worth something specific to one business.
+        </p>
+
+        <h2 class="case-h"><span class="n">03</span>The system</h2>
+        <p>
+          Routing is resolved at capture time rather than reconciled afterwards. Each contractor gets
+          a single-tenant landing page for their own service area, so the territory is already
+          implied by where the homeowner arrived; the ZIP field then confirms it.
+        </p>
+        <ol class="sysflow">
+          <li><span class="n">01</span><b>Territory landing page</b><span class="d">One page per territory, belonging to one contractor. The routing decision starts before the form is opened.</span></li>
+          <li><span class="n">02</span><b>Homeowner intake</b><span class="d">Name, service address, contact phone, service type &mdash; repair or replacement &mdash; urgency, and the service ZIP.</span></li>
+          <li><span class="n">03</span><b>Validation</b><span class="d">Service-area coverage, service type and contact details are checked before the request is treated as a lead.</span></li>
+          <li class="stop"><span class="n">04</span><b>Duplicate check</b><span class="d">Recent submissions are checked so the same job is not routed twice. A lead&rsquo;s value depends on it being singular.</span></li>
+          <li><span class="n">05</span><b>Territory resolution</b><span class="d">The ZIP resolves to exactly one territory. Anything outside covered ZIPs is set aside for manual review rather than dropped or force-fitted.</span></li>
+          <li class="gate"><span class="n">06</span><b>Assignment</b><span class="d">The request becomes the property of the one contractor who owns that territory. There is no second recipient.</span></li>
+          <li><span class="n">07</span><b>Contractor action</b><span class="d">The contractor works the request from a dashboard &mdash; status changes, notes, follow-up &mdash; against a record with a submission timestamp and a visible trail.</span></li>
+        </ol>
+        <p class="figcap">Fig. 1 &mdash; intake to ownership. Steps 03&ndash;05 all run before anyone is contacted.</p>
+
+        <h2 class="case-h"><span class="n">04</span>The territory model</h2>
+        <p>
+          Exclusivity here is an inventory constraint, not a marketing promise. If a ZIP range maps
+          to one contractor, then the number of contractors the product can sell to is fixed by
+          geography, and revenue per territory is capped by construction. That is an uncomfortable
+          property for a lead business, and it is the whole idea: a scarce thing can be priced;
+          an unlimited thing has to be sold on volume.
+        </p>
+        <div class="zipgrid" role="img" aria-label="A grid of ZIP ranges in which exactly one is marked as owned, the rest unclaimed">
+          <span>ZIP</span><span>ZIP</span><span class="owned">Owned</span><span>ZIP</span><span>ZIP</span>
+          <span>ZIP</span><span>ZIP</span><span>ZIP</span><span>ZIP</span><span>ZIP</span>
+        </div>
+        <p class="figcap">Fig. 2 &mdash; one contractor per ZIP range. The demo covers ten Louisiana ZIPs, New Orleans through Lafayette.</p>
+        <p>
+          Two further constraints follow from the same commitment. Qualification happens
+          <em>before</em> handoff, because a promise of exclusivity is worthless if the exclusive
+          thing turns out to be a duplicate or an out-of-area request. And pricing is kept off the
+          platform entirely &mdash; the site says so plainly, describing it as a conversation rather than
+          a checkout. While the territory model is unproven, self-serve pricing would be committing
+          to numbers the product has not earned the right to quote.
+        </p>
+        <p>
+          The homeowner side carries its own boundaries: submissions are used only to respond to
+          that service request &mdash; no newsletters, no remarketing, no third-party list resale &mdash; and
+          records carry a stated ninety-day retention, a submission timestamp, and a trail the
+          receiving contractor can see. In a category that resells contact data by default, a
+          declared retention limit is a product decision.
+        </p>
+
+        <h2 class="case-h"><span class="n">05</span>A different system from Bayou Vendor Records</h2>
+        <p>
+          Both are small operational prototypes in this wing, and they are deliberately not the same
+          shape.
+        </p>
+        <div class="contrast">
+          <div><h3>TerritoryOne</h3><p>Validation &rarr; allocation &rarr; routing &rarr; <b>ownership</b>. The interesting moment is a single decision made once, correctly, before anyone acts.</p></div>
+          <div><h3><a href="../bayou-vendor-records/">Bayou Vendor Records</a></h3><p>Record &rarr; status &rarr; expiration &rarr; <b>attention</b>. The interesting moment is a state accumulating quietly until it needs a person.</p></div>
+        </div>
+
+        <h2 class="case-h"><span class="n">06</span>My role</h2>
+        <p>
+          Product concept, the system rules &mdash; exclusivity, qualification before handoff, duplicate
+          suppression, out-of-area handling &mdash; the territory model, the intake and routing workflow,
+          the two-sided interface direction, the homeowner data boundaries, the commercial model
+          including the decision to keep pricing off-platform, and deployment of the working demo.
+        </p>
+        <p>
+          The application was <strong>built and directed on an agentic development platform</strong>
+          &mdash; Polsia &mdash; rather than from a blank repository. The rules the system enforces, and the
+          reasons it enforces them, are the work I am showing here.
+        </p>
+
+        <h2 class="case-h"><span class="n">07</span>Current status and limitations</h2>
+        <div class="caveat">
+          <h3>This is a demonstration. The contractor in it does not exist.</h3>
+          <p>
+            The live site runs in demo mode on synthetic data, and says so: the example company is
+            fictional and used only to demonstrate the intake and validation path. There is no live
+            service behind it.
+          </p>
+          <p style="margin-bottom:0">
+            No paying contractors, live traffic, lead volume, conversion rate or customer traction is
+            claimed anywhere on this page, because none of it exists to claim. What has been built is
+            the routing model and a working homeowner-facing path through it.
+          </p>
+        </div>
+        <p style="margin-top:var(--s-5)">Also:</p>
+        <ul>
+          <li>The contractor dashboard is behind sign-in and was not publicly inspectable, so it is
+              described here only as far as the product surface documents it.</li>
+          <li>Territory coverage in the demo is ten ZIP codes. Whether ZIP-range exclusivity holds up
+              against real service-area geography &mdash; which does not respect postal boundaries &mdash; is
+              the first thing a pilot would have to test.</li>
+          <li>No public repository exists for this project, so no source link is offered. The
+              implementation stack is not enumerated here; see the technology note in the sidebar.</li>
+          <li>Duplicate suppression is described by the product as a check on recent submissions.
+              Its exact window and matching rule were not publicly verifiable.</li>
+        </ul>
+      </div>
+
+      <aside class="case__aside">
+<dl class="facts"><dt>Status</dt><dd>Prototype &mdash; working demo, synthetic data</dd><dt>Year</dt><dd>2026</dd><dt>Type</dt><dd>Self-created product</dd><dt>Domain</dt><dd>Residential AC repair &amp; replacement; independent contractors</dd><dt>Core model</dt><dd>Intake &rarr; validation &rarr; duplicate check &rarr; territory resolution &rarr; single-owner assignment</dd><dt>Role</dt><dd>Product concept, system rules, territory model, workflow architecture, UX direction, commercial model, deployment</dd><dt>Built with</dt><dd>Polsia &mdash; agentic development platform</dd><dt>Technology note</dt><dd>No public repository exists and the implementation stack was not independently verified for this page, so no framework or library is listed here.</dd><dt>Demo coverage</dt><dd>Ten Louisiana ZIP codes, New Orleans to Lafayette</dd></dl><div class="facts"><dt style="font-family:var(--rf-mono);font-size:var(--t-nano);letter-spacing:var(--rf-track-s);text-transform:uppercase;color:var(--rf-muted);font-weight:600;margin-bottom:12px">Links</dt><ul class="linklist"><li><a href="https://territoryone.polsia.app" rel="noopener">Open Working Demo &rarr;</a></li></ul></div>
+      </aside>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="../../data/projects.js"></script>
+<script src="../../assets/js/cards.js"></script>
+</body>
+</html>
