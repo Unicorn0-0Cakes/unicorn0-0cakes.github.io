@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" data-world="design">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lantern Reply — Candice Cantrelle</title>
+<meta name="description" content="A local-visibility service for independent South Louisiana HVAC companies, designed as a defined workflow: a free manual profile review, three prioritised actions, and a monthly engagement in which nothing is published without the owner's approval.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/design/lantern-reply/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lantern Reply — Candice Cantrelle">
+<meta property="og:description" content="A local-visibility service for independent South Louisiana HVAC companies, designed as a defined workflow: a free manual profile review, three prioritised actions, and a monthly engagement in which nothing is published without the owner's approval.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/design/lantern-reply/">
+<meta property="og:site_name" content="Candice Cantrelle">
+<meta property="og:image" content="https://unicorn0-0cakes.github.io/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Share card: the wordmark C C slash Portfolio, the name Candice Cantrelle set large, the disciplines Software, AI/ML, Scientific simulation and Systems design, the line &ldquo;The medium changes. The systems thinking does not.&rdquo;, and a seven-ring orbit diagram centred on the word Systems, one ring per discipline.">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Lantern Reply — Candice Cantrelle">
+<meta name="twitter:description" content="A local-visibility service for independent South Louisiana HVAC companies, designed as a defined workflow: a free manual profile review, three prioritised actions, and a monthly engagement in which nothing is published without the owner's approval.">
+<meta name="twitter:image" content="https://unicorn0-0cakes.github.io/assets/og-card.png">
+<meta name="twitter:image:alt" content="Share card: the wordmark C C slash Portfolio, the name Candice Cantrelle set large, the disciplines Software, AI/ML, Scientific simulation and Systems design, the line &ldquo;The medium changes. The systems thinking does not.&rdquo;, and a seven-ring orbit diagram centred on the word Systems, one ring per discipline.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/shell.css">
+<link rel="stylesheet" href="../../assets/css/cards.css">
+<link rel="stylesheet" href="../../assets/css/worlds.css">
+<script src="../../assets/js/shell.js"></script>
+
+<style>
+.case { display:grid; grid-template-columns: minmax(0,1fr) 300px; gap: var(--s-8); align-items:start; }
+@media (max-width: 980px) { .case { grid-template-columns: 1fr; gap: var(--s-6); } }
+/* Grid items default to min-width:auto, so the inner auto-fit figure grid
+   would otherwise push this column past a phone viewport. Load-bearing. */
+.case > * { min-width: 0; }
+.case__aside { position: sticky; top: 84px; display: grid; gap: var(--s-5); }
+@media (max-width: 980px) { .case__aside { position: static; } }
+.facts { border:1px solid var(--rf-line); border-radius:var(--w-radius);
+         background:var(--rf-panel); padding:var(--s-5); margin:0; }
+.facts dt { font-family:var(--rf-mono); font-size:var(--t-nano); letter-spacing:var(--rf-track-s);
+            text-transform:uppercase; color:var(--rf-muted); font-weight:600; }
+.facts dd { margin:3px 0 var(--s-4); font-size:var(--t-small); color:var(--rf-ink); }
+.facts dd:last-child { margin-bottom:0; }
+.linklist { list-style:none; padding:0; margin:0; display:grid; gap:var(--s-2); }
+.linklist li { margin:0; }
+.linklist a { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track-s);
+              text-transform:uppercase; font-weight:600; }
+.q { font-family:var(--rf-display); font-size:clamp(19px,2.2vw,26px); font-weight:500;
+     line-height:1.32; letter-spacing:-.02em; color:var(--rf-ink); margin:0 0 var(--s-5);
+     padding-left:var(--s-5); border-left:3px solid var(--w-accent); max-width:34ch; }
+.caveat { border:1px solid var(--rf-watch); border-left-width:3px; border-radius:var(--rf-radius);
+          padding:var(--s-5); background:var(--rf-panel); }
+.caveat h3 { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+             text-transform:uppercase; color:var(--rf-watch); margin:0 0 var(--s-3); font-weight:600; }
+.caveat p { font-size:var(--t-small); color:var(--rf-ink-dim); }
+h2.case-h { font-family:var(--rf-display); font-size:var(--t-h2); margin:var(--s-8) 0 var(--s-4);
+            padding-bottom:var(--s-3); border-bottom:1px solid var(--rf-line); }
+h2.case-h:first-child { margin-top:0; }
+h2.case-h .n { font-family:var(--rf-mono); font-size:var(--t-micro); letter-spacing:var(--rf-track);
+               color:var(--w-accent); margin-right:var(--s-3); }
+
+/* ---- The system figure. A wrapping grid rather than a wide SVG, so a
+       phone gets a readable vertical sequence instead of a shrunk
+       picture of one. The step numbers carry the order. ---- */
+.sysflow { list-style:none; padding:0; margin:var(--s-5) 0 var(--s-4);
+           display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:var(--s-3); }
+.sysflow li { margin:0; border:1px solid var(--rf-line); border-top:2px solid var(--w-accent);
+              border-radius:var(--rf-radius); background:var(--rf-panel); padding:var(--s-4); }
+.sysflow li.gate { border-top-color:var(--rf-watch); }
+.sysflow .n { display:block; font-family:var(--rf-mono); font-size:var(--t-nano);
+              letter-spacing:var(--rf-track-s); text-transform:uppercase; color:var(--w-accent);
+              font-weight:600; margin-bottom:var(--s-2); }
+.sysflow li.gate .n { color:var(--rf-watch); }
+.sysflow b { display:block; font-size:var(--t-small); margin-bottom:4px; line-height:1.3; }
+.sysflow .d { display:block; font-size:var(--t-nano); line-height:1.55; color:var(--rf-ink-dim); }
+.figcap { font-family:var(--rf-mono); font-size:var(--t-nano); letter-spacing:var(--rf-track-s);
+          text-transform:uppercase; color:var(--rf-muted); margin:0 0 var(--s-6); }
+.refuse { list-style:none; padding:0; margin:var(--s-4) 0 0; display:grid; gap:var(--s-2); }
+.refuse li { margin:0; padding-left:1.5em; position:relative; font-size:var(--t-small); color:var(--rf-ink-dim); }
+.refuse li::before { content:"\00D7"; position:absolute; left:0; color:var(--rf-danger); font-weight:700; }
+</style>
+</head>
+
+<body>
+<div data-shell-header></div>
+<main id="main">
+<div class="wrap"><ol class="crumbs"><li><a href="../../">Portfolio</a></li><li><a href="../../design/">Design</a></li><li><span aria-current="page">Lantern Reply</span></li></ol></div>
+  <header class="plate">
+    <div class="wrap plate__grid">
+      <div>
+        <p class="plate__kicker">Case study &middot; Design &middot; Product &amp; service system</p>
+        <h1>Lantern Reply</h1>
+        <p class="plate__lede">A marketing problem with no natural edges, turned into a service with a fixed intake, a bounded deliverable, and one gate that everything has to pass through before it becomes public.</p>
+      </div>
+      <p class="stamp"><b>Showcase</b><br>Product &middot; Service design<br>2026</p>
+    </div>
+    <div class="wrap"><hr class="plate__rule" style="margin-top:32px"></div>
+  </header>
+
+
+  <section class="doc">
+    <div class="wrap case">
+      <div>
+        <p class="q">What does a small contractor actually buy when they buy &ldquo;help with Google&rdquo;?</p>
+
+        <h2 class="case-h"><span class="n">01</span>What it is</h2>
+        <p>
+          Lantern Reply is a Google Business Profile service for independent HVAC companies in
+          South Louisiana. It has two surfaces. The first is the <strong>Map Check</strong>: a free,
+          manually written read of a company&rsquo;s public profile that comes back as three
+          prioritised actions in an email, with no call attached. The second is a monthly
+          engagement &mdash; the Founding Client Offer &mdash; that carries out that kind of work on a
+          fixed cadence for one business location.
+        </p>
+        <p>
+          It is a service, not a piece of software, but it was designed the way software is
+          designed: a defined input, a defined state it moves through, a defined output, and an
+          explicit list of things it will not do.
+        </p>
+
+        <h2 class="case-h"><span class="n">02</span>The problem</h2>
+        <p>
+          An owner-operated HVAC company runs trucks across several parishes and is listed at one
+          address. Reviews arrive in a burst during a hot stretch or after a storm and get answered
+          three weeks later, or not at all. The last photo on the profile is from the previous
+          winter. None of that is a marketing failure exactly &mdash; it is what happens when the person
+          who would fix it is the same person who is on a roof.
+        </p>
+        <p>
+          The commercial problem underneath is worse: the category that sells into it is full of
+          vendors promising rankings, and a buyer has no way of telling a real service from a
+          confident one. So the product&rsquo;s first job is not visibility. It is legibility &mdash; making
+          it obvious, before any money changes hands, exactly what is going to be done and what
+          is not.
+        </p>
+
+        <h2 class="case-h"><span class="n">03</span>The system</h2>
+        <p>
+          The free tier and the paid tier are the same pipeline run at different lengths. The Map
+          Check stops after step three; the engagement continues in a monthly loop through steps
+          four to six.
+        </p>
+        <ol class="sysflow">
+          <li><span class="n">01</span><b>Intake</b><span class="d">Four fields: business name, business email, trade, primary city or parish. Nothing else is asked for up front.</span></li>
+          <li><span class="n">02</span><b>Manual review</b><span class="d">A person reads the public profile across five fixed dimensions &mdash; accuracy, categories and services, service-area clarity, review activity, photos and posts.</span></li>
+          <li><span class="n">03</span><b>Three priorities</b><span class="d">The finding is compressed to the three highest-priority actions and sent by email. The count is the product, not a summary of a longer report.</span></li>
+          <li><span class="n">04</span><b>Monthly drafts</b><span class="d">Review responses, profile posts and field edits are prepared against a fixed monthly allowance rather than an open-ended scope.</span></li>
+          <li class="gate"><span class="n">05</span><b>Owner approval</b><span class="d">Nothing is published until the owner has read it and agreed to the wording. This is the gate the whole service is built around.</span></li>
+          <li><span class="n">06</span><b>Publish &amp; report</b><span class="d">Approved work goes live; the month closes with a plain-language report of what changed and where the next month lands.</span></li>
+        </ol>
+        <p class="figcap">Fig. 1 &mdash; the service pipeline. Steps 01&ndash;03 are the free Map Check; 04&ndash;06 repeat monthly.</p>
+
+        <h2 class="case-h"><span class="n">04</span>What the customer actually buys</h2>
+        <p>
+          The engagement is deliberately countable. It covers one business location, at a
+          published rate &mdash; a one-time setup fee and a monthly fee, month to month, no annual
+          term &mdash; and the monthly deliverable is a list with numbers in it rather than a promise:
+          an opening profile audit, a branded review-request link and QR code, two request
+          templates, up to twenty individualised review-response drafts, four profile posts, field
+          and service-area edits, and a monthly report.
+        </p>
+        <p>
+          Every one of those is a thing that either happened or did not. That was the point.
+          A buyer in this category cannot verify a ranking claim, but anyone can count four posts.
+        </p>
+
+        <h2 class="case-h"><span class="n">05</span>Constraint design</h2>
+        <p>
+          The most deliberate part of the product is the list of things it refuses, published on
+          the marketing page rather than buried in the terms:
+        </p>
+        <ul class="refuse">
+          <li>No fake offices</li>
+          <li>No purchased reviews</li>
+          <li>No review gating &mdash; nobody is filtered out of being asked</li>
+          <li>No invented service areas</li>
+          <li>No guaranteed rankings, ratings, calls, leads or revenue</li>
+        </ul>
+        <p style="margin-top:var(--s-5)">
+          Three of those five are refusals of tactics that would work in the short term, which is
+          why they belong on the front page: the constraint is only meaningful where it costs
+          something. The sixth rule &mdash; client approval before publication &mdash; is the one that shapes
+          the workflow, because it forces every deliverable into a draft state with an owner who
+          has to sign it off, and rules out the whole class of &ldquo;we&rsquo;ll handle it&rdquo; automation the
+          category normally sells.
+        </p>
+        <p>
+          The same logic runs through the sample deliverable. Rather than showing a real client&rsquo;s
+          results, the site publishes worked examples for fictional businesses, each labelled as
+          fictional on the page it appears on. A prospective buyer gets to see the format of the
+          work product without the format being propped up by a case study that would have to be
+          taken on trust.
+        </p>
+
+        <h2 class="case-h"><span class="n">06</span>My role</h2>
+        <p>
+          I defined and built the product: the concept, the two-tier service architecture, the
+          intake and approval workflow, the five review dimensions, the contents and limits of the
+          monthly deliverable, the refusal list, the positioning and voice, the pricing structure,
+          the interface, and the launch of the live site on its own domain.
+        </p>
+        <p>
+          The application itself was <strong>built and directed on an agentic development
+          platform</strong> &mdash; Polsia &mdash; rather than assembled from a blank repository. What I brought
+          to it is the part that is specific to this system: what the product is, who it is for,
+          what moves through it, what it is allowed to claim, and what it must not do. The
+          framework scaffolding underneath is the platform&rsquo;s.
+        </p>
+
+        <h2 class="case-h"><span class="n">07</span>What exists now</h2>
+        <p>
+          A live service on its own domain, with a public marketing surface, a working intake form
+          for the free Map Check, a published sample-deliverable page, published pricing, a service
+          terms page, a privacy notice, a blog and an authenticated client sign-in. The commercial
+          offer is defined and open: a founding cohort capped at five South Louisiana businesses,
+          at a rate stated to close when those slots are filled.
+        </p>
+
+        <h2 class="case-h"><span class="n">08</span>Limitations</h2>
+        <div class="caveat">
+          <h3>There are no outcome numbers here, and there will not be</h3>
+          <p>
+            The product tells its own customers it does not guarantee rankings, ratings, calls,
+            leads or revenue. A portfolio case study that then reported a ranking improvement or a
+            revenue figure would be contradicting the thing it is describing. What is demonstrated
+            here is a designed and deployed service system &mdash; not a measured commercial result.
+          </p>
+          <p style="margin-bottom:0">
+            The founding cohort is open rather than filled, and no client outcomes are claimed,
+            because none have been measured.
+          </p>
+        </div>
+        <p style="margin-top:var(--s-5)">Also worth stating plainly:</p>
+        <ul>
+          <li>The client-side application is behind sign-in, so what is publicly inspectable is the
+              marketing surface, the intake path and the sample deliverable &mdash; not the working
+              client tooling.</li>
+          <li>The repository is private. The implementation stack is therefore not enumerated on
+              this page; see the technology note in the sidebar.</li>
+          <li>The service is scoped to one location per engagement and to one trade in one region.
+              That is a deliberate limit, but it is a limit.</li>
+        </ul>
+
+        <h2 class="case-h"><span class="n">09</span>Why it sits in Design</h2>
+        <p>
+          Because the artefact is not the website. It is the service: what gets asked, in what
+          order, by whom, with what held back for approval, and with which claims ruled out
+          before anyone is tempted to make them. The visual and verbal system exists to make that
+          structure legible to someone deciding whether to trust it &mdash; which is the same problem
+          as an identity, solved with a workflow instead of a mark.
+        </p>
+      </div>
+
+      <aside class="case__aside">
+<dl class="facts"><dt>Status</dt><dd>Showcase</dd><dt>Year</dt><dd>2026</dd><dt>Type</dt><dd>Self-created product &amp; service system</dd><dt>Role</dt><dd>Product concept, service architecture, workflow, UX, copy system, positioning, commercial offer, deployment</dd><dt>Sector</dt><dd>Independent HVAC, South Louisiana</dd><dt>Surfaces</dt><dd>Marketing site &middot; free intake &middot; sample deliverable &middot; client sign-in</dd><dt>Built with</dt><dd>Polsia &mdash; agentic development platform</dd><dt>Technology note</dt><dd>The repository is private and the implementation stack was not independently verified for this page, so no framework or library is listed here.</dd></dl><div class="facts"><dt style="font-family:var(--rf-mono);font-size:var(--t-nano);letter-spacing:var(--rf-track-s);text-transform:uppercase;color:var(--rf-muted);font-weight:600;margin-bottom:12px">Links</dt><ul class="linklist"><li><a href="https://www.lanternreply.com" rel="noopener">Visit Lantern Reply &rarr;</a></li></ul></div>
+      </aside>
+    </div>
+  </section>
+</main>
+<div data-shell-footer></div>
+
+<script src="../../data/projects.js"></script>
+<script src="../../assets/js/cards.js"></script>
+</body>
+</html>
