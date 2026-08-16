@@ -50,6 +50,14 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://unicorn0-0cakes.github.io/software/bayou-vendor-records/</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://unicorn0-0cakes.github.io/software/territoryone/</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://unicorn0-0cakes.github.io/ai-ml/facial-emotion-detection/</loc>
     <priority>0.6</priority>
   </url>
@@ -59,6 +67,10 @@
   </url>
   <url>
     <loc>https://unicorn0-0cakes.github.io/research/multimodal-archaeology/</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://unicorn0-0cakes.github.io/design/lantern-reply/</loc>
     <priority>0.6</priority>
   </url>
   <url>
