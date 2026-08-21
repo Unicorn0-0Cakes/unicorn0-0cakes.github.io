@@ -29,7 +29,26 @@
     currentScramble: '',
 
     // Solve History: Array of objects { id, time, puzzle, scramble, timestamp, penalty: null|'+2'|'DNF' }
-    solves: []
+    solves: [],
+
+    // --- SESSION ---
+    // A session is one sitting, not one day. It starts when the page loads
+    // and exists so the console can give a long practice run some shape.
+    sessionStart: Date.now(),
+    sessionSolves: 0,
+    milestonesHit: {},
+    tickerId: null,
+
+    // --- DIRECTIVES ---
+    // The console occasionally asks for something specific instead of just
+    // another solve. See the DIRECTIVES block below for what and why.
+    directivesEnabled: true,
+    directive: null,        // the live one, or null
+    lastDirectiveId: null,  // so the same one never lands twice running
+    solvesSinceDirective: 0,
+    directivesMet: 0,
+    directivesSeen: 0,
+    maskTimer: false        // set by the blind directive
   };
 
   // --- AUDIO SYNTHESIZER (Web Audio API) ---
@@ -122,6 +141,22 @@
       let lastFace = '';
 
       while (result.length < 40) {
+        const face = faces[Math.floor(Math.random() * faces.length)];
+        if (face === lastFace) continue;
+        const suf = suffixes[Math.floor(Math.random() * suffixes.length)];
+        result.push(face + suf);
+        lastFace = face;
+      }
+      return result.join(' ');
+    },
+
+    '555': function () {
+      const faces = ['U', 'D', 'L', 'R', 'F', 'B', 'Uw', 'Dw', 'Lw', 'Rw', 'Fw', 'Bw'];
+      const suffixes = ['', "'", '2'];
+      const result = [];
+      let lastFace = '';
+
+      while (result.length < 60) {
         const face = faces[Math.floor(Math.random() * faces.length)];
         if (face === lastFace) continue;
         const suf = suffixes[Math.floor(Math.random() * suffixes.length)];
@@ -289,7 +324,8 @@
   function startTimer() {
     STATE.timerState = 'RUNNING';
     STATE.startTime = performance.now();
-    timerDisplay.className = 'timer-display state-running';
+    STATE.maskTimer = !!(STATE.directive && STATE.directive.mask);
+    timerDisplay.className = 'timer-display state-running' + (STATE.maskTimer ? ' is-masked' : '');
     timerStatusHint.textContent = 'TIMING... PRESS ANY KEY TO STOP';
 
     playTone(880, 'sine', 0.06, 0.12);
@@ -297,7 +333,9 @@
     function update() {
       if (STATE.timerState !== 'RUNNING') return;
       STATE.elapsedTime = performance.now() - STATE.startTime;
-      timerDisplay.textContent = formatTime(STATE.elapsedTime);
+      /* Under a blind directive the clock still runs; it just is not shown.
+         The whole value of that drill is losing the digits. */
+      timerDisplay.textContent = STATE.maskTimer ? '\u00b7 \u00b7 \u00b7' : formatTime(STATE.elapsedTime);
       STATE.animFrameId = requestAnimationFrame(update);
     }
     STATE.animFrameId = requestAnimationFrame(update);
@@ -306,6 +344,7 @@
   function stopTimer() {
     cancelAnimationFrame(STATE.animFrameId);
     STATE.timerState = 'IDLE';
+    STATE.maskTimer = false;
     timerDisplay.className = 'timer-display';
     timerStatusHint.textContent = 'SOLVE COMPLETE! HOLD [SPACE] FOR NEXT';
 
@@ -316,7 +355,9 @@
 
     // Check if new PB!
     const activeSolves = STATE.solves.filter(s => s.puzzle === STATE.puzzle && s.penalty !== 'DNF');
-    const bestBefore = activeSolves.length > 0 ? Math.min(...activeSolves.map(s => s.effectiveTime)) : Infinity;
+    const bestBefore = activeSolves.length > 0 ? Math.min(...activeSolves.map(getEffectiveTime)) : Infinity;
+    const bestAo5Before = calculateBestAverage(
+      STATE.solves.filter(s => s.puzzle === STATE.puzzle), 5);
     const currentEffective = penalty === 'DNF' ? Infinity : rawMs + (penalty === '+2' ? 2000 : 0);
 
     const newSolve = {
@@ -331,13 +372,420 @@
 
     STATE.solves.unshift(newSolve);
     saveSolvesToStorage();
+    STATE.sessionSolves++;
 
     if (currentEffective < bestBefore) {
       playChime();
     }
 
+    /* The reveal, then the reckoning, then whatever comes next. Order
+       matters: the time is on screen before anything comments on it. */
+    timerDisplay.textContent = formatTime(rawMs, penalty);
     renderAll();
+    resolveDirective(newSolve);
+    reportAchievements(newSolve, bestBefore, bestAo5Before);
+    checkCountMilestones();
+    maybeIssueDirective();
     generateScramble();
+  }
+
+  /* ======================================================================
+     SETTINGS
+     ----------------------------------------------------------------------
+     Theme, audio, inspection and directives are remembered. A tool people
+     open every day should not need re-configuring every day.
+     ====================================================================== */
+  const SETTINGS_KEY = 'cubetimer_settings';
+
+  function saveSettings() {
+    try {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify({
+        puzzle: STATE.puzzle,
+        soundEnabled: STATE.soundEnabled,
+        inspectionEnabled: STATE.inspectionEnabled,
+        themeIndex: STATE.themeIndex,
+        directivesEnabled: STATE.directivesEnabled,
+        directivesMet: STATE.directivesMet,
+        directivesSeen: STATE.directivesSeen
+      }));
+    } catch (e) { /* private mode */ }
+  }
+
+  function loadSettings() {
+    try {
+      const raw = localStorage.getItem(SETTINGS_KEY);
+      if (!raw) return;
+      const s = JSON.parse(raw) || {};
+      if (SCRAMBLERS[s.puzzle]) STATE.puzzle = s.puzzle;
+      if (typeof s.soundEnabled === 'boolean') STATE.soundEnabled = s.soundEnabled;
+      if (typeof s.inspectionEnabled === 'boolean') STATE.inspectionEnabled = s.inspectionEnabled;
+      if (typeof s.themeIndex === 'number' && STATE.themes[s.themeIndex]) STATE.themeIndex = s.themeIndex;
+      if (typeof s.directivesEnabled === 'boolean') STATE.directivesEnabled = s.directivesEnabled;
+      if (typeof s.directivesMet === 'number') STATE.directivesMet = s.directivesMet;
+      if (typeof s.directivesSeen === 'number') STATE.directivesSeen = s.directivesSeen;
+    } catch (e) { /* corrupt settings should never stop the timer */ }
+  }
+
+  /* ======================================================================
+     THE CONSOLE
+     ----------------------------------------------------------------------
+     One line at the foot of the screen. Most of the time it reports where
+     the session is up to; when something actually happens it says so, and
+     then goes quiet again.
+
+     Everything it prints is read out of the solve history. It never
+     congratulates anyone for showing up.
+     ====================================================================== */
+  let consoleTimeout = null;
+
+  function say(message, tone) {
+    const el = document.getElementById('console-line');
+    if (!el) return;
+    el.textContent = message;
+    el.className = 'console-line' + (tone ? ' tone-' + tone : '');
+    clearTimeout(consoleTimeout);
+    consoleTimeout = setTimeout(function () {
+      el.textContent = '';
+      el.className = 'console-line';
+    }, 9000);
+  }
+
+  function clockString(ms) {
+    const total = Math.floor(ms / 1000);
+    const m = Math.floor(total / 60);
+    const s = total % 60;
+    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+
+  function tickSession() {
+    const el = document.getElementById('status-text');
+    if (!el) return;
+    const elapsed = Date.now() - STATE.sessionStart;
+    const bits = ['SESSION ' + clockString(elapsed)];
+    if (STATE.sessionSolves) bits.push(STATE.sessionSolves + ' SOLVE' + (STATE.sessionSolves === 1 ? '' : 'S'));
+    const mean = sessionMean();
+    if (mean) bits.push('MEAN ' + formatTime(mean));
+    el.textContent = bits.join('  ·  ');
+
+    const d = document.getElementById('directive-tally');
+    if (d) d.textContent = STATE.directivesSeen
+      ? STATE.directivesMet + '/' + STATE.directivesSeen
+      : '—';
+
+    checkTimeMilestones(elapsed);
+  }
+
+  function sessionMean() {
+    const times = puzzleTimes();
+    if (!times.length) return null;
+    return Math.round(times.reduce(function (a, b) { return a + b; }, 0) / times.length);
+  }
+
+  /* Times for the current puzzle, newest first, DNFs excluded. */
+  function puzzleTimes() {
+    return STATE.solves
+      .filter(function (s) { return s.puzzle === STATE.puzzle && s.penalty !== 'DNF'; })
+      .map(getEffectiveTime);
+  }
+
+  function pctile(times, p) {
+    if (!times.length) return null;
+    const sorted = times.slice().sort(function (a, b) { return a - b; });
+    const i = Math.max(0, Math.min(sorted.length - 1, Math.round((sorted.length - 1) * p)));
+    return sorted[i];
+  }
+
+  /* Session milestones. Announced once each, and only ever describing
+     something that is true. */
+  const TIME_MILESTONES = [15, 30, 45, 60];
+
+  function checkTimeMilestones(elapsed) {
+    const mins = Math.floor(elapsed / 60000);
+    for (let i = 0; i < TIME_MILESTONES.length; i++) {
+      const m = TIME_MILESTONES[i];
+      if (mins >= m && !STATE.milestonesHit['t' + m] && STATE.sessionSolves >= 5) {
+        STATE.milestonesHit['t' + m] = true;
+        say('>> ' + m + ' MINUTES IN — ' + STATE.sessionSolves + ' SOLVES ON THE BOARD', 'note');
+        return;
+      }
+    }
+  }
+
+  const COUNT_MILESTONES = [10, 25, 50, 100, 200];
+
+  function checkCountMilestones() {
+    if (COUNT_MILESTONES.indexOf(STATE.sessionSolves) === -1) return;
+    if (STATE.milestonesHit['c' + STATE.sessionSolves]) return;
+    STATE.milestonesHit['c' + STATE.sessionSolves] = true;
+
+    const trend = trendReport();
+    say('>> ' + STATE.sessionSolves + ' SOLVES' + (trend ? ' — ' + trend : ''), 'note');
+  }
+
+  /* Compare the last twelve against the twelve before them. Only reported
+     when there are actually twenty-four to compare. */
+  function trendReport() {
+    const times = puzzleTimes();
+    if (times.length < 24) return null;
+    const recent = times.slice(0, 12);
+    const prior = times.slice(12, 24);
+    const avg = function (a) { return a.reduce(function (x, y) { return x + y; }, 0) / a.length; };
+    const delta = avg(prior) - avg(recent);
+    if (Math.abs(delta) < 250) return 'HOLDING STEADY';
+    return delta > 0
+      ? 'DOWN ' + (delta / 1000).toFixed(2) + 'S ON THE LAST TWELVE'
+      : 'UP ' + (Math.abs(delta) / 1000).toFixed(2) + 'S ON THE LAST TWELVE';
+  }
+
+  /* ======================================================================
+     DIRECTIVES
+     ----------------------------------------------------------------------
+     A directive is a small, specific thing to attempt on the next solve or
+     three. It is the difference between "solve again" and "solve for
+     something", and it is the whole reason a session can hold someone for
+     an hour rather than ten minutes.
+
+     Rules it plays by, deliberately:
+
+       Rare      — never in the first few solves, never twice in a row, and
+                   only about one solve in four after that. Something that
+                   happens every time is a chore, not an event.
+       Earned    — every target is computed from that person's own recent
+                   times, so it always sits just past what they are doing
+                   now. Nothing is a fixed number pulled from the air.
+       Optional  — it never blocks the timer. Ignore it and it lapses.
+       Quiet     — a line of text and a status word. No points, no badges,
+                   no confetti. The console notices; that is all.
+
+     Each entry supplies ready() to say whether there is enough history for
+     it to mean anything, and make() to build the live instance.
+     ====================================================================== */
+  const DIRECTIVES = [
+    {
+      /* A target drawn from the better third of recent solves: reachable,
+         but not on a bad one. */
+      id: 'pace',
+      ready: function (c) { return c.times.length >= 6; },
+      make: function (c) {
+        const target = pctile(c.times.slice(0, 24), 0.3);
+        return {
+          label: 'UNDER ' + formatTime(target),
+          hint: 'drawn from your better solves this session',
+          span: 1,
+          judge: function (s) { return getEffectiveTime(s) < target; }
+        };
+      }
+    },
+    {
+      /* Consistency is harder than speed and almost never practised. */
+      id: 'steady',
+      ready: function (c) { return c.times.length >= 4; },
+      make: function (c) {
+        const last = c.times[0];
+        const tol = 1500;
+        return {
+          label: 'WITHIN 1.5S OF ' + formatTime(last),
+          hint: 'repeatability, not speed',
+          span: 1,
+          judge: function (s) { return Math.abs(getEffectiveTime(s) - last) <= tol; }
+        };
+      }
+    },
+    {
+      /* The timer goes dark while it runs. Builds a sense of pace that
+         watching the digits actively prevents. */
+      id: 'blind',
+      ready: function (c) { return c.times.length >= 3; },
+      make: function () {
+        return {
+          label: 'BLIND — THE TIMER STAYS DARK',
+          hint: 'no digits until you stop',
+          span: 1,
+          mask: true,
+          judge: function (s) { return s.penalty !== 'DNF'; }
+        };
+      }
+    },
+    {
+      id: 'no-inspect',
+      ready: function (c) { return c.times.length >= 5 && STATE.inspectionEnabled; },
+      make: function () {
+        return {
+          label: 'STRAIGHT IN — NO INSPECTION',
+          hint: 'read it while you turn',
+          span: 1,
+          noInspect: true,
+          judge: function (s) { return s.penalty !== 'DNF'; }
+        };
+      }
+    },
+    {
+      id: 'beat-mean',
+      ready: function (c) { return c.times.length >= 8; },
+      make: function (c) {
+        const mean = Math.round(c.times.reduce(function (a, b) { return a + b; }, 0) / c.times.length);
+        return {
+          label: 'UNDER YOUR MEAN — ' + formatTime(mean),
+          hint: null,
+          span: 1,
+          judge: function (s) { return getEffectiveTime(s) < mean; }
+        };
+      }
+    },
+    {
+      /* Only offered after a bad one, so it reads as the console noticing
+         rather than as a scheduled prompt. */
+      id: 'recover',
+      ready: function (c) {
+        if (c.times.length < 8) return false;
+        const slow = pctile(c.times, 0.8);
+        return c.times[0] >= slow;
+      },
+      make: function (c) {
+        const mid = pctile(c.times, 0.5);
+        return {
+          label: 'SHAKE IT OFF — UNDER ' + formatTime(mid),
+          hint: 'the last one was slower than usual',
+          span: 1,
+          judge: function (s) { return getEffectiveTime(s) < mid; }
+        };
+      }
+    },
+    {
+      /* The only multi-solve directive. Three in a row is a genuinely
+         different skill from one good one. */
+      id: 'clean-three',
+      ready: function (c) { return c.times.length >= 10; },
+      make: function (c) {
+        const cap = pctile(c.times, 0.7);
+        return {
+          label: 'THREE CLEAN — NONE OVER ' + formatTime(cap),
+          hint: 'no DNFs, three in a row',
+          span: 3,
+          judge: function (s, progress) {
+            if (s.penalty === 'DNF' || getEffectiveTime(s) > cap) return false;
+            return progress >= 3 ? true : null;
+          }
+        };
+      }
+    }
+  ];
+
+  function directiveContext() {
+    return { times: puzzleTimes() };
+  }
+
+  function maybeIssueDirective() {
+    if (!STATE.directivesEnabled || STATE.directive) return;
+    if (STATE.sessionSolves < 3) return;              // let them warm up
+    if (STATE.solvesSinceDirective < 2) return;       // breathing room
+    if (Math.random() > 0.28) return;                 // rare by design
+
+    const ctx = directiveContext();
+    const pool = DIRECTIVES.filter(function (d) {
+      return d.id !== STATE.lastDirectiveId && d.ready(ctx);
+    });
+    if (!pool.length) return;
+
+    const chosen = pool[Math.floor(Math.random() * pool.length)];
+    const inst = chosen.make(ctx);
+    inst.id = chosen.id;
+    inst.progress = 0;
+    STATE.directive = inst;
+    STATE.lastDirectiveId = chosen.id;
+    STATE.solvesSinceDirective = 0;
+    STATE.directivesSeen++;
+    saveSettings();
+    renderDirective();
+    playTone(587, 'triangle', 0.09, 0.09);
+  }
+
+  function renderDirective() {
+    const strip = document.getElementById('directive-strip');
+    const label = document.getElementById('directive-label');
+    const hint = document.getElementById('directive-hint');
+    if (!strip) return;
+
+    if (!STATE.directive) { strip.classList.add('hidden'); return; }
+    strip.classList.remove('hidden');
+    strip.className = 'directive-strip';
+    let text = STATE.directive.label;
+    if (STATE.directive.span > 1) {
+      text += '   [' + STATE.directive.progress + '/' + STATE.directive.span + ']';
+    }
+    label.textContent = text;
+    hint.textContent = STATE.directive.hint || '';
+  }
+
+  function resolveDirective(solve) {
+    const d = STATE.directive;
+    if (!d) { STATE.solvesSinceDirective++; return; }
+
+    d.progress++;
+    const verdict = d.judge(solve, d.progress);
+
+    if (verdict === null) { renderDirective(); return; }   // still running
+
+    const strip = document.getElementById('directive-strip');
+    const label = document.getElementById('directive-label');
+    const hint = document.getElementById('directive-hint');
+
+    if (verdict) {
+      STATE.directivesMet++;
+      if (strip) strip.className = 'directive-strip is-met';
+      if (label) label.textContent = 'DIRECTIVE MET — ' + d.label;
+      if (hint) hint.textContent = '';
+      playTone(784, 'triangle', 0.12, 0.13);
+      setTimeout(function () { playTone(1046, 'triangle', 0.14, 0.12); }, 90);
+    } else {
+      if (strip) strip.className = 'directive-strip is-missed';
+      if (label) label.textContent = 'DIRECTIVE LAPSED — ' + d.label;
+      if (hint) hint.textContent = 'it comes back around';
+    }
+
+    STATE.directive = null;
+    STATE.maskTimer = false;
+    STATE.solvesSinceDirective = 0;
+    saveSettings();
+    setTimeout(function () {
+      if (!STATE.directive) {
+        const s = document.getElementById('directive-strip');
+        if (s) s.classList.add('hidden');
+      }
+    }, 5000);
+  }
+
+  /* ======================================================================
+     RECOGNITION
+     ----------------------------------------------------------------------
+     Rare because the things it reports are rare. A personal best, a
+     barrier crossed for the first time, a best average beaten. If none of
+     those happened, it says nothing.
+     ====================================================================== */
+  function reportAchievements(solve, bestBefore, bestAo5Before) {
+    if (solve.penalty === 'DNF') return;
+    const eff = getEffectiveTime(solve);
+
+    if (eff < bestBefore) {
+      /* Crossing a ten-second barrier for the first time is the one every
+         cuber remembers, so it gets said out loud instead of the generic
+         line. */
+      const barrier = Math.ceil(eff / 5000) * 5;
+      const crossed = bestBefore !== Infinity &&
+                      Math.floor(bestBefore / 5000) > Math.floor(eff / 5000);
+      if (crossed) {
+        say('>> FIRST SUB-' + (Math.floor(eff / 5000) + 1) * 5 + ' — ' + formatTime(eff), 'win');
+      } else {
+        say('>> PERSONAL BEST — ' + formatTime(eff), 'win');
+      }
+      return;
+    }
+
+    const ao5 = calculateBestAverage(
+      STATE.solves.filter(function (s) { return s.puzzle === STATE.puzzle; }), 5);
+    if (typeof ao5 === 'number' && typeof bestAo5Before === 'number' && ao5 < bestAo5Before) {
+      say('>> BEST Ao5 — ' + formatTime(ao5), 'win');
+    }
   }
 
   // --- STATISTICS CALCULATOR ENGINE ---
@@ -729,15 +1177,37 @@
 
   // --- INITIALIZATION & EVENT BINDINGS ---
   function init() {
+    loadSettings();
     loadSolvesFromStorage();
+
+    // Restore whatever was in use last time before the first paint of state.
+    document.body.className = STATE.themes[STATE.themeIndex];
+    const soundLbl = document.querySelector('#btn-sound .btn-lbl');
+    if (soundLbl) soundLbl.textContent = STATE.soundEnabled ? 'AUDIO: ON' : 'AUDIO: OFF';
+    const inspectStatus = document.getElementById('inspect-status');
+    if (inspectStatus) inspectStatus.textContent = STATE.inspectionEnabled ? 'ON' : 'OFF';
+    if (STATE.inspectionEnabled) document.getElementById('btn-inspection').classList.add('active');
+
     generateScramble();
     renderAll();
+    renderDirective();
+
+    // The session clock. One second is plenty; nothing here is a stopwatch.
+    tickSession();
+    STATE.tickerId = setInterval(tickSession, 1000);
 
     // Puzzle selector
     const puzzleSelect = document.getElementById('puzzle-select');
+    puzzleSelect.value = STATE.puzzle;
+    const tag = document.getElementById('scramble-puzzle-tag');
+    if (tag) tag.textContent = puzzleSelect.options[puzzleSelect.selectedIndex].text;
     puzzleSelect.addEventListener('change', (e) => {
       STATE.puzzle = e.target.value;
       document.getElementById('scramble-puzzle-tag').textContent = e.target.options[e.target.selectedIndex].text;
+      /* A directive is scoped to the puzzle it was issued for. */
+      STATE.directive = null;
+      renderDirective();
+      saveSettings();
       generateScramble();
       renderAll();
     });
@@ -753,6 +1223,7 @@
     soundBtn.addEventListener('click', () => {
       STATE.soundEnabled = !STATE.soundEnabled;
       soundBtn.querySelector('.btn-lbl').textContent = STATE.soundEnabled ? 'AUDIO: ON' : 'AUDIO: OFF';
+      saveSettings();
     });
 
     // Inspection toggle
@@ -762,6 +1233,7 @@
       document.getElementById('inspect-status').textContent = STATE.inspectionEnabled ? 'ON' : 'OFF';
       if (STATE.inspectionEnabled) inspectBtn.classList.add('active');
       else inspectBtn.classList.remove('active');
+      saveSettings();
     });
 
     // Theme Switcher
@@ -770,6 +1242,7 @@
       document.body.className = '';
       STATE.themeIndex = (STATE.themeIndex + 1) % STATE.themes.length;
       document.body.classList.add(STATE.themes[STATE.themeIndex]);
+      saveSettings();
     });
 
     // Clear session
@@ -777,8 +1250,28 @@
       if (confirm('Clear solves for current puzzle?')) {
         STATE.solves = STATE.solves.filter(s => s.puzzle !== STATE.puzzle);
         saveSolvesToStorage();
+        STATE.sessionSolves = 0;
+        STATE.sessionStart = Date.now();
+        STATE.milestonesHit = {};
+        STATE.directive = null;
+        renderDirective();
         renderAll();
       }
+    });
+
+    // Directives on/off
+    const dirBtn = document.getElementById('btn-directives');
+    function paintDirButton() {
+      document.getElementById('directive-status').textContent = STATE.directivesEnabled ? 'ON' : 'OFF';
+      dirBtn.classList.toggle('active', STATE.directivesEnabled);
+    }
+    paintDirButton();
+    dirBtn.addEventListener('click', function () {
+      STATE.directivesEnabled = !STATE.directivesEnabled;
+      if (!STATE.directivesEnabled) { STATE.directive = null; renderDirective(); }
+      paintDirButton();
+      saveSettings();
+      say(STATE.directivesEnabled ? '>> DIRECTIVES ON' : '>> DIRECTIVES OFF', 'note');
     });
 
     // Seed Data
@@ -867,7 +1360,7 @@
           if (STATE.timerState === 'RUNNING') {
             stopTimer();
           } else if (STATE.timerState === 'IDLE') {
-            if (STATE.inspectionEnabled) {
+            if (STATE.inspectionEnabled && !(STATE.directive && STATE.directive.noInspect)) {
               startInspection();
             } else {
               startArmingTimer();
@@ -888,6 +1381,8 @@
         document.getElementById('btn-sound').click();
       } else if (e.code === 'KeyT') {
         document.getElementById('btn-theme').click();
+      } else if (e.code === 'KeyG') {
+        document.getElementById('btn-directives').click();
       } else if (e.key === '?') {
         if (helpModal.classList.contains('hidden')) openHelp(); else closeHelp();
       } else if (e.altKey && e.code === 'Digit1') {
@@ -915,7 +1410,7 @@
       if (STATE.timerState === 'RUNNING') {
         stopTimer();
       } else if (STATE.timerState === 'IDLE') {
-        if (STATE.inspectionEnabled) {
+        if (STATE.inspectionEnabled && !(STATE.directive && STATE.directive.noInspect)) {
           startInspection();
         } else {
           startArmingTimer();

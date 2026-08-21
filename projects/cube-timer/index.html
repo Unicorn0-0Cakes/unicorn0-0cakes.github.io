@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A terminal-style speedcubing timer: five puzzles, random-move scrambles, WCA inspection, +2 and DNF penalties, Ao5/Ao12/Ao50 and a 365-day practice matrix. No account, no network.">
+  <meta name="description" content="A terminal-style speedcubing timer: six puzzles, random-move scrambles, WCA inspection, +2 and DNF penalties, Ao5/Ao12/Ao50, occasional practice directives and a 365-day practice matrix. No account, no network.">
   <title>CUBE//TIMER — Candice Cantrelle</title>
   <meta name="author" content="Candice Cantrelle">
   <meta name="theme-color" content="#070908">
@@ -12,7 +12,7 @@
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="CUBE//TIMER — Candice Cantrelle">
-  <meta property="og:description" content="A terminal-style speedcubing timer: five puzzles, random-move scrambles, WCA inspection, penalties, full averages and a 365-day practice matrix. Runs entirely in the page.">
+  <meta property="og:description" content="A terminal-style speedcubing timer: six puzzles, random-move scrambles, WCA inspection, penalties, full averages, practice directives and a 365-day practice matrix. Runs entirely in the page.">
   <meta property="og:url" content="https://unicorn0-0cakes.github.io/projects/cube-timer/">
   <meta property="og:site_name" content="Candice Cantrelle">
 
@@ -51,6 +51,7 @@
           <option value="333">3x3x3</option>
           <option value="222">2x2x2</option>
           <option value="444">4x4x4</option>
+          <option value="555">5x5x5</option>
           <option value="pyram">Pyraminx</option>
           <option value="skewb">Skewb</option>
         </select>
@@ -62,6 +63,9 @@
         </button>
         <button id="btn-inspection" class="icon-btn" title="Toggle 15s WCA Inspection (I)" aria-label="Toggle Inspection">
           <span class="icon" aria-hidden="true">⏱️</span> <span class="btn-lbl">INSPECT: <span id="inspect-status">OFF</span></span>
+        </button>
+        <button id="btn-directives" class="icon-btn" title="Directives: occasional targets drawn from your own times (G)" aria-label="Toggle Directives">
+          <span class="icon" aria-hidden="true">◆</span> <span class="btn-lbl">DIRECTIVES: <span id="directive-status">ON</span></span>
         </button>
         <button id="btn-theme" class="icon-btn" title="Cycle Terminal Theme (T)" aria-label="Cycle Theme">
           <span class="icon" aria-hidden="true">🎨</span> <span class="btn-lbl">THEME</span>
@@ -160,6 +164,17 @@
           <div class="scramble-text" id="scramble-text">Loading scramble...</div>
         </div>
 
+        <!-- DIRECTIVE
+             Appears rarely and never blocks anything. role="status" so it
+             is announced once when it arrives rather than interrupting. -->
+        <div class="directive-strip hidden" id="directive-strip" role="status">
+          <span class="directive-mark" aria-hidden="true">◆</span>
+          <span class="directive-body">
+            <span class="directive-label" id="directive-label"></span>
+            <span class="directive-hint" id="directive-hint"></span>
+          </span>
+        </div>
+
         <!-- TIMER DISPLAY AREA -->
         <div class="timer-display-wrap" id="timer-touch-area">
           <div class="inspection-display hidden" id="inspection-display">
@@ -238,15 +253,22 @@
     <!-- FOOTER / STATUS BAR -->
     <footer class="bottom-bar">
       <div class="status-left">
-        <span class="status-indicator"></span>
-        <span id="status-text">READY // SYSTEM ONLINE</span>
+        <span class="status-indicator" aria-hidden="true"></span>
+        <span id="status-text">SESSION 00:00</span>
+        <span class="status-sep" aria-hidden="true">·</span>
+        <span class="tally" title="Directives met this device">◆ <span id="directive-tally">—</span></span>
       </div>
+
+      <!-- The console speaks here. Polite, so it never cuts across the
+           timer being read out. -->
+      <div class="console-line" id="console-line" role="status" aria-live="polite"></div>
+
       <div class="status-right">
         <span>[SPACE] Timer</span>
         <span>[R] Scramble</span>
+        <span>[G] Directives</span>
         <span>[Alt+1] +2</span>
         <span>[Alt+2] DNF</span>
-        <span>[Alt+D] Delete</span>
       </div>
     </footer>
 
@@ -272,10 +294,20 @@
           <tr><td><kbd>I</kbd></td><td>Toggle 15s WCA Inspection</td></tr>
           <tr><td><kbd>M</kbd></td><td>Toggle Sound Effects</td></tr>
           <tr><td><kbd>T</kbd></td><td>Cycle Terminal Theme</td></tr>
+          <tr><td><kbd>G</kbd></td><td>Directives on / off</td></tr>
           <tr><td><kbd>?</kbd></td><td>Open Help Window</td></tr>
         </table>
         <div class="modal-tip">
-          <strong>Tip:</strong> Daily solves are automatically tracked on your 365-day Activity Matrix. Keep solving daily to build your streak visual momentum!
+          <strong>Directives.</strong> Every so often the console asks for something
+          specific on the next solve &mdash; a time to beat, three clean in a row, or
+          the timer going dark until you stop. Targets are worked out from your own
+          recent solves, so they always sit just past where you are. They are
+          optional: ignore one and it lapses. Press <kbd>G</kbd> to turn them off.
+        </div>
+        <div class="modal-tip">
+          <strong>Activity matrix.</strong> Every solve is dated, so the last 365 days
+          fill in as you practise. The streak counts consecutive days &mdash; a day you
+          have not started yet does not break it.
         </div>
       </div>
     </div>

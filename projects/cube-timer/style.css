@@ -1018,3 +1018,112 @@ select:focus-visible,
   .cc-return { font-size: 0.68rem; }
   .cc-return .cc-links { gap: 10px; }
 }
+
+/* ==========================================================================
+   DIRECTIVES AND THE CONSOLE
+   --------------------------------------------------------------------------
+   Both of these exist to make a long session hold together. They are
+   deliberately quiet: one accent line and one status word. No score, no
+   badge, no confetti. The console notices what happened; that is the whole
+   reward, and it is the only one that stays interesting after an hour.
+   ========================================================================== */
+
+.directive-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border-color);
+  background:
+    linear-gradient(90deg, var(--accent-dim), transparent 70%),
+    var(--bg-panel);
+  border-left: 2px solid var(--accent-color);
+  font-size: 0.78rem;
+}
+
+.directive-strip.hidden { display: none; }
+
+.directive-mark {
+  color: var(--accent-color);
+  text-shadow: var(--accent-glow);
+  line-height: 1.5;
+  flex: none;
+}
+
+.directive-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+
+.directive-label {
+  color: var(--text-main);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.directive-hint {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+}
+
+/* Met and lapsed differ in weight, not in alarm. A missed directive is not
+   a failure state and is never coloured like one. */
+.directive-strip.is-met {
+  border-left-color: var(--accent-color);
+  background: linear-gradient(90deg, var(--accent-dim), transparent 70%), var(--bg-panel);
+}
+.directive-strip.is-met .directive-label {
+  color: var(--accent-color);
+  text-shadow: var(--accent-glow);
+}
+
+.directive-strip.is-missed {
+  border-left-color: var(--border-color);
+  background: var(--bg-panel);
+}
+.directive-strip.is-missed .directive-label { color: var(--text-muted); }
+
+/* The blind directive. The digits are still there, just unreadable, so the
+   layout never jumps when they come back. */
+.timer-display.is-masked {
+  color: var(--text-muted);
+  opacity: 0.35;
+  letter-spacing: 12px;
+}
+
+/* ---- the console line ---------------------------------------------------- */
+.console-line {
+  flex: 1;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 12px;
+  min-height: 1em;
+}
+
+.console-line.tone-note { color: var(--text-main); }
+.console-line.tone-win {
+  color: var(--accent-color);
+  text-shadow: var(--accent-glow);
+  font-weight: 700;
+}
+
+.status-sep { color: var(--border-color); margin: 0 2px; }
+.tally { color: var(--text-muted); }
+.tally #directive-tally { color: var(--accent-color); font-weight: 700; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .directive-strip { animation: directive-in 0.35s ease both; }
+  @keyframes directive-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: none; }
+  }
+}
+
+@media (max-width: 900px) {
+  .console-line { display: none; }
+  .bottom-bar .status-right span:nth-child(n+4) { display: none; }
+}

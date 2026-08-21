@@ -301,21 +301,21 @@ const PROJECTS = [
     visibility: "public",
     treatment: "ui",
     year: "2026",
-    summary: "A terminal-style speedcubing console: five puzzles, WCA inspection with its +2 and DNF rules, full averages, and a year of practice drawn as a matrix. Everything is in the page \u2014 no account, no network, no dependency.",
+    summary: "A terminal-style speedcubing console: six puzzles, WCA inspection, full averages, and a year of practice drawn as a matrix. Every so often it asks for something specific \u2014 a time to beat, three clean in a row, the timer going dark \u2014 with the target read off your own recent solves.",
     question: "What does a practice tool look like when the practice history is the point, not the stopwatch?",
     role: "Design and build",
     tech: ["HTML", "CSS", "JavaScript", "Web Audio", "localStorage"],
-    chips: ["Zero dependencies", "Offline", "Five puzzles", "365-day matrix"],
+    chips: ["Zero dependencies", "Offline", "Six puzzles", "365-day matrix"],
     /* Every number here was counted out of the source, not estimated.
        Scrambles are random-MOVE with redundant-turn filtering, which is the
        right tool for practice and is NOT the random-state generation the WCA
        requires for competition \u2014 so the description says "WCA inspection",
        which it implements exactly, and never "WCA scrambles". */
     metrics: [
-      { k: "Puzzles scrambled", v: "5" },
+      { k: "Puzzles scrambled", v: "6" },
       { k: "Runtime dependencies", v: "0" }
     ],
-    metricsNote: "Counted from data/projects.js's sibling source at projects/cube-timer/. Five scramble generators (3x3, 2x2, 4x4, Pyraminx, Skewb); no library is loaded at runtime.",
+    metricsNote: "Counted from data/projects.js's sibling source at projects/cube-timer/. Six scramble generators (3x3, 2x2, 4x4, 5x5, Pyraminx, Skewb); no library is loaded at runtime.",
     links: { live: "/projects/cube-timer/", source: GH + "unicorn0-0cakes.github.io/tree/main/projects/cube-timer" }
   },
 
