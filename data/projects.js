@@ -44,7 +44,8 @@
      unlisted, and "unlisted" was never a status a visitor should read.
 
    treatment        — which card plate is used. diagram | scope | viz |
-                      ui | image | flow | lanes | territory | none.
+                      ui | image | flow | lanes | territory | quadrant |
+                      none.
                       Purely visual; does not affect the metadata
                       structure.
 
@@ -222,6 +223,23 @@ const PROJECTS = [
     chips: ["500 simulated years", "Preregistered effect sizes", "Reproducible"],
     links: { live: SIM_BASE + "cce/cce.html", methods: SIM_BASE + "cce/methods.html", source: GH + "simulations/tree/main/cce" }
   },
+  {
+    id: "ferry-terminal",
+    title: "Ferry Terminal",
+    category: "simulations",
+    portfolioStatus: "prototype",
+    visibility: "public",
+    treatment: "scope",
+    year: "2026",
+    summary: "A single berth, a fixed timetable, and a queue that is only served in batches. Vehicles pile up between sailings; a departure clears as many as fit and leaves the rest for the next one. Measure who waited, how long, and who never sailed — and watch the answer change once you stop counting only the vehicles that made it aboard.",
+    question: "When a queue is only served at scheduled departures, who waits, how long, and who never sails at all?",
+    role: "Design, queueing model, implementation",
+    tech: ["JavaScript", "Discrete-event simulation", "Bulk-service queueing model"],
+    evidence: "Uncalibrated prototype",
+    basis: "After Hanssen, Jørgensen & Larsen, 2020",
+    chips: ["Timetable-coupled arrivals", "Denied-boarding carry-over", "Survivorship-corrected waiting time"],
+    links: { live: SIM_BASE + "ferry-terminal/ferry-terminal.html", methods: SIM_BASE + "ferry-terminal/methods.html", source: GH + "simulations/tree/main/ferry-terminal" }
+  },
 
   /* ═══════════════════════════════════════════════════════════════════
      SOFTWARE & TOOLS
@@ -317,6 +335,26 @@ const PROJECTS = [
     ],
     metricsNote: "Counted from data/projects.js's sibling source at projects/cube-timer/. Six scramble generators (3x3, 2x2, 4x4, 5x5, Pyraminx, Skewb); no library is loaded at runtime.",
     links: { live: "/projects/cube-timer/", source: GH + "unicorn0-0cakes.github.io/tree/main/projects/cube-timer" }
+  },
+  {
+    id: "docket",
+    plateCap: "Brain dump → matrix",
+    title: "Docket",
+    category: "software",
+    /* Prototype: every MVP path works and was exercised end to end in a
+       headless browser before it shipped, but it has not yet carried a
+       real working week. Promote to showcase once it has. */
+    portfolioStatus: "prototype",
+    visibility: "public",
+    treatment: "quadrant",
+    year: "2026",
+    summary: "A work to-do list that sorts itself. Paste everything on your mind; plain rules read each line for deadlines, blockers and \u201cif I have time\u201d and file it into an Eisenhower matrix, flagging the guesses for review. Finished work earns points you spend on breaks you defined.",
+    question: "Can a to-do list lower the cost of deciding what matters, instead of just storing it?",
+    role: "Design and build",
+    tech: ["HTML", "CSS", "JavaScript", "localStorage", "Web Audio"],
+    chips: ["No account", "Tasks never leave the browser", "Rule-based sorting, no AI API", "JSON backup"],
+    metricsNote: "No usage figures exist and none are implied. The classifier is deterministic and its whole rule set is readable in projects/docket/classify.js.",
+    links: { live: "/projects/docket/", source: GH + "unicorn0-0cakes.github.io/tree/main/projects/docket" }
   },
 
   /* ═══════════════════════════════════════════════════════════════════

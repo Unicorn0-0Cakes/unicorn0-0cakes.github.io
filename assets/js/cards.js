@@ -103,6 +103,7 @@
     if (t === "flow")      return '<div class="plate-area plate-area--diagram">' + flowArt(p) + cap + "</div>";
     if (t === "lanes")     return '<div class="plate-area plate-area--diagram">' + lanesArt(p) + cap + "</div>";
     if (t === "territory") return '<div class="plate-area plate-area--diagram">' + territoryArt(p) + cap + "</div>";
+    if (t === "quadrant")  return '<div class="plate-area plate-area--diagram">' + quadrantArt(p) + cap + "</div>";
     return "";
   }
 
@@ -399,6 +400,38 @@
            '<path d="M96 88 l7 7 M103 88 l-7 7" stroke="' + D + '" stroke-width="1.5" stroke-linecap="round"/>';
     return '<svg viewBox="0 0 200 110" role="img" aria-label="A grid of ZIP ranges in which one cell is marked as owned and routed to a single contractor node, while a second inbound request is struck out before routing">' +
       arrowDefs(p.id) + out + "</svg>";
+  }
+
+  /* QUADRANT — Docket's Eisenhower matrix. Four cells in the same four
+     semantic inks the tool itself uses, the heaviest load in the
+     urgent-and-important corner, and one row already ticked off there.
+     A fixed drawing, like the three product figures above. */
+  function quadrantArt(p) {
+    var CELLS = [
+      { x: 24,  y: 10, c: "var(--rf-action)", rows: [58, 44, 50], done: 0 },
+      { x: 106, y: 10, c: "var(--rf-teal)",   rows: [52, 38] },
+      { x: 24,  y: 58, c: "var(--rf-watch)",  rows: [40] },
+      { x: 106, y: 58, c: "var(--rf-slate)",  rows: [] }
+    ];
+    var out = '<path d="M12 10V96M24 6H186" stroke="var(--rf-line)" stroke-width=".8"/>';
+    for (var i = 0; i < CELLS.length; i++) {
+      var q = CELLS[i];
+      out += '<rect x="' + q.x + '" y="' + q.y + '" width="76" height="40" rx="2" fill="var(--rf-panel)" ' +
+             'stroke="var(--rf-line)" stroke-width="1"/>' +
+             '<rect x="' + q.x + '" y="' + q.y + '" width="76" height="2.6" fill="' + q.c + '"/>';
+      for (var j = 0; j < q.rows.length; j++) {
+        var ry = q.y + 11 + j * 9.5, ticked = q.done === j;
+        out += '<rect x="' + (q.x + 6) + '" y="' + (ry - 2.6) + '" width="5.2" height="5.2" rx=".8" ' +
+               (ticked ? 'fill="' + q.c + '"' : 'fill="none" stroke="' + q.c + '" stroke-width=".9"') + "/>" +
+               '<rect x="' + (q.x + 15) + '" y="' + (ry - 0.9) + '" width="' + q.rows[j] + '" height="1.8" ' +
+               'fill="' + (ticked ? "var(--rf-line)" : "var(--rf-ink)") + '" opacity="' + (ticked ? ".9" : ".55") + '"/>';
+      }
+      if (!q.rows.length) {
+        out += '<path d="M' + (q.x + 32) + " " + (q.y + 21) + 'h12" stroke="' + q.c + '" stroke-width="1"/>';
+      }
+    }
+    return '<svg viewBox="0 0 200 110" role="img" aria-label="A two-by-two task matrix: three tasks in the urgent and important cell with the first ticked off, two in the important cell, one in the urgent cell, and the fourth cell clear">' +
+      out + "</svg>";
   }
 
   function uiArt(p) {

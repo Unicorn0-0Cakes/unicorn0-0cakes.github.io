@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" data-world="software">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docket — Candice Cantrelle</title>
+<meta name="description" content="A local-first work docket: brain-dump everything, let deterministic rules sort it into an Eisenhower matrix, and turn finished work into Break Bank points you spend on breaks you chose yourself. No account; tasks never leave the browser.">
+<meta name="author" content="Candice Cantrelle">
+<link rel="icon" type="image/png" href="../../favicon.png">
+<link rel="canonical" href="https://unicorn0-0cakes.github.io/projects/docket/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Docket — Candice Cantrelle">
+<meta property="og:description" content="Brain dump in, Eisenhower matrix out. Finished work earns Break Bank points for breaks you define. Runs entirely in the page; nothing is sent anywhere.">
+<meta property="og:url" content="https://unicorn0-0cakes.github.io/projects/docket/">
+<meta property="og:site_name" content="Candice Cantrelle">
+<meta property="og:image" content="https://unicorn0-0cakes.github.io/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://unicorn0-0cakes.github.io/assets/og-card.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+
+<!-- The portfolio's own design system, not a copy of it: a change to a
+     token changes this tool too. app.css only adds what a working tool
+     needs that a wing page does not. -->
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/shell.css">
+<link rel="stylesheet" href="../../assets/css/worlds.css">
+<link rel="stylesheet" href="app.css">
+<!-- shell.js resolves the day/night theme before paint and wires the
+     theme button. There is no [data-shell-header] placeholder here on
+     purpose: a tool kept open all day gets a compact bar, not the full
+     portfolio masthead. -->
+<script src="../../assets/js/shell.js"></script>
+<script src="classify.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+
+<body class="dk">
+<a class="skip-link" href="#main">Skip to tasks</a>
+
+<div class="dk-top">
+  <header class="dk-bar">
+    <div class="dk-bar__inner">
+      <a class="wordmark" href="../../" aria-label="Candice Cantrelle portfolio home"><em>CC</em><span class="slash">/</span><span class="sub">Portfolio</span></a>
+      <p class="dk-crumb"><a href="../../software/">Software</a><span aria-hidden="true">/</span><b>Docket</b></p>
+
+      <nav class="dk-tabs" aria-label="Docket views">
+        <a href="#/" data-view="matrix">Matrix</a>
+        <a href="#/do" data-view="do" data-q="do">Do now <span class="dk-tabs__n" data-count="do"></span></a>
+        <a href="#/schedule" data-view="schedule" data-q="schedule">Schedule <span class="dk-tabs__n" data-count="schedule"></span></a>
+        <a href="#/delegate" data-view="delegate" data-q="delegate">Delegate <span class="dk-tabs__n" data-count="delegate"></span></a>
+        <a href="#/later" data-view="later" data-q="later">Later <span class="dk-tabs__n" data-count="later"></span></a>
+        <a href="#/focus" data-view="focus">Focus</a>
+        <a href="#/rewards" data-view="rewards">Rewards</a>
+      </nav>
+
+      <div class="dk-tools">
+        <div class="dk-menu">
+          <button class="dk-iconbtn" type="button" id="menu-btn" aria-expanded="false" aria-controls="menu-pop" aria-label="Backup and settings">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
+          </button>
+          <div class="dk-pop" id="menu-pop" hidden>
+            <button type="button" data-act="export">Export backup</button>
+            <button type="button" data-act="import">Import backup…</button>
+            <button type="button" data-act="sound" aria-pressed="false">Completion sound <span data-sound-state>off</span></button>
+            <button type="button" data-act="keys">Keyboard shortcuts</button>
+            <p class="dk-pop__note">Everything is stored in this browser only. Export a backup before clearing site data or switching computers.</p>
+          </div>
+          <input type="file" id="import-file" accept="application/json,.json" hidden>
+        </div>
+        <button class="theme-btn" type="button" aria-label="Switch theme">
+          <svg class="i-day" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg>
+          <svg class="i-night" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="dk-capture">
+    <form class="dk-add" id="quick-add" autocomplete="off">
+      <label class="sr-only" for="quick-input">Add a task</label>
+      <span class="dk-add__plus" aria-hidden="true">+</span>
+      <input id="quick-input" type="text" maxlength="280" placeholder="Add a task, then press Enter" enterkeyhint="done">
+      <button type="button" class="dk-qchip" id="quick-chip" hidden aria-label="Destination quadrant. Click to change."></button>
+      <button type="submit" class="sr-only">Add task</button>
+    </form>
+    <button type="button" class="btn btn--solid dk-dumpbtn" id="dump-btn">Brain dump</button>
+
+    <dl class="dk-strip" aria-label="Today">
+      <div><dt>Today</dt><dd data-stat="date">—</dd></div>
+      <div><dt>Open</dt><dd data-stat="open">0</dd></div>
+      <div><dt>Done today</dt><dd data-stat="done">0</dd></div>
+      <div><dt>Earned today</dt><dd data-stat="earned">0</dd></div>
+      <div class="dk-strip__bank"><dt><a href="#/rewards">Break Bank</a></dt><dd data-stat="bank" id="bank">0</dd></div>
+    </dl>
+  </div>
+</div>
+
+<main id="main" class="dk-main" tabindex="-1">
+  <noscript>
+    <div class="dk-noscript">
+      <p>Docket runs in the browser and needs JavaScript. Nothing is sent to a server; tasks are kept in this browser's local storage.</p>
+      <p><a href="../../software/">Back to Software</a></p>
+    </div>
+  </noscript>
+</main>
+
+<!-- BRAIN DUMP -->
+<dialog class="dk-dialog dk-dump" id="dump" aria-labelledby="dump-title">
+  <form method="dialog" class="dk-dump__form" id="dump-form">
+    <header class="dk-dialog__head">
+      <h2 id="dump-title">Brain dump</h2>
+      <p>One task per line. Sorting happens as you type; click any destination to change it before adding.</p>
+    </header>
+    <div class="dk-dump__cols">
+      <div class="dk-dump__in">
+        <label class="sr-only" for="dump-text">Tasks, one per line</label>
+        <textarea id="dump-text" spellcheck="true" placeholder="Finish weekly report&#10;Check Brazil integration issue&#10;Email Rick about replacement training&#10;Review documentation tomorrow&#10;Look at training material if I have time"></textarea>
+        <p class="dk-hint">Words like <em>today</em>, <em>ASAP</em>, <em>blocking</em>, <em>someday</em> or <em>if I have time</em> steer the sorting. Dates such as <em>tomorrow</em>, <em>Friday</em> or <em>10/3</em> become due dates. <code>#tag</code> adds a tag.</p>
+      </div>
+      <div class="dk-dump__out" aria-live="polite">
+        <p class="label">Sorted</p>
+        <ol class="dk-preview" id="dump-preview"></ol>
+      </div>
+    </div>
+    <footer class="dk-dialog__foot">
+      <span class="dk-hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> adds</span>
+      <button type="button" class="btn" value="cancel" data-close>Cancel</button>
+      <button type="submit" class="btn btn--solid" id="dump-submit" value="add" disabled>Add tasks</button>
+    </footer>
+  </form>
+</dialog>
+
+<!-- TASK SHEET -->
+<dialog class="dk-dialog dk-sheet" id="sheet" aria-labelledby="sheet-title">
+  <form method="dialog" id="sheet-form">
+    <header class="dk-dialog__head">
+      <h2 id="sheet-title">Edit task</h2>
+      <p id="sheet-why" class="dk-why" hidden></p>
+    </header>
+    <div class="dk-fields">
+      <label class="dk-field"><span>Task</span><textarea name="text" rows="2" maxlength="280" required></textarea></label>
+      <fieldset class="dk-field">
+        <legend>Quadrant</legend>
+        <div class="dk-seg dk-seg--q" role="radiogroup">
+          <label><input type="radio" name="quadrant" value="do"><span>Do now</span></label>
+          <label><input type="radio" name="quadrant" value="schedule"><span>Schedule</span></label>
+          <label><input type="radio" name="quadrant" value="delegate"><span>Delegate</span></label>
+          <label><input type="radio" name="quadrant" value="later"><span>Later</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="dk-field">
+        <legend>Effort</legend>
+        <div class="dk-seg" role="radiogroup">
+          <label><input type="radio" name="effort" value="quick"><span>Quick <small>1 pt</small></span></label>
+          <label><input type="radio" name="effort" value="normal"><span>Normal <small>3 pts</small></span></label>
+          <label><input type="radio" name="effort" value="deep"><span>Deep <small>5 pts</small></span></label>
+        </div>
+      </fieldset>
+      <div class="dk-field-row">
+        <label class="dk-field"><span>Due</span><input type="date" name="due"></label>
+        <label class="dk-field"><span>Project or tag</span><input type="text" name="tag" maxlength="40" placeholder="optional"></label>
+      </div>
+      <label class="dk-field"><span>Notes</span><textarea name="notes" rows="4" maxlength="4000" placeholder="optional"></textarea></label>
+      <p class="dk-sheet__meta" id="sheet-meta"></p>
+    </div>
+    <footer class="dk-dialog__foot">
+      <button type="button" class="btn dk-danger" id="sheet-delete">Delete</button>
+      <span class="dk-grow"></span>
+      <button type="button" class="btn" data-close>Cancel</button>
+      <button type="submit" class="btn btn--solid" value="save">Save</button>
+    </footer>
+  </form>
+</dialog>
+
+<!-- SHORTCUTS -->
+<dialog class="dk-dialog dk-keys" id="keys" aria-labelledby="keys-title">
+  <form method="dialog">
+    <header class="dk-dialog__head"><h2 id="keys-title">Keyboard shortcuts</h2></header>
+    <table>
+      <tbody>
+        <tr><td><kbd>N</kbd></td><td>Add a task</td></tr>
+        <tr><td><kbd>B</kbd></td><td>Brain dump</td></tr>
+        <tr><td><kbd>M</kbd></td><td>Matrix</td></tr>
+        <tr><td><kbd>1</kbd>–<kbd>4</kbd></td><td>Do now, Schedule, Delegate, Later</td></tr>
+        <tr><td><kbd>F</kbd></td><td>Focus</td></tr>
+        <tr><td><kbd>R</kbd></td><td>Rewards</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Close a dialog or menu</td></tr>
+      </tbody>
+    </table>
+    <footer class="dk-dialog__foot"><button class="btn btn--solid" value="close">Close</button></footer>
+  </form>
+</dialog>
+
+<!-- MOVE MENU (shared, positioned next to whichever task opened it) -->
+<div class="dk-pop dk-move" id="move-pop" role="menu" hidden></div>
+
+<p class="sr-only" id="live" aria-live="polite"></p>
+<div class="dk-toast" id="toast" role="status" aria-live="polite" hidden>
+  <span id="toast-msg"></span>
+  <button type="button" class="dk-toast__act" id="toast-act" hidden></button>
+</div>
+</body>
+</html>

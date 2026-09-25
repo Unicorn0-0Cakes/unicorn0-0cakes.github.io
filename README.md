@@ -63,7 +63,7 @@ request. It does **not** deploy — publishing stays a plain Pages operation.
 /about/                  About
 /about/credentials/      certificate programmes and coursework
 /map/                    star map — the whole site as one figure
-/projects/               self-hosted builds (the cube timer)
+/projects/               self-hosted builds (the cube timer, Docket)
 /assets/css/             five stylesheets, loaded in this order:
                            tokens · base · shell · cards · worlds
                          (+ starmap.css, on /map/ only)
@@ -276,6 +276,19 @@ every failure prints what is wrong and where. It checks:
 
 Run it before every commit. CI runs it too, but a red CI badge is a worse place
 to learn than a terminal.
+
+### Docket's classifier
+
+`projects/docket/classify.js` sorts brain-dump lines into Eisenhower quadrants
+with plain rules. Its decisions are pinned by a regression suite:
+
+```sh
+node tools/test-docket-classify.js
+```
+
+Run it after touching any rule. When a real line sorts wrongly and the rule is
+fixed, add that line as a case so the fix cannot quietly regress. CI does not
+run this yet.
 
 ---
 
