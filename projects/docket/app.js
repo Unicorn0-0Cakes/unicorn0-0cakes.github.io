@@ -20,10 +20,10 @@
   var KEY = "cc-docket-v1";
 
   var QUADS = {
-    do:       { name: "Do now",   axis: "Urgent + important",         empty: "Nothing urgent.",        key: "1" },
+    do:       { name: "Do",       axis: "Urgent + important",         empty: "Nothing urgent.",        key: "1" },
     schedule: { name: "Schedule", axis: "Important, not urgent",      empty: "Nothing waiting here.",  key: "2" },
-    delegate: { name: "Delegate", axis: "Urgent, not important",      empty: "Nothing to hand off.",   key: "3" },
-    later:    { name: "Later",    axis: "Neither urgent nor important", empty: "Clear.",               key: "4" }
+    delegate: { name: "Automate", axis: "Urgent, not important",      empty: "Nothing to hand off.",   key: "3" },
+    later:    { name: "Delete",   axis: "Neither urgent nor important", empty: "Clear.",               key: "4" }
   };
   var ORDER = ["do", "schedule", "delegate", "later"];
   var EFFORT = { quick: { label: "Quick", pts: 1 }, normal: { label: "Normal", pts: 3 }, deep: { label: "Deep", pts: 5 } };
@@ -140,13 +140,13 @@
   }
 
   /* FOCUS — the whole rule, in order:
-       1. Do now, most pressing due date first
+       1. Do, most pressing due date first
        2. Schedule items due within two days
        3. the rest of Schedule
-     Delegate and Later never appear: they are not "what to work on". */
+     Automate and Delete never appear: they are not "what to work on". */
   function recommend() {
     var now = new Date();
-    var doList = openTasks("do").sort(byDueThenAge).map(function (t) { return { t: t, why: dueWords(t) || "Do now" }; });
+    var doList = openTasks("do").sort(byDueThenAge).map(function (t) { return { t: t, why: dueWords(t) || "Do" }; });
     var sched = openTasks("schedule").sort(byDueThenAge);
     var soon = [], rest = [];
     sched.forEach(function (t) {
@@ -444,19 +444,19 @@
   function focusView() {
     var recs = recommend();
     var head = '<header class="fv__head"><h1>What to work on next</h1>' +
-      '<p class="dk-hint">Do now first, then Schedule items due within two days, then the rest of Schedule. ' +
+      '<p class="dk-hint">Do first, then Schedule items due within two days, then the rest of Schedule. ' +
       "Earliest due date, then oldest, within each.</p></header>";
     if (!recs.length) {
       var msg = skipped.length
         ? 'You set everything aside for now. <button type="button" class="btn btn--quiet" data-act="unskip">Show them again</button>'
-        : "Nothing important is waiting. Delegate and Later items are still on the <a href=\"#/\">matrix</a>.";
+        : "Nothing important is waiting. Automate and Delete items are still on the <a href=\"#/\">matrix</a>.";
       return '<section class="fv">' + head + '<p class="dk-empty dk-empty--lg">' + msg + "</p></section>";
     }
     var first = recs[0], t = first.t;
     var next = recs.slice(1, 3);
     return '<section class="fv">' + head +
       '<article class="fv__now" data-id="' + t.id + '" data-q="' + t.quadrant + '">' +
-        '<p class="fv__why"><span class="dk-qname" data-q="' + t.quadrant + '">' + QUADS[t.quadrant].name + "</span>" + esc(first.why && first.why !== "Do now" ? first.why : "") + "</p>" +
+        '<p class="fv__why"><span class="dk-qname" data-q="' + t.quadrant + '">' + QUADS[t.quadrant].name + "</span>" + esc(first.why && first.why !== "Do" ? first.why : "") + "</p>" +
         '<h2 class="fv__text">' + esc(t.text) + "</h2>" +
         (t.notes ? '<p class="fv__notes">' + esc(t.notes) + "</p>" : "") +
         '<div class="fv__acts">' +
@@ -520,7 +520,7 @@
           '<p class="label">How points are earned</p>' +
           '<table class="dk-rates"><tbody>' +
             "<tr><td>Quick</td><td>1</td></tr><tr><td>Normal</td><td>3</td></tr><tr><td>Deep</td><td>5</td></tr>" +
-            "<tr><td>Do now bonus</td><td>+" + DO_BONUS + "</td></tr>" +
+            "<tr><td>Do bonus</td><td>+" + DO_BONUS + "</td></tr>" +
           "</tbody></table>" +
         "</aside>" +
       "</div>" +

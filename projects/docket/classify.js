@@ -12,9 +12,9 @@
      u  urgency    — does this need attention soon?
      i  importance — does this move real work forward?
    plus two overrides that read more like intent than weight:
-     low    "someday / if I have time / optional" — pushes to Later
+     low    "someday / if I have time / optional" — pushes to Delete
      route  "email X / ask X / forward / loop in" — a routing job,
-            which is what the Delegate quadrant is for
+            which is what the Automate quadrant is for
 
    A task is flagged for Review when the evidence is thin or pulls both
    ways. Review never blocks anything; it is a small marker saying
@@ -177,7 +177,7 @@
     var signals = u.hits.length + i.hits.length + low.hits.length + route.hits.length + (due ? 1 : 0);
     var review = false, why = null;
     if (signals === 0) { review = true; why = "No timing or priority words — filed as Schedule."; }
-    else if (uTotal === 1 && quadrant !== "delegate" && quadrant !== "later") { review = true; why = "Some time pressure, not much. Could be Do now."; }
+    else if (uTotal === 1 && quadrant !== "delegate" && quadrant !== "later") { review = true; why = "Some time pressure, not much. Could be Do."; }
     else if (low.total > 0 && uTotal >= 3) { review = true; why = "Says both urgent and optional."; }
     else if (route.total > 0 && i.total >= 2) { review = true; why = "A handoff about something important — kept it with you."; }
     else if (quadrant === "later" && low.total > 0 && low.total < 3 && i.total > 0) { review = true; why = "Sounds low-stakes, but mentions real work."; }
